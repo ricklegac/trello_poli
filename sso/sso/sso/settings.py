@@ -164,3 +164,5 @@ SITE_ID = 1
 LOGIN_REDIRECT_URL = 'home'
 ACCOUNT_LOGOUT_REDIRECT_URL = 'account_login'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+STATIC_ROOT = '/code/static'
