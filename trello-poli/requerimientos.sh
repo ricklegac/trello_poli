@@ -5,3 +5,5 @@ pip install django-crispy-forms #form para django
 pip install gunicorn #entorno prod
 pip install dj-database-url #conexion mediante url
 python -m pip install Pillow #templates
+pip3 install -U Sphinx #doc sphinx 
+pip install python-decouple  #entorno prod
