@@ -1,4 +1,4 @@
-Welcome to Trello Poli's documentation!
+Trello-Poli Docs!
 =======================================
 
 .. toctree::
