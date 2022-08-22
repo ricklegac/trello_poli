@@ -1,1 +1,1 @@
-web:gunicorn trello-poli.wsgi --log-file -  
+web: gunicorn trello-poli.wsgi --log-file -  
