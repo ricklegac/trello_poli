@@ -9,10 +9,11 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-
+import dj_database_url
 import os
 from pathlib import Path
 from re import template
+from decouple import config 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,6 +24,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-j%(h#pic0l(h3*5^(@)h(cn^9gum&o%q%(wiaf^pxlh@f0j!uj'
+
+#SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False #para produccion
@@ -56,6 +59,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
@@ -95,14 +99,12 @@ WSGI_APPLICATION = 'trello-poli.wsgi.application'
 #     }
 # }
 #PROYECTO EN PRODUCCION: 
-import dj_database_url
-from decouple import config 
+
+ 
 DATABASES = {
     'default': dj_database_url.config(
         default=config('DATABASE_URL')
-    ) 
-        
-    
+    )     
 }
 
 
@@ -142,7 +144,10 @@ USE_TZ = True
 
 # STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_TMP = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
+os.makedirs(STATIC_TMP, exist_ok = True)
+os.makedirs(STATIC_ROOT, exist_ok = True)
 STATICFILES_DIR = (
     os.path.join(BASE_DIR, 'static'),
 )
