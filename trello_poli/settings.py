@@ -59,7 +59,7 @@ ROOT_URLCONF = 'trello_poli.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR/'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -121,7 +121,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-MX'
 
 TIME_ZONE = 'UTC'
 
@@ -153,3 +153,9 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 SITE_ID = 1 
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+ACCOUNT_EMAIL_REQUIRED=True #forzoso que tenga email para poder ingresar 
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_VERIFICATION  = 'mandatory' #tiene que verificar por su email para ingresar al sso 
+ACCOUNT_LOGOUT_ON_GET = True # para que salga directamente sin estar preguntando si quiere o no salir de la cuenta  
