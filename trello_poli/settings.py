@@ -159,3 +159,4 @@ ACCOUNT_EMAIL_REQUIRED=True #forzoso que tenga email para poder ingresar
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VERIFICATION  = 'mandatory' #tiene que verificar por su email para ingresar al sso 
 ACCOUNT_LOGOUT_ON_GET = True # para que salga directamente sin estar preguntando si quiere o no salir de la cuenta  
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
