@@ -47,9 +47,6 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.google",
     "usuarios",
     "proyectos",
-    "roles",
-    "miembros",
-    "tareas",
 ]
 
 MIDDLEWARE = [
@@ -169,6 +166,8 @@ SOCIALACCOUNT_PROVIDERS = {
         },
     }
 }
+
+SOCIALACCOUNT_LOGIN_ON_GET = True
 
 # EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 # EMAIL_HOST_USER = "is2.sgpa@gmail.com"
