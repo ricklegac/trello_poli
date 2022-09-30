@@ -1,9 +1,9 @@
-from datetime import date, datetime
 from django import forms
 from django.db.models import Q
 from usuarios.models import Perfil
-from proyectos.models import Proyecto, Sprint
-from django.core.validators import MinValueValidator
+from proyectos.models import Miembro, Proyecto, Rol, Sprint, UserStory
+from django.contrib.auth.models import Permission
+from django.forms import Form, CharField, IntegerField
 
 
 class Proyecto_Form(forms.ModelForm):
@@ -68,3 +68,108 @@ class ProyectoEdit_Form(forms.ModelForm):
             "estado": forms.Select(attrs={"class": "form-control"}),
             "fechaFin": forms.DateInput(attrs={"type": "date"}),
         }
+
+
+class MiembrosForm(forms.ModelForm):
+    class Meta:
+        model = Miembro
+        fields = [
+            "idPerfil",
+        ]
+        labels = {
+            "idPerfil": "Perfil",
+        }
+        widgets = {
+            "idPerfil": forms.Select(attrs={"class": "form-control custom-select"}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        perfil = Perfil.objects.all()
+        idProyecto = kwargs.pop("idProyecto")
+        super(MiembrosForm, self).__init__(*args, **kwargs)
+        proyecto = Proyecto.objects.get(id=idProyecto)
+        miembro = proyecto.miembro_set.all()
+        valid_id = []
+        for p in perfil:
+            if (
+                not Miembro.objects.filter(idProyecto=proyecto)
+                .filter(idPerfil=p)
+                .exists()
+            ):
+                if not p.id == 1:
+                    valid_id.append(p.id)
+        perfiles = Perfil.objects.filter(id__in=valid_id)
+        self.fields["idPerfil"].queryset = perfiles
+
+
+class Rol_Form(forms.ModelForm):
+    permissions = [
+        "Crear proyecto",
+        "Modificar proyecto",
+        "Eliminar proyecto",
+        "Crear Sprint",
+        "Modificar Sprint",
+        "Cancelar Sprint",
+        "Crear user story",
+        "Modificar user story" "Eliminar user story",
+    ]
+    permisos = Permission.objects.filter(codename__in=permissions).values_list(
+        "name", "codename"
+    )
+    select = forms.MultipleChoiceField(
+        choices=permissions, widget=forms.CheckboxSelectMultiple()
+    )
+
+    def __init__(self, *args, **kwargs):
+        id = kwargs.pop("idProyecto")
+        super(Rol_Form, self).__init__(*args, **kwargs)
+        proyecto = Proyecto.objects.get(id=id)
+        self.fields["sprint"].queryset = Sprint.objects.filter(
+            proyecto=proyecto
+        ).order_by("id")
+        if kwargs.get("instance"):
+            instance = kwargs.get("instance")
+            lista = instance.grupo.permissions.all().values_list("name", "codename")
+            self.fields["select"].initial = [x[0] for x in lista]
+
+    class Meta:
+        model = Rol
+        fields = ["nombre", "sprint"]
+        labels = {"nombre": "Nombre", "sprint": "Sprint"}
+        widgets = {
+            "nombre": forms.TextInput(attrs={"class": "form-control"}),
+            "sprint": forms.CheckboxSelectMultiple(),
+        }
+
+
+class UserStoryForm(Form):
+    nombre = CharField()
+    descripcion = CharField()
+    prioridad = IntegerField()
+
+
+class UserStoryEdit_Form(forms.ModelForm):
+    class Meta:
+        model = UserStory
+        fields = [
+            "nombre",
+            "descripcion",
+            "estado",
+            "desarrollador",
+        ]
+        labels = {
+            "nombre": "Nombre",
+            "descripcion": "Descripcion",
+            "estado": "Estado",
+            "desarrollador": "Desarrollador",
+        }
+        widgets = {
+            "nombre": forms.TextInput(attrs={"class": "form-control"}),
+            "descripcion": forms.TextInput(attrs={"class": "form-control"}),
+            "estado": forms.Select(attrs={"class": "form-control"}),
+            "desarrollador": forms.Select(attrs={"class": "form-control"}),
+        }
+
+        def init(self, args, **kwargs):
+            super(UserStoryEdit_Form, self).init(args, **kwargs)
+            self.fields["desarrollador"].queryset = Miembro.objects.filter(~Q(id=1))
