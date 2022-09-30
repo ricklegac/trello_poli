@@ -1,8 +1,8 @@
 from django.db import models
-from tareas.models import UserStory
-from usuarios.models import Perfil
-from django.db.models.deletion import CASCADE
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import Group
+
+# from usuarios.models import Perfil
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 ESTADOPROY_CHOICES = [
     ("Pendiente", "Pendiente"),
@@ -46,7 +46,7 @@ class Proyecto(models.Model):
         choices=ESTADOPROY_CHOICES,
     )
     numSprints = models.IntegerField(default=0)
-    scrumMaster = models.ForeignKey(Perfil, on_delete=models.CASCADE)
+    scrumMaster = models.ForeignKey(to="usuarios.Perfil", on_delete=models.CASCADE)
     equipo = models.OneToOneField(Group, on_delete=models.CASCADE, null=True)
 
     def str(self):
@@ -99,3 +99,71 @@ class Historial(models.Model):
         return "{} {}: {}".format(
             self.fecha.strftime("%d/%m/%Y %X"), self.autor, self.operacion
         )
+
+
+class Miembro(models.Model):
+    idPerfil = models.ForeignKey(to="usuarios.Perfil", on_delete=models.CASCADE)
+    idProyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE)
+
+
+class Rol(models.Model):
+    grupo = models.OneToOneField(Group, on_delete=models.CASCADE)
+    nombre = models.CharField(max_length=50)
+    proyecto = models.ForeignKey(
+        Proyecto, on_delete=models.CASCADE, null=True, blank=True
+    )
+    sprint = models.ManyToManyField(to="proyectos.Sprint", blank=True)
+
+    class Meta:
+        unique_together = ["nombre", "proyecto"]
+        permissions = (
+            ("Crear proyecto", "Permite crear proyectos"),
+            ("Modificar proyecto", "Permite modificar proyectos"),
+            ("Eliminar proyecto", "Permite eliminar proyectos"),
+            ("Crear Sprint", "Permite crear un sprint"),
+            ("Modificar Sprint", "Permite modificar un sprint"),
+            ("Cancelar Sprint", "Permite cancelar un sprint"),
+            ("Crear user story", "Permite crear un user story"),
+            ("Modificar user story", "Permite modificar un user story"),
+            ("Eliminar user story", "Permite eliminar un user story"),
+        )
+
+
+ESTADOUS_CHOICES = [
+    ("En_Cola", "En Cola"),
+    ("To_Do", "To Do"),
+    ("Doing", "Doing"),
+    ("Done", "Done"),
+]
+
+
+class UserStory(models.Model):
+
+    backlog = models.ForeignKey(
+        to="proyectos.Backlog",
+        on_delete=models.CASCADE,
+        null=True,
+        related_name="user_stories",
+    )
+    nombre = models.CharField(max_length=150, blank=False)
+    descripcion = models.TextField(max_length=300, blank=False)
+    estado = models.CharField(default="En_Cola", max_length=7)
+    desarrollador = models.ForeignKey(
+        to="usuarios.Perfil", on_delete=models.CASCADE, null=True, blank=True
+    )
+    fechaCreacion = models.DateField(auto_now_add=True)
+    fechaInicio = models.DateField(null=True)
+    fechaFin = models.DateField(null=True)
+    sprint = models.ForeignKey(
+        to="proyectos.Sprint", on_delete=models.CASCADE, null=True
+    )
+    identificador = models.CharField(max_length=80, null=True)
+    prioridad = models.PositiveIntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(100)], default=0
+    )
+
+    class Meta:
+        unique_together = ["identificador", "sprint"]
+
+    def __str__(self):
+        return "{}".format(self.identificador)

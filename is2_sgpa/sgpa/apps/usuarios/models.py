@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
-from roles.models import Rol
+
+from proyectos.models import Rol
 
 # Create your models here.
 
