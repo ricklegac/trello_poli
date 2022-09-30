@@ -122,10 +122,11 @@
 
             <a href="{% url 'proyectos:modificar_proyecto' proyecto.id %}" class="btn btn-primary">Modificar
                 Proyecto</a>
-            <a href="{% url 'miembros:listar' proyecto.id %}" class="btn btn-primary" role="button">Miembros</a>
-            <a href="{% url 'tareas:listar_tareas' proyecto.id %}" class="btn btn-primary" role="button">Product
+            <a href="{% url 'proyectos:listar_miembros' proyecto.id %}" class="btn btn-primary"
+                role="button">Miembros</a>
+            <a href="{% url 'proyectos:listar_tareas' proyecto.id %}" class="btn btn-primary" role="button">Product
                 Backlog</a>
-            <a href="{% url 'roles:listar_roles' proyecto.id %}" class="btn btn-primary" role="button">Roles</a>
+            <a href="{% url 'proyectos:listar_roles' proyecto.id %}" class="btn btn-primary" role="button">Roles</a>
             {% endif %}
             {% endif %}
 
