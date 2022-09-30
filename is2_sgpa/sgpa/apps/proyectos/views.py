@@ -1,18 +1,32 @@
 from datetime import datetime
 from django.forms.models import inlineformset_factory
-from django.http import request
 from usuarios.models import Perfil
 from django.contrib import messages
-from miembros.models import Miembro
+from django.contrib.auth.models import Group, Permission, User
 from django.core.mail import send_mail
-from tareas.models import UserStory
 from django.urls.base import reverse_lazy
 from django.views.generic import ListView
-from proyectos.models import Backlog, Proyecto, Sprint, Historial
+from proyectos.models import (
+    Backlog,
+    Miembro,
+    Proyecto,
+    Rol,
+    Sprint,
+    Historial,
+    UserStory,
+)
 from django.shortcuts import reverse, redirect, render, get_object_or_404
 from django.contrib.auth.models import Group, User
 from django.contrib.auth.mixins import LoginRequiredMixin
-from proyectos.forms import Proyecto_Form, ProyectoEdit_Form, Sprint_Form
+from proyectos.forms import (
+    MiembrosForm,
+    Proyecto_Form,
+    ProyectoEdit_Form,
+    Rol_Form,
+    Sprint_Form,
+    UserStoryEdit_Form,
+    UserStoryForm,
+)
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.decorators import login_required, permission_required
 
@@ -583,4 +597,517 @@ def verSprint(request, id_proyecto, id_sprint):
         request,
         "proyectos/ver_proyecto.html",
         {"tareas_PB": tareas_PB, "proyecto": proyecto, "sprint": sprint},
+    )
+
+
+# ! Miembros
+# --- Crear nuevo Miembro --- #
+@login_required
+def miembroCrear(request, idProyecto):
+    """
+    Vista basada en funciones que permite crear miembros
+    Recibe el request HTTP y el id de un proyecto como parámetros
+    Al finalizar la petición se retorna a la vista de lista de miembros
+    Requiere inicio de sesión
+    """
+
+    if request.method == "POST":
+        form = MiembrosForm(request.POST, idProyecto=idProyecto)
+
+        if form.is_valid():
+            miembro = form.save(commit=False)
+            miembro.idProyecto = Proyecto.objects.get(id=idProyecto)
+            miembro.save()
+            user = User.objects.get(username=request.user)
+            perfil = Perfil.objects.get(user=user)
+            Historial.objects.create(
+                operacion="Agregar a {} al proyecto".format(miembro.idPerfil.__str__()),
+                autor=perfil.__str__(),
+                proyecto=Proyecto.objects.get(id=idProyecto),
+                categoria="Miembros",
+            )
+
+        return redirect("proyectos:listar_miembros", idProyecto=idProyecto)
+
+    else:
+        form = MiembrosForm(request.POST or None, idProyecto=idProyecto)
+
+    return render(
+        request, "miembros/nuevo_miembro.html", {"form": form, "idProyecto": idProyecto}
+    )
+
+
+# --- Eliminar Miembro --- #
+@login_required
+def miembroEliminar(request, idProyecto, idMiembro):
+    """
+    Vista basada en funciones que permite la eliminación de miembros
+    Recibe el request HTTP, el id de un proyecto y el id de un miembro como parámeetros
+    Una vez finalizada la petición se retorna a la lista de miembros
+    Requiere inicio de sesión
+    """
+
+    miembro = Miembro.objects.get(idPerfil=idMiembro, idProyecto=idProyecto)
+    if request.method == "POST":
+        miembro.delete()
+        user = User.objects.get(username=request.user)
+        perfil = Perfil.objects.get(user=user)
+        Historial.objects.create(
+            operacion="Eliminar a {} del proyecto".format(miembro.idPerfil.__str__()),
+            autor=perfil.__str__(),
+            proyecto=Proyecto.objects.get(id=idProyecto),
+            categoria="Miembros",
+        )
+        return redirect("proyectos:listar_miembros", idProyecto=idProyecto)
+    return render(
+        request,
+        "miembros/eliminar_miembro.html",
+        {"miembros": miembro, "idProyecto": idProyecto},
+    )
+
+
+# --- Listar Miembros --- #
+@login_required
+def verMiembros(request, idProyecto):
+    """
+    Vista basada en funciones para listar miembros pertenecientes a un proyecto
+    Recibe el request y el id de un proyecto como parámtros
+    Requiere inicio de sesión
+    """
+    miembros = Miembro.objects.filter(idProyecto=idProyecto)
+
+    return render(
+        request,
+        "miembros/ver_miembros.html",
+        {
+            "miembros": miembros,
+            "idProyecto": idProyecto,
+        },
+    )
+
+
+# ! Apartado de Roles
+# --- Vista para la creación de un rol --- #
+class CrearRol(LoginRequiredMixin, CreateView):
+    """
+    Vista basada en modelos que permite crear un rol y el grupo asociado con los permisos correspondientes
+    La Validación se redefine para permitir la creación del grupo y asociar los permisos correspondientes
+    No recibe parámetros
+    Requiere inicio de sesión
+    """
+
+    redirect_field_name = "redirect_to"
+    model = Rol
+    form_class = Rol_Form
+    template_name = "roles/nuevo_rol.html"
+
+    def get_success_url(self):
+        return reverse("proyectos:listar_roles", args=(self.kwargs["idProyecto"],))
+
+    def get_form_kwargs(self, **kwargs):
+        form_kwargs = super(CrearRol, self).get_form_kwargs(**kwargs)
+        form_kwargs["idProyecto"] = self.kwargs["idProyecto"]
+        return form_kwargs
+
+    def form_valid(self, form):
+        proyecto = Proyecto.objects.get(id=self.kwargs["idProyecto"])
+        form.instance.proyecto = proyecto
+        nombreRol = form.cleaned_data["nombre"]
+        nombreGrupo = "{}{}".format(nombreRol, proyecto.id)
+        grupo = Group.objects.create(name=nombreGrupo)
+        form.instance.grupo = grupo
+        permisos = Permission.objects.filter(name__in=form.cleaned_data["select"])
+        grupo.permissions.set(permisos)
+        user = User.objects.get(username=self.request.user)
+        perfil = Perfil.objects.get(user=user)
+        Historial.objects.create(
+            operacion="Crear Rol {}".format(form.instance.nombre),
+            autor=perfil.__str__(),
+            proyecto=proyecto,
+            categoria="Miembros",
+        )
+
+        return super(CrearRol, self).form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super(CrearRol, self).get_context_data()
+        context["idProyecto"] = self.kwargs["idProyecto"]
+        return context
+
+
+# --- Vista para listar roles existentes --- #
+class ListarRol(LoginRequiredMixin, ListView):
+    """
+    Vista basada en modelos que permite listar todos los roles creados
+    Muestra la lista de los roles asociados al proyecto en forma de tabla
+    No recibe parámetros
+    Requiere inicio de sesión
+    """
+
+    redirect_field_name = "redirect_to"
+    model = Rol
+    template_name = "roles/listar_roles.html"
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(ListarRol, self).get_context_data()
+        context["idProyecto"] = self.kwargs["idProyecto"]
+        return context
+
+    def get_queryset(self):
+        return Rol.objects.filter(proyecto=self.kwargs["idProyecto"]).order_by("id")
+
+
+# --- Vista para eliminar un rol --- #
+def eliminarRol(request, idProyecto, id_rol):
+    """
+    Vista basada en funciones que permite eliminar un rol seleccionado y su grupo asociado
+    Recibe el request HTTP y el id del rol a eliminar
+    Requiere inicio de sesión
+    """
+
+    rol = Rol.objects.get(id=id_rol)
+    if request.method == "POST":
+        grupo = Group.objects.get(id=rol.grupo.id)
+        grupo.delete()
+        nombre = rol.nombre
+        rol.delete()
+        user = User.objects.get(username=request.user)
+        perfil = Perfil.objects.get(user=user)
+        Historial.objects.create(
+            operacion="Eliminar Rol {}".format(nombre),
+            autor=perfil.__str__(),
+            proyecto=Proyecto.objects.get(id=idProyecto),
+            categoria="Miembros",
+        )
+
+        return redirect("proyectos:listar_roles", idProyecto=idProyecto)
+    return render(
+        request, "roles/eliminar_rol.html", {"rol": rol, "idProyecto": idProyecto}
+    )
+
+
+# --- Vista para la edición de un rol --- #
+@login_required
+def editarRol(request, idProyecto, id_rol):
+    """
+    Vista basada en funciones que permite editar un rol seleccionado y su grupo asociado
+    Recibe el request HTTP y el id del rol a editar
+    Requiere inicio de sesión
+    """
+
+    rol = Rol.objects.get(id=id_rol)
+    grupo = Group.objects.get(id=rol.grupo.id)
+    if request.method == "GET":
+        form = Rol_Form(instance=rol, idProyecto=idProyecto)
+    else:
+        form = Rol_Form(request.POST, instance=rol, idProyecto=idProyecto)
+        if form.is_valid():
+            permisos = Permission.objects.filter(name__in=form.cleaned_data["select"])
+            grupo.permissions.set(permisos)
+            form.save()
+            user = User.objects.get(username=request.user)
+            perfil = Perfil.objects.get(user=user)
+            Historial.objects.create(
+                operacion="Editar Rol {}".format(rol.nombre),
+                autor=perfil.__str__(),
+                proyecto=Proyecto.objects.get(id=idProyecto),
+                categoria="Miembros",
+            )
+
+        return redirect("proyectos:listar_roles", idProyecto=idProyecto)
+    return render(
+        request, "roles/editar_rol.html", {"form": form, "idProyecto": idProyecto}
+    )
+
+
+# --- Asignación de un rol --- #
+@login_required
+def asignarRol(request, idProyecto, idMiembro, idRol):
+    """
+    Vista basada en funciones que permite asignar un rol seleccionado y su grupo asociado a un usuario miembro del proyecto
+    Recibe el request HTTP, el id del proyecto asociado, el id miembro y el id del rol a asignar
+    Requiere inicio de sesión
+    """
+
+    user = User.objects.get(id=idMiembro)
+    rol = Rol.objects.get(id=idRol)
+    rol.grupo.user_set.add(user)
+    perfil = Perfil.objects.get(user=user)
+    nombre = perfil.__str__()
+    user = User.objects.get(username=request.user)
+    perfil = Perfil.objects.get(user=user)
+    Historial.objects.create(
+        operacion="Asignar Rol {} a {}".format(rol.nombre, nombre),
+        autor=perfil.__str__(),
+        proyecto=Proyecto.objects.get(id=idProyecto),
+        categoria="Miembros",
+    )
+    return redirect("proyectos:ver_roles", idProyecto=idProyecto, idMiembro=idMiembro)
+
+
+# --- Revocar un rol --- #
+@login_required
+def desasignarRol(request, idProyecto, idMiembro, idRol):
+    """
+    Vista basada en funciones que permite revocar un rol seleccionado y su grupo asociado a un usuario miembro del proyecto
+    Recibe el request HTTP, el id del proyecto asociado, el id del miembro y el id del rol a revocar
+    Requiere inicio de sesión
+    """
+
+    user = User.objects.get(id=idMiembro)
+    rol = Rol.objects.get(id=idRol)
+    rol.grupo.user_set.remove(user)
+    user = User.objects.get(username=request.user)
+    perfil = Perfil.objects.get(user=user)
+    Historial.objects.create(
+        operacion="Desasignar Rol {} a {}".format(rol.nombre, perfil.__str__()),
+        autor=perfil.__str__(),
+        proyecto=Proyecto.objects.get(id=idProyecto),
+        categoria="Miembros",
+    )
+    return redirect("proyectos:ver_roles", idProyecto=idProyecto, idMiembro=idMiembro)
+
+
+# --- Ver todos los roles --- #
+@login_required
+def verRoles(request, idProyecto, idMiembro):
+    """
+    Vista basada en modelos que permite listar todos los reoles creados
+    Recibe el request HTTP, el id del proyecto asociado y el id del miembro
+    Requiere inicio de sesión
+    """
+
+    roles = Rol.objects.filter(proyecto=idProyecto)
+    user = User.objects.get(id=idMiembro)
+    roles_asignados = []
+    roles_noasignados = []
+    user = User.objects.get(id=idMiembro)
+    print(user.id)
+    for x in roles:
+        roles_noasignados.append(x)
+
+    for i in user.groups.filter(user=idMiembro):
+        for x in roles:
+            if i.name.startswith(x.nombre):
+                roles_asignados.append(x)
+
+    diferencia = set(roles_noasignados) - set(roles_asignados)
+    roles_noasignados = list(diferencia)
+    return render(
+        request,
+        "miembros/ver_roles.html",
+        {
+            "roles_a": roles_asignados,
+            "roles_sa": roles_noasignados,
+            "idProyecto": idProyecto,
+            "idMiembro": idMiembro,
+        },
+    )
+
+
+# ! User Stories
+# --- Crear User Story --- #
+# class CrearUserStory(LoginRequiredMixin, CreateView):
+#     """
+#     Vista basada en modelos que permite crear un User Story con los campos correspondientes
+#     No recibe parámetros
+#     Requiere inicio de sesión
+#     """
+
+#     redirect_field_name = "redirect_to"
+#     model = UserStory
+#     form_class = UserStoryForm
+#     template_name = "tareas/nuevo_userStory.html"
+
+#     def get_success_url(self):
+#         return reverse("proyectos:listar_tareas", args=(self.kwargs["idProyecto"],))
+
+#     def get_form_kwargs(self, **kwargs):
+#         form_kwargs = super(CrearUserStory, self).get_form_kwargs(**kwargs)
+#         form_kwargs["idProyecto"] = self.kwargs["idProyecto"]
+#         return form_kwargs
+
+#     def form_valid(self, form):
+#         proyecto = Proyecto.objects.get(id=self.kwargs["idProyecto"])
+#         form.instance.proyecto = proyecto
+#         backlog = Backlog.objects.get(proyecto=proyecto, tipo="Product_Backlog")
+#         backlog.numTareas += 1
+#         user = User.objects.get(username=self.request.user)
+#         perfil = Perfil.objects.get(user=user)
+#         Historial.objects.create(
+#             operacion="Crear User Story {}".format(form.instance.nombre),
+#             autor=perfil.__str__(),
+#             proyecto=proyecto,
+#             categoria="User Story",
+#         )
+#         return super(CrearUserStory, self).form_valid(form)
+
+#     def get_context_data(self, **kwargs):
+#         context = super(CrearUserStory, self).get_context_data(**kwargs)
+#         context["idProyecto"] = self.kwargs["idProyecto"]
+#         return context
+
+
+# --- Listar User Story --- #
+class ListarUserStory(LoginRequiredMixin, ListView):
+    """
+    Vista basada en modelos que permite listar todos los user stories creados
+    Muestra la lista de los user stories asociados al proyecto en forma de tabla
+    No recibe parámetros
+    Requiere inicio de sesión
+    """
+
+    redirect_field_name = "redirect_to"
+    model = UserStory
+    template_name = "tareas/listar_userStory.html"
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(ListarUserStory, self).get_context_data()
+        context["idProyecto"] = self.kwargs["idProyecto"]
+        return context
+
+    def get_queryset(self):
+        proyecto = Proyecto.objects.get(id=self.kwargs["idProyecto"])
+        backlog = Backlog.objects.get(proyecto=proyecto, tipo="Product_Backlog")
+        print("IMPRESION", backlog)
+        return UserStory.objects.filter(backlog=backlog)
+
+
+# --- Crear User Story --- #
+@login_required
+def crearUserStory(request, idProyecto):
+    proyecto = Proyecto.objects.get(id=idProyecto)
+    data = {"idProyecto": idProyecto}
+
+    if request.method == "GET":
+        data["form"] = UserStoryForm()
+        return render(request, "tareas/nuevo_userStory.html", data)
+
+    elif request.method == "POST":
+        form = UserStoryForm(request.POST)
+
+        if form.is_valid():
+            backlog = Backlog.objects.get(proyecto=proyecto, tipo="Product_Backlog")
+            backlog.numTareas += 1
+            backlog.save()
+            proyecto.save()
+            userStory = UserStory.objects.create(
+                backlog=backlog,
+                nombre=form.cleaned_data["nombre"],
+                descripcion=form.cleaned_data["descripcion"],
+                prioridad=form.cleaned_data["prioridad"],
+            )
+            userStory.save()
+            user = User.objects.get(username=request.user)
+            perfil = Perfil.objects.get(user=user)
+            Historial.objects.create(
+                operacion="Crear User Story",
+                autor=perfil.__str__(),
+                proyecto=proyecto,
+                categoria="User Story",
+            )
+            return redirect("proyectos:listar_tareas", idProyecto)
+        data["form"] = form
+        return render(request, "tareas/nuevo_userStory.html", data)
+
+
+# --- Eliminar User Story --- #
+@login_required
+def eliminarUserStory(request, idProyecto, id_tarea):
+    """
+    Vista basada en funciones que permite eliminar un User Story seleccionado
+    Recibe el request HTTP y el id del rol a eliminar
+    Requiere inicio de sesión
+    """
+
+    userStory = UserStory.objects.get(id=id_tarea)
+
+    if request.method == "POST":
+        nombre = userStory.nombre
+        userStory.delete()
+        backlog = Backlog.objects.get(id=userStory.backlog)
+        backlog.numTareas -= 1
+        backlog.save()
+        user = User.objects.get(username=request.user)
+        perfil = Perfil.objects.get(user=user)
+        Historial.objects.create(
+            operacion="Eliminar US {}".format(nombre),
+            autor=perfil.__str__(),
+            proyecto=Proyecto.objects.get(id=idProyecto),
+            categoria="User Story",
+        )
+
+        return redirect("proyectos:listar_tareas", idProyecto=idProyecto)
+    return render(
+        request,
+        "tareas/eliminar_tarea.html",
+        {"userStory": userStory, "idProyecto": idProyecto},
+    )
+
+
+# --- Modificar User Story --- #
+@login_required
+def modificarUserStory(request, idProyecto, id_tarea):
+    """
+    Vista basada en función, para actualizar un User Story existente
+    Recibe el request HTTP y el id del US correspondiente como parámetros
+    Al finalizar los cambios en los campos del formulario, guarda la información y redirige a la lista de US asociados
+    Requiere inicio de sesión y permisos de Scrum Master o administrador
+    """
+    tarea = UserStory.objects.get(id=id_tarea)
+
+    if request.method == "GET":
+        tarea_Form = UserStoryEdit_Form(instance=tarea)
+    else:
+        tarea_Form = UserStoryEdit_Form(request.POST, instance=tarea)
+        if tarea_Form.is_valid():
+            tarea_Form.save()
+            desarrollador = tarea.desarrollador
+            send_mail(
+                "El User Story ha sido modificado",
+                "Usted es desarrollador del User Story '{0}' y este acaba de ser modificado, ingrese a la plataforma para observar los cambios".format(
+                    tarea.nombre
+                ),
+                "is2.sgpa@gmail.com",
+                desarrollador,
+            )
+            backlog = Backlog.objects.get(id=tarea.backlog)
+            proyecto = Proyecto.objects.get(id=backlog.proyecto)
+
+            user = User.objects.get(username=request.user)
+            perfil = Perfil.objects.get(user=user)
+            Historial.objects.create(
+                operacion="Modificar Proyecto",
+                autor=perfil.__str__(),
+                proyecto=proyecto,
+                categoria="User Story",
+            )
+
+        return redirect("proyectos:listar_tareas", idProyecto)
+    return render(
+        request,
+        "tareas/modificar_tarea.html",
+        {"tarea_Form": tarea_Form, "id_tarea": id_tarea, "idProyecto": idProyecto},
+    )
+
+
+# --- Asignación de un User Story--- #
+@login_required
+def asignarSprint(request, idProyecto, idMiembro, id_tarea):
+
+    user = User.objects.get(id=idMiembro)
+    perfil = Perfil.objects.get(user=user)
+    userStory = UserStory.objects.get(id=id_tarea)
+    userStory.desarrollador = perfil
+    nombre = perfil.__str__()
+    user = User.objects.get(username=request.user)
+    perfil = Perfil.objects.get(user=user)
+    Historial.objects.create(
+        operacion="Asignar User Story {} a {}".format(userStory.nombre, nombre),
+        autor=perfil.__str__(),
+        proyecto=Proyecto.objects.get(id=idProyecto),
+        categoria="User Story",
+    )
+    return redirect(
+        "proyectos:listar_tareas", idProyecto=idProyecto, idMiembro=idMiembro
     )

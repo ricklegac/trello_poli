@@ -1,10 +1,8 @@
 from django.db.models import Q
-from django.http import request
 from usuarios.models import Perfil
 from django.contrib import messages
-from miembros.models import Miembro
 from django.urls import reverse_lazy
-from proyectos.models import Proyecto
+from proyectos.models import Miembro, Proyecto
 from django.core.mail import send_mail
 from django.conf import settings
 from django.views.generic import CreateView
