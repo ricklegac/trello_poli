@@ -1,8 +1,8 @@
 import pytest
 import datetime
-from tareas.models import UserStory
-from usuarios.models import User, Perfil
-from proyectos.models import Proyecto, Sprint
+from django.contrib.auth.models import User
+from usuarios.models import Perfil
+from proyectos.models import Proyecto, Sprint, UserStory
 
 
 @pytest.mark.django_db

@@ -1,10 +1,8 @@
 import pytest
 import datetime
-from proyectos.models import Proyecto
-from usuarios.models import User, Perfil
-from django.contrib.auth.models import Group
-from roles.models import Rol
-from django.urls import reverse
+from django.contrib.auth.models import User, Group
+from proyectos.models import Proyecto, Rol
+from usuarios.models import Perfil
 
 # --- Crear Grupo --- #
 # Verifica la creación de un grupo
