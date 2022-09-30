@@ -11,9 +11,9 @@
 ## Instrucciones
 1. Crear la base de datos y el usuario en PostgreSQL para el proyecto con los siguientes datos:
   ```
-    nombre: sgpa,
-    user: sgpa,
-    password: sgpa
+    nombre: is2,
+    user: is2,
+    password: is2
   ```
 2. Instalar las dependencias `pipevn install`.
 3. Correr las migraciones `python manage.py migrate`.
