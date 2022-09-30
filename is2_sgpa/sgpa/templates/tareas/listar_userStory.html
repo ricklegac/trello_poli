@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <ins>
+        <h3 align="center">Lista de User Stories</h3>
+    </ins>
+    {% if object_list %}
+    <div class="row">
+        <div class="col-md-2">
+
+        </div>
+        <div class="col-md-8">
+            <table class="table">
+                <thead align="center">
+                    <tr class="table-primary">
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Descripcion</th>
+                        <th scope="col">Desarrollador</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for us in object_list %}
+                    <tr>
+                        <td scope="col">{{ us.nombre }}</td>
+                        <td scope="col">{{ us.descripcion }}</td>
+                        <td scope="col">
+                            {% if us.desarrollador %}
+                            {{ us.desarrollador }}
+                            {% else %}
+                            <p>No asignado</p>
+                            {% endif %}
+                        </td>
+                        <td scope="col">
+                            <a href="{% url 'tareas:modificar_tarea' idProyecto us.id %}"
+                                class="btn boton-color">Modificar
+                                US</a>
+                            <a href="{% url 'tareas:eliminar_tarea' idProyecto us.id %}"
+                                class="btn boton-color">Eliminar
+                                US</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <h4 align="center">El proyecto no tiene US creados</h4><br>
+    {% endif %}
+    <p align="center">
+        <a href="{% url 'tareas:crear_tarea' idProyecto %}" class="btn boton-color">Crear US</a>
+        <a href="{% url 'proyectos:ver_proyecto' idProyecto %}" class="btn boton-color" role="button">Volver</a>
+    </p>
+</div>
+{% endblock %}

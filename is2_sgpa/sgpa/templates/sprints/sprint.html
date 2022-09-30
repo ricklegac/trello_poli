@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row">
+  <h4>Tareas</h4>
+</div>
+
+<div class="dropdown">
+  <button type="button" class="btn boton-color dropdown-toggle" id="simpleDropdown" data-bs-toggle="dropdown"
+    aria-expanded="false">
+    Crear
+  </button>
+  <div class="dropdown-menu">
+    Titulo de la tarea
+    <input type="text">
+    Asignada a
+    <label for="email"></label>
+    <input type="email" class="form-control" placeholder="Enter email" id="email">
+    <input type="button" value="Agregar">
+  </div>
+</div>
+
+</br>
+
+
+</br>
+
+<div class="container-fluid">
+  <main>
+    <div class="row">
+
+
+      <div class="col-md-4">
+        <div class="col-md-12" style="background-image:linear-gradient(-90deg,rgb(140, 125, 224),rgb(65, 37, 139))">
+          <p class="tittle">To do</p>
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Mensaje</h5>
+              <p class="card-text">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item"><a href="#">Tarea 1</li>
+                <li class="list-group-item"><a href="#">Tarea 7</li>
+                <li class="list-group-item"><a href="#">Tarea 3</li>
+                <li class="list-group-item"><a href="#">Tarea 8</li>
+              </ul>
+              </p>
+              <a href="#" class="btn boton-color">next</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+      <div class="col-md-4">
+        <div class="col-md-12" style="background-image:linear-gradient(-90deg,rgb(140, 125, 224),rgb(65, 37, 139))">
+          <p class="tittle">Doing</p>
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Mensaje</h5>
+              <p class="card-text">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item"><a href="#">Tarea 2</li>
+                <li class="list-group-item"><a href="#">Tarea 5</li>
+                <li class="list-group-item"><a href="#">Tarea 9</li>
+              </ul>
+              </p>
+              <a href="#" class="btn boton-color">next</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+      <div class="col-md-4">
+        <div class="col-md-12" style="background-image:linear-gradient(-90deg,rgb(140, 125, 224),rgb(65, 37, 139))">
+          <p class="tittle">Done</p>
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Mensaje</h5>
+              <p class="card-text">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item"><a href="#">Tarea 4</li>
+                <li class="list-group-item"><a href="#">Tarea 6</li>
+              </ul>
+              </p>
+              <a href="#" class="btn boton-color">next</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+    </div>
+  </main>
+
+</div>
+{% endblock %}

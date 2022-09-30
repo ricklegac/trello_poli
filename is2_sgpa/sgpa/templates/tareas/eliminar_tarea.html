@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4">
+
+        </div>
+        <div class="col-md-4">
+            <form method="POST">
+                {% csrf_token %}
+                <h3>Estás a punto de eliminar el siguiente User Story:</h3>
+                <div class="form-group">
+                    <label class="col-form-label">Nombre:</label>
+                    <input class="form-control" id="readOnlyInput" type="text" placeholder="{{ userStory.nombre }}"
+                        readonly="">
+                    <label class="col-form-label">Descripcion:</label>
+                    <input class="form-control" id="readOnlyInput" type="text" placeholder="{{ userStory.descripcion }}"
+                        readonly="">
+                    <label class="col-form-label">Estado:</label>
+                    <input class="form-control" id="readOnlyInput" type="text" placeholder="{{ userStory.estado }}"
+                        readonly="">
+                    <label class="col-form-label">Desarrollador:</label>
+                    <input class="form-control" id="readOnlyInput" type="text"
+                        placeholder="{{ userStory.desarrollador }}" readonly="">
+
+                </div>
+                <button type="submit" class="btn btn-danger">Confirmar</button>
+                <a class="btn btn-primary" href="{% url 'tareas:listar_tareas' idProyecto %}">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

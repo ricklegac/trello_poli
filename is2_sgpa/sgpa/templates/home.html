@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+<div class="vh-100 d-flex flex-column justify-content-center align-items-center">
+    <div class="bg-white d-flex flex-column shadow-lg px-5 py-5 rounded-3 align-items-center justify-content-center">
+        <h4>Bienvenido al SGPA</h4>
+        <h6>Sistema Gerenciador de Proyectos Ágiles</h6>
+        <hr class="h-divider mb-1">
+        <div class="card-body">
+            <h4 class="card-title text-center">Datos de usuario</h4>
+            <ul>
+                <li>
+                    <p class="card-text">Nombre: {{ user.first_name }}</p>
+                </li>
+                <li>
+                    <p class="card-text">Apellido: {{ user.last_name }}</p>
+                </li>
+                <li>
+                    <p class="card-text">Email: {{ user.email }}</p>
+                </li>
+            </ul>
+        </div>
+        {% if not perms.usuarios.acceso_usuario %}
+        <a class="btn boton-color btn-lg btn-block" href="{% url 'usuarios:solicitar_acceso' %}" role="button">Solicitar
+            Acceso</a>
+        <br>
+        <form method="post" action="{% url 'account_logout' %}">
+            {% csrf_token %}
+            {% if redirect_field_value %}
+            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+            {% endif %}
+        </form>
+        {% else %}
+        {% if not perms.usuarios.autorizar_usuario %}
+        <div class="text-center">
+            <a href="{% url 'usuarios:proyectos_usuario' user.id%}" class="boton-color btn">Continuar</a>
+        </div>
+        </button>
+        {% else %}
+        <div class="text-center">
+            <a href="{% url 'usuarios:administrador' %}" class="boton-color btn">Continuar</a>
+        </div>
+        </button>
+        {% endif %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

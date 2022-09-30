@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <ins>
+        <h3 align="center">Lista de Roles</h3>
+    </ins>
+    {% if object_list %}
+    <div class="row">
+        <div class="col-md-2">
+
+        </div>
+        <div class="col-md-8">
+            <table class="table">
+                <thead align="center">
+                    <tr class="table-primary">
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Permisos</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rol in object_list %}
+                    <tr>
+                        <td scope="col">{{ rol.nombre }}</td>
+                        <td scope="col">
+                            {% if rol.grupo.permissions.all %}
+                            {% for permiso in rol.grupo.permissions.all %}
+                            {{ permiso.name }} <br><br>
+                            {% endfor %}
+                            {% endif %}
+                        </td>
+                        <td scope="col">
+                            <a href="{% url 'roles:editar_rol' idProyecto rol.id %}" class="btn boton-color">Modificar
+                                Rol</a>
+                            <a href="{% url 'roles:eliminar_rol' idProyecto rol.id %}" class="btn boton-color">Eliminar
+                                Rol</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <h4 align="center">El proyecto no tiene roles creados</h4><br>
+    {% endif %}
+    <p align="center">
+        <a href="{% url 'roles:crear_rol' idProyecto %}" class="btn boton-color">Crear Rol</a>
+        <a href="{% url 'proyectos:ver_proyecto' idProyecto %}" class="btn boton-color" role="button">Volver</a>
+    </p>
+</div>
+{% endblock %}

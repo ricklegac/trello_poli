@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br>
+<div class="container-fluid">
+    <ins>
+        <h3 align="center">Proyectos Asociados</h3>
+    </ins>
+    <br>
+    <div class="row">
+        <div class="col-md-3">
+
+        </div>
+        <div class="col-md-6">
+            {% if miembros %}
+            <table class="table">
+                <thead>
+                    <tr class="table-primary">
+                        <td>ID</td>
+                        <td>Nombre</td>
+                        <td>Estado</td>
+                        <td>Scrum Master</td>
+                        <td>Descripción</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for miembro in miembros %}
+                    <tr>
+                        <td>{{ miembro.idProyecto.id }}</td>
+                        <td><a href="{% url 'proyectos:ver_proyecto' miembro.idProyecto.id %}">
+                                {{ miembro.idProyecto.nombre}} </a></td>
+                        <td>{{ miembro.idProyecto.estado }}</td>
+                        <td>{{miembro.idProyecto.scrumMaster}}</td>
+                        <td>{{ miembro.idProyecto.descripcion }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <h3>Aún no posee proyectos asociados</h3>
+            {% endif %}
+        </div>
+        <div class="col-md-3">
+
+        </div>
+    </div>
+    <p align="center">
+        <a class="btn boton-color" href="{% url 'proyectos:nuevo_proyecto' %}"> Crear Proyecto </a>
+    </p>
+</div>
+{% endblock %}

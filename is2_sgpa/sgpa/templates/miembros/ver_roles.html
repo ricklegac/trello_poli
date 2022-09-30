@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br>
+<div class="container-fluid">
+    <h3 align="center">Roles de Usuario</h3>
+    <br>
+    <div class="row">
+        <div class="col-md-6">
+            <ins>
+                <h3 align="center">Roles Asignados</h3>
+            </ins>
+            {% if roles_a %}
+            <table class="table">
+                <thead>
+                    <tr class="table-primary">
+                        <th class="text-center" scope="col">Rol</th>
+                        <th class="text-center" scope="col">Permisos</th>
+                        <th class="text-center" scope="col">Accion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rol in roles_a %}
+                    <tr>
+                        <td class="text-center"> {{ rol.nombre }} </td>
+                        <td class="text-center">
+                            {% if rol.grupo.permissions.all %}
+                            {% for permiso in rol.grupo.permissions.all %}
+                            {{permiso.name}}
+                            <br><br>
+                            {% endfor %}
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            <a class="btn btn-danger"
+                                href="{% url 'miembros:desasignar_rol' idProyecto idMiembro rol.id %}">Desasignar
+                                Rol</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <h4>No posee roles asignados</h4>
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            <ins>
+                <h3 align="center">Roles Sin Asignar</h3>
+            </ins>
+            {% if roles_sa %}
+            <table class="table">
+                <thead>
+                    <tr class="table-primary">
+                        <th class="text-center" scope="col">Rol</th>
+                        <th class="text-center" scope="col">Permisos</th>
+                        <th class="text-center" scope="col">Accion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rol in roles_sa %}
+                    <tr>
+                        <td class="text-center"> {{ rol.nombre }} </td>
+                        <td class="text-center">
+                            {% if rol.grupo.permissions.all %}
+                            {% for permiso in rol.grupo.permissions.all %}
+                            {{permiso.name}}
+                            <br><br>
+                            {% endfor %}
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            <a class="btn boton-color"
+                                href="{% url 'miembros:asignar_rol' idProyecto idMiembro rol.id %}">Asignar Rol</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <h4>No existen roles sin asignar</h4>
+            {% endif %}
+        </div>
+    </div>
+    <p align="center">
+        <a href="{% url 'miembros:listar' idProyecto %}" class="btn boton-color" role="button">Volver</a>
+    </p>
+</div>
+{% endblock %}

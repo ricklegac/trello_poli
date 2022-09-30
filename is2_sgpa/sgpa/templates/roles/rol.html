@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+<p class="container-fluid"></p>
+<table class="table table-hover" style="width: 371.117px;">
+    <thead>
+        <tr class="table-primary">
+            <th scope="col">Id</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Permisos</th>
+            <th scope="col">&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if object_list %}
+        {% for rol in object_list %}
+        <tr>
+            <td style="width: 85px;">{{rol.id}}</td>
+            <td style="width: 85px;">{{rol.nombre}}</td>
+            {% if rol.grupo.permissions.all %}
+            {% for permiso in rol.grupo.permissions.all %}
+            <td style="width: 94px;">{{permiso.name}}</td>
+            {% endfor %}
+            {% endif %}
+            <td style="width: 63px;">&nbsp;</td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <h1>No hay roles
+            <h1 />
+            {% endif %}
+    </tbody>
+</table>
+<p>{% endblock %}</p>

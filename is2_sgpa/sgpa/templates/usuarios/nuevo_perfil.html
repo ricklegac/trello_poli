@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-5">
+            <fieldset>
+                <label class="col-form-label">Nombre:</label>
+                <input class="form-control" type="text" readonly="" placeholder="{{ user.first_name }}">
+                <label class="col-form-label">Apellido:</label>
+                <input class="form-control" type="text" readonly="" placeholder="{{ user.last_name }}">
+                <label class="col-form-label">Email:</label>
+                <input class="form-control" type="text" readonly="" placeholder="{{ user.email }}">
+            </fieldset>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label class="col-form-label">CI:</label><br>
+                    {{ form.ci }}
+                </div>
+                {% if form.errors %}
+                <!-- Error messaging -->
+                <div class="alert alert-dismissible alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    {% for field in form %}
+                    {% if field.errors %}{{ field.errors|striptags }}{% endif %}
+                    {% endfor %}
+                </div>
+                <!-- /Error messaging -->
+                {% endif %}
+
+                <div class="form-group">
+                    <label class="col-form-label">Teléfono:</label><br>
+                    {{ form.telefono }}
+                </div>
+                <br>
+                <button type="submit" class="btn boton-color">Guardar</button>
+                <a href="{% url 'proyectos:home'%}" class="btn boton-color" role="button">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

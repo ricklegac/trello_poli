@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br>
+<div class="container">
+    <ins>
+        <h3 align="center">Miembros del proyecto</h3>
+    </ins>
+    <br>
+    <div class="row">
+        <div class="col-md-3">
+
+        </div>
+        <div class="col-md-6">
+            <table class="table">
+                <thead>
+                    <tr class="table-primary">
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Apellido</th>
+                        <th scope="col">Proyecto</th>
+                        <th scope="col">Accion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if miembros %}
+                    {% for miembro in miembros %}
+                    <tr>
+                        <td> {{ miembro.idPerfil.user.first_name }} </td>
+                        <td> {{ miembro.idPerfil.user.last_name }} </td>
+                        <td> {{ miembro.idProyecto.nombre }} </td>
+                        <td> <a class="btn btn-danger"
+                                href="{% url 'miembros:eliminar' miembro.idProyecto.id miembro.idPerfil.id %}">Eliminar</a>
+                            <a class="btn btn-primary"
+                                href="{% url 'miembros:ver_roles' miembro.idProyecto.id miembro.idPerfil.id %}">Ver
+                                Roles</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% else %}
+                    <h3>No hay miembros</h3>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-3">
+        </div>
+        <p align=center>
+            <a href="{% url 'miembros:nuevo' idProyecto %}" class="btn boton-color" role="button">Agregar
+                miembro</a>
+            <a href="{% url 'proyectos:ver_proyecto' idProyecto %}" class="btn boton-color" role="button">Volver</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

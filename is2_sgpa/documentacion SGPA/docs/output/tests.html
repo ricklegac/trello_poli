@@ -1,0 +1,450 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Tests &mdash; documentación de SGPA - </title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/translations.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Búsqueda" href="search.html" />
+    <link rel="next" title="Shortcuts" href="shortcuts.html" />
+    <link rel="prev" title="Vistas" href="views.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> SGPA
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contenidos:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="models.html">Modelos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="views.html">Vistas</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tests</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#proyecto-tests-py">proyecto/tests.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#product-backlog-tests-py">product_backlog/tests.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#user-stories-tests-py">user_stories/tests.py</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="shortcuts.html">Shortcuts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="admin.html">Admins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="forms.html">Forms</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SGPA</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Tests</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/tests.rst.txt" rel="nofollow"> Ver código fuente de la página</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-proyecto.tests">
+<span id="tests"></span><h1>Tests<a class="headerlink" href="#module-proyecto.tests" title="Enlazar permanentemente con este título">¶</a></h1>
+<div class="section" id="proyecto-tests-py">
+<h2>proyecto/tests.py<a class="headerlink" href="#proyecto-tests-py" title="Enlazar permanentemente con este título">¶</a></h2>
+<p>Pruebas unitarias de la App de Proyectos</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="proyecto.tests.SetupClass">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">proyecto.tests.</span></span><span class="sig-name descname"><span class="pre">SetupClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#proyecto.tests.SetupClass" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Date: 24/08/2021</p>
+<p>Clase para generar datos base para poder probar las funcionalidades.
+Crea un usuario y un proyecto al que tiene acceso.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="proyecto.tests.SetupClass.setUp">
+<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#proyecto.tests.SetupClass.setUp" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Date: 24/08/2021</p>
+<p>Realiza las acciones mencionadas.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="proyecto.tests.TestsVistasProyectos">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">proyecto.tests.</span></span><span class="sig-name descname"><span class="pre">TestsVistasProyectos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#proyecto.tests.TestsVistasProyectos" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Date: 24/08/2021</p>
+<p>Clase con pruebas sobre las funcionalidades de modificación de proyectos</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="proyecto.tests.TestsVistasProyectos.test_eliminar_miembro">
+<span class="sig-name descname"><span class="pre">test_eliminar_miembro</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#proyecto.tests.TestsVistasProyectos.test_eliminar_miembro" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Date: 01-09-2021</p>
+<p>Para probar si funciona correctamente la vista de eliminar un usuario del proyecto</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="proyecto.tests.TestsVistasProyectos.test_modificar_permisos_rol">
+<span class="sig-name descname"><span class="pre">test_modificar_permisos_rol</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#proyecto.tests.TestsVistasProyectos.test_modificar_permisos_rol" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Date: 03-09-2021</p>
+<p>Para probar si funciona correctamente la vista</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="proyecto.tests.TestsVistasProyectos.test_modificar_proyecto">
+<span class="sig-name descname"><span class="pre">test_modificar_proyecto</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#proyecto.tests.TestsVistasProyectos.test_modificar_proyecto" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Date: 24/08/2021</p>
+<p>Para probar si funciona correctamente la vista de modificar proyecto</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="proyecto.tests.TestsVistasProyectos.test_modificar_rol">
+<span class="sig-name descname"><span class="pre">test_modificar_rol</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#proyecto.tests.TestsVistasProyectos.test_modificar_rol" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Date: 03-09-2021</p>
+<p>Para probar si funciona correctamente la vista</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="proyecto.tests.TestsVistasProyectos.test_usuario_puede_ver_modificar_proyecto">
+<span class="sig-name descname"><span class="pre">test_usuario_puede_ver_modificar_proyecto</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#proyecto.tests.TestsVistasProyectos.test_usuario_puede_ver_modificar_proyecto" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Date: 24/08/2021</p>
+<p>Para probar si el usuario establecido en <cite>Setup_Class</cite> puede ver el template de modificar proyecto</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="proyecto.tests.TestsVistasProyectos.test_usuario_puede_ver_proyecto">
+<span class="sig-name descname"><span class="pre">test_usuario_puede_ver_proyecto</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#proyecto.tests.TestsVistasProyectos.test_usuario_puede_ver_proyecto" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Date: 24/08/2021</p>
+<p>Para probar si el usuario establecido en <cite>Setup_Class</cite> puede ver su proyecto</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="proyecto.tests.proyecto_1">
+<span class="sig-prename descclassname"><span class="pre">proyecto.tests.</span></span><span class="sig-name descname"><span class="pre">proyecto_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#proyecto.tests.proyecto_1" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Date: 23/08/2021</p>
+<p>Fixture para crear un nuevo proyecto</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="proyecto.tests.test_crear_proyecto">
+<span class="sig-prename descclassname"><span class="pre">proyecto.tests.</span></span><span class="sig-name descname"><span class="pre">test_crear_proyecto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">proyecto_1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#proyecto.tests.test_crear_proyecto" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Date: 23/08/2021</p>
+<p>Test para probar la funcionalidad de crear un proyecto</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><p><strong>proyecto_1</strong> – Recibe el proyecto nuevo</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="proyecto.tests.test_eliminar_proyecto_auth">
+<span class="sig-prename descclassname"><span class="pre">proyecto.tests.</span></span><span class="sig-name descname"><span class="pre">test_eliminar_proyecto_auth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_user</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proyecto_fixture</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#proyecto.tests.test_eliminar_proyecto_auth" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Date: 01-09-2021</p>
+<p>Probar la vista eliminar proyecto cuando el usuario ya inicio sesion y tiene los permisos
+El comportamiento es que deberia eliminar el objeto y luego redireccionar al dashboard</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="proyecto.tests.test_eliminar_proyecto_auth_no_perms">
+<span class="sig-prename descclassname"><span class="pre">proyecto.tests.</span></span><span class="sig-name descname"><span class="pre">test_eliminar_proyecto_auth_no_perms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_user</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proyecto_fixture</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#proyecto.tests.test_eliminar_proyecto_auth_no_perms" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Date: 01-09-2021</p>
+<p>Probar la vista eliminar proyecto cuando el usuario ya inicio sesion pero no tiene permiso
+El comportamiento es que deberia retornar 404</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="proyecto.tests.test_eliminar_proyecto_not_auth">
+<span class="sig-prename descclassname"><span class="pre">proyecto.tests.</span></span><span class="sig-name descname"><span class="pre">test_eliminar_proyecto_not_auth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_user</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proyecto_fixture</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#proyecto.tests.test_eliminar_proyecto_not_auth" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Date: 01-09-2021</p>
+<p>Probar la vista eliminar_proyecto cuando el usuario no inicio sesion y hace get directo del link.
+El comportamiento es que deberia redireccionar a <a class="reference external" href="http://127.0.0.1:8000/?next=/proyecto">http://127.0.0.1:8000/?next=/proyecto</a>/&lt;int:proyecto_id&gt;/eliminar/</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="proyecto.tests.test_miembros_auth">
+<span class="sig-prename descclassname"><span class="pre">proyecto.tests.</span></span><span class="sig-name descname"><span class="pre">test_miembros_auth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_user</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proyecto_fixture</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#proyecto.tests.test_miembros_auth" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Date: 01-09-2021</p>
+<p>Probar la vista miembros cuando el usuario ya inicio sesion y tiene permiso de ver proyecto, hace get directo.
+El comportamiento es que deberia retornar el template</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="proyecto.tests.test_miembros_auth_no_perms">
+<span class="sig-prename descclassname"><span class="pre">proyecto.tests.</span></span><span class="sig-name descname"><span class="pre">test_miembros_auth_no_perms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_user</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proyecto_fixture</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#proyecto.tests.test_miembros_auth_no_perms" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Date: 01-09-2021</p>
+<p>Probar la vista miembros cuando el usuario ya inicio sesion pero no tiene permiso de ver proyecto y hace get directo.
+El comportamiento es que deberia retornar 404</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="proyecto.tests.test_miembros_not_auth">
+<span class="sig-prename descclassname"><span class="pre">proyecto.tests.</span></span><span class="sig-name descname"><span class="pre">test_miembros_not_auth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_user</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proyecto_fixture</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#proyecto.tests.test_miembros_not_auth" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Date: 01-09-2021</p>
+<p>Probar la vista miembros cuando el usuario no inicio sesion y hace get directo del link.
+El comportamiento es que deberia redireccionar a <a class="reference external" href="http://127.0.0.1:8000/?next=/proyecto">http://127.0.0.1:8000/?next=/proyecto</a>/&lt;int:proyecto_id&gt;/miembros/</p>
+</dd></dl>
+
+</div>
+<span class="target" id="module-product_backlog.tests"></span><div class="section" id="product-backlog-tests-py">
+<h2>product_backlog/tests.py<a class="headerlink" href="#product-backlog-tests-py" title="Enlazar permanentemente con este título">¶</a></h2>
+<p>Pruebas unitarias de la App product_backlog</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="product_backlog.tests.SetupClass">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">product_backlog.tests.</span></span><span class="sig-name descname"><span class="pre">SetupClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#product_backlog.tests.SetupClass" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Date: 08/09/2021</p>
+<p>Clase para generar datos base para poder probar las funcionalidades.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="product_backlog.tests.SetupClass.setUp">
+<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product_backlog.tests.SetupClass.setUp" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Date: 08/09/2021</p>
+<p>Crea un usuario con permisos sobre el Product Backlog.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="product_backlog.tests.TestsVistasProductBacklog">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">product_backlog.tests.</span></span><span class="sig-name descname"><span class="pre">TestsVistasProductBacklog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#product_backlog.tests.TestsVistasProductBacklog" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Date: 08/09/2021</p>
+<p>Clase con pruebas sobre las funcionalidades del Product Backlog</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="product_backlog.tests.TestsVistasProductBacklog.test_usuario_puede_agregar_us_al_product_backlog">
+<span class="sig-name descname"><span class="pre">test_usuario_puede_agregar_us_al_product_backlog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product_backlog.tests.TestsVistasProductBacklog.test_usuario_puede_agregar_us_al_product_backlog" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Date: 08/09/2021</p>
+<p>Para probar si el usuario puede agregar un US al Product Backlog</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="product_backlog.tests.TestsVistasProductBacklog.test_usuario_puede_eliminar_us_del_product_backlog">
+<span class="sig-name descname"><span class="pre">test_usuario_puede_eliminar_us_del_product_backlog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product_backlog.tests.TestsVistasProductBacklog.test_usuario_puede_eliminar_us_del_product_backlog" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Date: 08/09/2021</p>
+<p>Para probar si el usuario puede eliminar un US del Product Backlog</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="product_backlog.tests.TestsVistasProductBacklog.test_usuario_puede_modificar_us_del_product_backlog">
+<span class="sig-name descname"><span class="pre">test_usuario_puede_modificar_us_del_product_backlog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product_backlog.tests.TestsVistasProductBacklog.test_usuario_puede_modificar_us_del_product_backlog" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Date: 08/09/2021</p>
+<p>Para probar si el usuario puede modificar un US del Product Backlog</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="product_backlog.tests.TestsVistasProductBacklog.test_usuario_puede_ver_product_backlog">
+<span class="sig-name descname"><span class="pre">test_usuario_puede_ver_product_backlog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product_backlog.tests.TestsVistasProductBacklog.test_usuario_puede_ver_product_backlog" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Date: 08/09/2021</p>
+<p>Para probar si el usuario puede ver el Product Backlog</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<span class="target" id="module-historial_user_stories.tests"></span><div class="section" id="user-stories-tests-py">
+<h2>user_stories/tests.py<a class="headerlink" href="#user-stories-tests-py" title="Enlazar permanentemente con este título">¶</a></h2>
+<p>Pruebas unitarias para el historial de user stories</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="historial_user_stories.tests.SetupClass">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">historial_user_stories.tests.</span></span><span class="sig-name descname"><span class="pre">SetupClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#historial_user_stories.tests.SetupClass" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Date: 13/09/2021</p>
+<p>Clase para generar datos base para poder probar las funcionalidades.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="historial_user_stories.tests.SetupClass.setUp">
+<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#historial_user_stories.tests.SetupClass.setUp" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Date: 13/09/2021</p>
+<p>Crea un usuario con permisos sobre el Historial de User Stories.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="historial_user_stories.tests.TestsVistasHistorialUserStories">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">historial_user_stories.tests.</span></span><span class="sig-name descname"><span class="pre">TestsVistasHistorialUserStories</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#historial_user_stories.tests.TestsVistasHistorialUserStories" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Date: 13/09/2021</p>
+<p>Clase con pruebas sobre las funcionalidades del Historial de User Stories</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="historial_user_stories.tests.TestsVistasHistorialUserStories.test_usuario_puede_ver_historial_un_us">
+<span class="sig-name descname"><span class="pre">test_usuario_puede_ver_historial_un_us</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#historial_user_stories.tests.TestsVistasHistorialUserStories.test_usuario_puede_ver_historial_un_us" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Date: 13/09/2021</p>
+<p>Para probar si el usuario puede ver el Historial de un User Story</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="historial_user_stories.tests.TestsVistasHistorialUserStories.test_usuario_puede_ver_historial_us">
+<span class="sig-name descname"><span class="pre">test_usuario_puede_ver_historial_us</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#historial_user_stories.tests.TestsVistasHistorialUserStories.test_usuario_puede_ver_historial_us" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Date: 13/09/2021</p>
+<p>Para probar si el usuario puede ver el Historial de User Stories</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="shortcuts.html" class="btn btn-neutral float-right" title="Shortcuts" accesskey="n" rel="next">Siguiente <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="views.html" class="btn btn-neutral float-left" title="Vistas" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; GRUPO 1
+
+    </p>
+  </div>
+    
+    
+    
+    Construido con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

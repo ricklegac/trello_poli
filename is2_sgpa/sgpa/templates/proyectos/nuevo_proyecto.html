@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br>
+<div class="container-fluid">
+    <ins>
+        <h3 align="center"> Datos del Proyecto </h3>
+    </ins>
+    <br>
+    <div class="row">
+        <div class="col-md-3">
+
+        </div>
+        <div class="col-md-6">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p}}
+                <button type="submit" class="btn boton-color"> Guardar Proyecto </button>
+                <a class="btn btn-outline-secondary" href="{% url 'proyectos:listar_proyectos' %}"> Cancelar </a>
+            </form>
+        </div>
+        <div class="col-md-3">
+
+        </div>
+    </div>
+</div>
+{% endblock %}

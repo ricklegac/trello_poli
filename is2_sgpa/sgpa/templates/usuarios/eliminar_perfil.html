@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4">
+
+        </div>
+        <div class="col-md-4">
+            <form method="POST">
+                {% csrf_token %}
+                <h3>Estás a punto de eliminar el perfil del siguiente usuario:</h3>
+                <div class="form-group">
+                    <label class="col-form-label">Nombre:</label>
+                    <input class="form-control" id="readOnlyInput" type="text"
+                        placeholder="{{ perfil.user.first_name }}" readonly="">
+                </div>
+                <div class="form-group">
+                    <label class="col-form-label">Apellido:</label>
+                    <input class="form-control" id="readOnlyInput" type="text" placeholder="{{ perfil.user.last_name }}"
+                        readonly="">
+                </div>
+                <div class="form-group">
+                    <label class="col-form-label">Email:</label>
+                    <input class="form-control" id="readOnlyInput" type="text" placeholder="{{ perfil.user.email }}"
+                        readonly="">
+                </div><br>
+                <button type="submit" class="btn btn-danger">Confirmar</button>
+                <a class="btn boton-color" href="{% url 'usuarios:listar_perfiles' %}">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

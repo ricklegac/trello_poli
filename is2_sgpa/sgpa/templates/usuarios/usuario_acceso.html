@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br>
+<div class="container">
+    {% if perfiles %}
+    <table class="table">
+        <thead>
+            <tr class="table-primary">
+                <th scope="col">Id</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Apellido</th>
+                <th scope="col">Email</th>
+                <th scope="col">CI</th>
+                <th scope="col">Teléfono</th>
+                <th scope="col">Acceso</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for perfil in perfiles %}
+            <tr>
+                <td style="vertical-align:middle;">{{perfil.id}}</td>
+                <td style="vertical-align:middle;">{{perfil.user.first_name}}</td>
+                <td style="vertical-align:middle;">{{perfil.user.last_name}} </td>
+                <td style="vertical-align:middle;">{{perfil.user.email}}</td>
+                <td style="vertical-align:middle;">{{perfil.ci}}</td>
+                <td style="vertical-align:middle;">{{perfil.telefono}}</td>
+                <td><a href="{% url 'usuarios:conceder_acceso' perfil.id%}" class="btn boton-color"
+                        role="button">Conceder</a></td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <h2>No hay solicitudes de acceso al sistema</h2>
+            <a href="{% url 'usuarios:home' %}" class="btn boton-color btn-lg">Volver</a>
+            {% endif %}
+           
+        </tbody>
+    </table>
+    <a class="btn boton-color " href="{% url 'usuarios:administrador' %}"> Volver </a>
+</div>
+{% endblock %}

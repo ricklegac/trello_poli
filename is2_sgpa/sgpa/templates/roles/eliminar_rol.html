@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4">
+
+        </div>
+        <div class="col-md-4">
+            <form method="POST">
+                {% csrf_token %}
+                <h3>Estás a punto de eliminar el siguiente rol:</h3>
+                <div class="form-group">
+                    <label class="col-form-label">Nombre:</label>
+                    <input class="form-control" id="readOnlyInput" type="text" placeholder="{{ rol.nombre }}"
+                        readonly="">
+                    <label class="col-form-label">Permisos:</label>
+                    {% if rol.grupo.permissions.all %}
+                    <br>
+                    {% for permiso in rol.grupo.permissions.all %}
+                    {{ permiso.name }}
+                    <br><br>
+                    {% endfor %}
+                    {% endif %}
+
+                </div>
+                <button type="submit" class="btn btn-danger">Confirmar</button>
+                <a class="btn boton-color" href="{% url 'roles:listar_roles' idProyecto %}">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

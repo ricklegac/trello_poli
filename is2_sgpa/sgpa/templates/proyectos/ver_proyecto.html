@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br>
+<div class="container-fluid">
+    {% if messages %}
+    {% for message in messages %}
+    {% if 'error' in message.tags %}
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {{ message }}
+    </div>
+    {% endif %}
+    {% if 'info' in message.tags %}
+    <div class="alert alert-dismissible alert-info" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {{ message }}
+    </div>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+    <h2 align="center">Detalles del Proyecto</h2><br>
+    <div class="row">
+        <div class="col-md-5">
+            <ins>
+                <h3 align="center">Información</h3>
+            </ins>
+            <table class="table table-light table-hover">
+                <tbody>
+                    <tr>
+                        <th class="table-light">Nombre:</th>
+                        <td>{{proyecto.nombre}}</td>
+                    </tr>
+                    <tr>
+                        <th class="table-light">Descripción:</th>
+                        <td>{{proyecto.descripcion}}</td>
+                    </tr>
+                    <tr>
+                        <th class="table-light">Scrum Master:</th>
+                        <td>{{proyecto.scrumMaster}}</td>
+                    </tr>
+                    <tr>
+                        <th class="table-light">Creación:</th>
+                        <td>{{proyecto.fechaCreacion}}</td>
+                    </tr>
+                    <tr>
+                        <th class="table-light">Estado:</th>
+                        <td>{{proyecto.estado}}</td>
+                    </tr>
+                    {% if proyecto.estado != 'Pendiente' %}
+                    <tr>
+                        <th class="table-light">Fecha de Inicio:</th>
+                        <td>{{proyecto.fechaInicio}}</td>
+                    </tr>
+                    {% endif %}
+                    {% if proyecto.estado == 'Finalizado' or proyecto.estado == 'Cancelado' %}
+                    <tr>
+                        <th class="table-light">Fecha de Finalización:</th>
+                        <td>{{proyecto.fechaFin}}</td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-7">
+            <ins>
+                <h3 align="center">Miembros</h3>
+            </ins>
+            {% if miembros %}
+            <table class="table table-hover">
+                <thead>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Apellido</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">CI</th>
+                    <th scope="col">Teléfono</th>
+                </thead>
+                <tbody>
+                    {% for miembro in miembros %}
+                    <tr>
+                        <td>{{miembro.idPerfil.user.first_name}}</td>
+                        <td>{{miembro.idPerfil.user.last_name}}</td>
+                        <td>{{miembro.idPerfil.user.email}}</td>
+                        <td>{{miembro.idPerfil.ci}}</td>
+                        <td>{{miembro.idPerfil.telefono}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <h4>No existen miembros asociados al proyecto</h4>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row text-center">
+
+        <div class="col-md-12">
+
+            {% if user.id == proyecto.scrumMaster.user.id%}
+
+            <a href="{% url 'proyectos:ver_historial' proyecto.id %}" class="btn btn-info" role="button">Historial</a>
+
+            {% if proyecto.estado == 'Finalizado' or proyecto.estado == 'Cancelado' %}
+
+
+            {% else %}
+            {% if proyecto.estado == 'Pendiente' %}
+            <a href="{% url 'proyectos:listar_sprints' proyecto.id %}">Sprints</a>
+            <a href="{% url 'proyectos:iniciar_proyecto' proyecto.id %}" class="btn btn-success"
+                role="button">Iniciar</a>
+            {% elif proyecto.estado == 'Iniciado'%}
+            <a href="{% url 'proyectos:finalizar_proyecto' proyecto.id %}" class="btn btn-success"
+                role="button">Finalizar</a>
+            <a href="{% url 'proyectos:cancelar_proyecto' proyecto.id %}" class="btn btn-danger"
+                role="button">Cancelar</a>
+            <h3>Cancelar Sprint</h3>
+            {% endif %}
+
+            <a href="{% url 'proyectos:modificar_proyecto' proyecto.id %}" class="btn btn-primary">Modificar
+                Proyecto</a>
+            <a href="{% url 'miembros:listar' proyecto.id %}" class="btn btn-primary" role="button">Miembros</a>
+            <a href="{% url 'tareas:listar_tareas' proyecto.id %}" class="btn btn-primary" role="button">Product
+                Backlog</a>
+            <a href="{% url 'roles:listar_roles' proyecto.id %}" class="btn btn-primary" role="button">Roles</a>
+            {% endif %}
+            {% endif %}
+
+
+        </div>
+    </div>
+    <br>
+</div>
+{% endblock %}

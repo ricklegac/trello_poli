@@ -1,0 +1,82 @@
+{% load static %}
+<!doctype html>
+
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/principal.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+        integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title> SGPA </title>
+</head>
+
+
+<body id="body-pd">
+    {% block navbar %}
+    <header class="header" id="header">
+        <div class="header_toggle"> <i class='bx bx-menu' id="header-toggle"></i> </div>
+
+
+
+        <div>
+            <h3 class="nav nav_name">{{user.first_name}}</h1>
+        </div>
+
+
+    </header>
+    <div class="l-navbar" id="nav-bar">
+        <nav class="nav">
+            <div>
+                <a href="#" class="nav_logo"> <i class='bx bx-layer nav_logo-icon'></i> <span
+                        class="nav_logo-name">SGPA</span> </a>
+                {% if perms.usuarios.acceso_usuario %}
+                <div class="nav_list">
+                    {% if not perms.usuarios.autorizar_usuario %}
+                    <a href="{% url 'usuarios:proyectos_usuario' user.id%}" class="nav_link"><i
+                            class='bx bx-grid-alt nav_icon'></i>
+                        <span class="nav_name">Dashboard</span> </a>
+                    <a href="{% url 'usuarios:editar_perfilGeneral' user.id%}" class="nav_link"> <i
+                            class='bx bx-user nav_icon'></i>
+                        <span class="nav_name">Perfil</span> </a>
+                    <a href="{% url 'proyectos:proy'%}" class="nav_link"> <i
+                            class='bx bx-message-square-detail nav_icon'></i>
+                        <span class="nav_name">Tareas</span> </a>
+                    <a href="#" class="nav_link"> <i class='bx bx-bar-chart-alt-2 nav_icon'></i>
+                        <span class="nav_name">Burdownchart</span> </a>
+                    {% elif perms.usuarios.autorizar_usuario %}
+                    <a href="{% url 'usuarios:administrador' %}" class="nav_link"> <i class="fas fa-users-cog"></i>
+                        <span class="nav_name">Administrador</span> </a>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+            <a href="{% url 'logout' %}" class="nav_link"> <i class='bx bx-log-out nav_icon'></i> <span
+                    class="nav_name">LogOut</span> </a>
+        </nav>
+    </div>
+    {% endblock %}
+    <!--Container Main start-->
+    <div class=" bg-light">
+        {% block content %}
+
+        {% endblock %}
+    </div>
+    <!--Container Main end-->
+
+
+
+
+    <script src="{% static 'js/navegacion.js'%}"></script>
+    <script src="{% static 'js/bootstrap.min.js'%}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"
+        integrity="sha512-Tn2m0TIpgVyTzzvmxLNuqbSJH3JP8jm+Cy3hvHrW7ndTDcJ1w5mBiksqDBb8GpE2ksktFvDB/ykZ0mDpsZj20w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</body>
+
+</html>

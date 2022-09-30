@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+<br>
+
+    <div class="container-fluid" >
+        <h2 align="center">Administración del Sistema</h2><br>
+        <div class="row" align="center">
+            <div class="col">
+                {% if proyectos %}       
+                <div class="float-right" align="center">              
+                    <a class="btn btn-info" role="button" href="{% url 'proyectos:listar_proyectos' %}">Proyectos</a>
+                </div>
+                {% else %}
+                <h4>Aún no existen proyectos creados</h4>
+                <a class="btn boton-color" role="button" href="{% url 'proyectos:nuevo_proyecto' %}">Crear Proyecto</a>
+                {% endif %}
+            </div>
+            <div class="col">
+                {% if perfilesAcceso %}
+                <div class="float-right" align="center">
+                    <a class="btn btn-info btn-block" role="button" href="{% url 'usuarios:lista_acceso' %}">Acceso</a>
+                </div>   
+                {% else %}
+                <h4>No hay solicitudes de acceso al sistema</h4>
+                {% endif %}
+            </div>
+            <div class="col">
+            <a class="btn btn-info btn-block" role="button" href="{% url 'usuarios:listar_perfiles' %}">Ver Usuarios</a>
+            </div>
+        </div>
+    </div> 
+
+{% endblock %}

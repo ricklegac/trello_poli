@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+{% load filtros_proyectos %}
+{% block content%}
+<br>
+<div class="container-fluid">
+    {% if messages %}
+    {% for message in messages %}
+    {% if 'error' in message.tags %}
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {% autoescape off %}
+        {{ message }}
+        {% endautoescape %}
+    </div>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+    <h3 align="center">Fase: {{fase.nombre}}</h3>
+    <br>
+    <div class="row">
+        <div class="col-md-4">
+            <ins>
+                <h4 align="center">Información General</h4>
+            </ins>
+            <table class="table table-light">
+                <tbody>
+                    <tr>
+                        <th class="table-primary">Nombre:</th>
+                        <td>{{fase.nombre}}</td>
+                    </tr>
+                    <tr>
+                        <th class="table-primary">Estado:</th>
+                        <td>{{fase.estado}}</td>
+                    </tr>
+                    <tr>
+                        <th class="table-primary">Num. Ítems:</th>
+                        <td>{{fase.numItems}}</td>
+                    </tr>
+                    <tr>
+                        <th class="table-primary">Num. LB</th>
+                        <td>{{fase.numLB}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-4">
+            <ins>
+                <h4 align="center">Tipos de Ítems Asociados</h4>
+            </ins>
+            {% if tipos %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tipo in tipos %}
+                    <tr>
+                        <td><a
+                                href="{% url 'items:listar_items' fase.proyecto.id fase.id tipo.id %}">{{tipo.nombre}}</a>
+                        </td>
+                        <td>{{tipo.descripcion}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <h4>No existen tipos de ítems asociados</h4>
+            {% endif %}
+        </div>
+        <div class="col-md-4">
+            <ins>
+                <h4 align="center">Tipos de Ítem sin Asociar</h4>
+            </ins>
+            {% if tiposSF %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tipo in tiposSF %}
+                    <tr>
+                        <td>{{tipo.nombre}}</td>
+                        <td>{{tipo.descripcion}}</td>
+                        <td><a href="{% url 'proyectos:add_tipoItem' fase.proyecto.id fase.id tipo.id%}"
+                                class="btn btn-primary" role="button">Asociar</a> </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <h4>No existen tipos de ítems sin asociar</h4>
+            {% endif %}
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-4">
+            <ins>
+                <h4 align="center">Líneas Base</h4>
+            </ins>
+            {% if lbs %}
+            <table class="table">
+                <thead>
+                    <th>Línea Base</th>
+                    <th>Estado</th>
+                    <th>Responsable</th>
+                </thead>
+                <tbody>
+                    {% for lb in lbs %}
+                    <tr>
+                        <td><a href="{% url 'proyectos:ver_lb' fase.proyecto.id fase.id lb.id %}">{{lb.nombre}}</a></td>
+                        <td>{{lb.estado}}</td>
+                        <td>{{lb.creador.first_name}} {{lb.creador.last_name}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <h5>Aún no se han definido líneas base.</h5>
+            {% endif %}
+        </div>
+        <div class="col-md-4">
+            <ins>
+                <h4 align="center">Miembros de la Fase</h4>
+            </ins>
+            {% if miembros %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for miembro in miembros %}
+                    <tr>
+                        <td>{{miembro.first_name}}</td>
+                        <td>{{miembro.last_name}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <h5>No existen miembros asociados</h5>
+            {% endif %}
+        </div>
+        <div class="col-md-4">
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12" align="right">
+            {% if fase.estado == 'Abierta' %}
+            {% if request.user|crear_lb:fase.id %}
+            <a href="{% url 'proyectos:crear_LB' fase.proyecto.id fase.id %}" class="btn btn-success"
+                role="button">Crear LB</a>
+            {% endif %}
+            {% if request.user.id == fase.proyecto.gerente.id %}
+            <a href="{% url 'proyectos:cerrar_fase'  fase.proyecto.id fase.id %}" class="btn btn-danger"
+                role="button">Finalizar</a>
+            {% endif %}
+            {% endif %}
+            {% if request.user.id == fase.proyecto.gerente.id %}
+            <a href="{% url 'proyectos:reporte_LB' fase.proyecto.id fase.id %}" class="btn btn-info"
+                role="button">Reporte LB</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12" align="center">
+            <a href="{% url 'proyectos:listar_fases' fase.proyecto.id %}" class="btn btn-primary">Volver</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

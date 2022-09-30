@@ -1,0 +1,411 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Shortcuts &mdash; documentación de SGPA - </title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/translations.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Búsqueda" href="search.html" />
+    <link rel="next" title="Admins" href="admin.html" />
+    <link rel="prev" title="Tests" href="tests.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> SGPA
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contenidos:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="models.html">Modelos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="views.html">Vistas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tests.html">Tests</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Shortcuts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#rol-shortcuts-py">rol/shortcuts.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#product-backlog-shortcuts-py">product_backlog/shortcuts.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#historial-user-stories-shortcuts-py">historial_user_stories/shortcuts.py</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="admin.html">Admins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="forms.html">Forms</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SGPA</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Shortcuts</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/shortcuts.rst.txt" rel="nofollow"> Ver código fuente de la página</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-rol.shortcuts">
+<span id="shortcuts"></span><h1>Shortcuts<a class="headerlink" href="#module-rol.shortcuts" title="Enlazar permanentemente con este título">¶</a></h1>
+<div class="section" id="rol-shortcuts-py">
+<h2>rol/shortcuts.py<a class="headerlink" href="#rol-shortcuts-py" title="Enlazar permanentemente con este título">¶</a></h2>
+<p>shortcuts de la app rol</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="rol.shortcuts.crear_rol">
+<span class="sig-prename descclassname"><span class="pre">rol.shortcuts.</span></span><span class="sig-name descname"><span class="pre">crear_rol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nombre_rol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proyecto</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rol.shortcuts.crear_rol" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Obtener el nombre del rol, y el id del proyecto al que pertenece
+Crea un rol en un proyecto
+Date 02-09-2021.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nombre_rol</strong> – El nombre del rol</p></li>
+<li><p><strong>proyecto</strong> – El proyecto en el cual crear el rol</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rol.shortcuts.crear_roles_por_defecto">
+<span class="sig-prename descclassname"><span class="pre">rol.shortcuts.</span></span><span class="sig-name descname"><span class="pre">crear_roles_por_defecto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">proyecto</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rol.shortcuts.crear_roles_por_defecto" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Para comprobar si existe un rol en un proyecto</p>
+<p>Date 05-09-2021.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><p><strong>proyecto</strong> – El proyecto en el cual crear los roles por defecto</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rol.shortcuts.existe_rol">
+<span class="sig-prename descclassname"><span class="pre">rol.shortcuts.</span></span><span class="sig-name descname"><span class="pre">existe_rol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nombre_rol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proyecto</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rol.shortcuts.existe_rol" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Para comprobar si existe un rol en un proyecto</p>
+<blockquote>
+<div><p>Date 05-09-2021.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>nombre_rol: El nombre del rol
+proyecto: El proyecto en el cual verificar el rol</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rol.shortcuts.get_nombre_traducido">
+<span class="sig-prename descclassname"><span class="pre">rol.shortcuts.</span></span><span class="sig-name descname"><span class="pre">get_nombre_traducido</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rol</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#rol.shortcuts.get_nombre_traducido" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Obtener sólo el nombre del rol, sin el id del proyecto al que pertenece
+Date 02-09-2021.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><p><strong>rol</strong> – El rol</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rol.shortcuts.get_todos_los_roles">
+<span class="sig-prename descclassname"><span class="pre">rol.shortcuts.</span></span><span class="sig-name descname"><span class="pre">get_todos_los_roles</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rol.shortcuts.get_todos_los_roles" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Traer todos los roles de todos los proyectos
+Date 02-09-2021.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rol.shortcuts.get_todos_los_roles_excluyendo">
+<span class="sig-prename descclassname"><span class="pre">rol.shortcuts.</span></span><span class="sig-name descname"><span class="pre">get_todos_los_roles_excluyendo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_proyecto_excluido</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rol.shortcuts.get_todos_los_roles_excluyendo" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Traer todos los roles de todos los proyectos, menos del del proyecto recibido como argumento
+Date 02-09-2021.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><p><strong>proyecto</strong> – el proyecto a excluir</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rol.shortcuts.id_proyecto_rol">
+<span class="sig-prename descclassname"><span class="pre">rol.shortcuts.</span></span><span class="sig-name descname"><span class="pre">id_proyecto_rol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rol</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#rol.shortcuts.id_proyecto_rol" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Obtener sólo la id del proyecto al que pertenece este rol
+Date 02-09-2021.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><p><strong>rol</strong> – El rol</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rol.shortcuts.importar_rol">
+<span class="sig-prename descclassname"><span class="pre">rol.shortcuts.</span></span><span class="sig-name descname"><span class="pre">importar_rol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proyecto_destino</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proyecto_original</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rol.shortcuts.importar_rol" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Importar un rol de otro proyecto
+Date 02-09-2021.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rol</strong> – El rol a importar</p></li>
+<li><p><strong>proyecto_destino</strong> – El proyecto en el cual importar</p></li>
+<li><p><strong>proyecto_original</strong> – El proyecto del cual exportar</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rol.shortcuts.proyecto_del_rol">
+<span class="sig-prename descclassname"><span class="pre">rol.shortcuts.</span></span><span class="sig-name descname"><span class="pre">proyecto_del_rol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rol</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="models.html#proyecto.models.Proyecto" title="proyecto.models.Proyecto"><span class="pre">proyecto.models.Proyecto</span></a></span></span><a class="headerlink" href="#rol.shortcuts.proyecto_del_rol" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Obtener el proyecto al que pertenece el rol
+Date 05-09-2021.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><p><strong>rol</strong> – El rol del cual obtener el proyecto al que pertenece</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rol.shortcuts.traducir_nombre">
+<span class="sig-prename descclassname"><span class="pre">rol.shortcuts.</span></span><span class="sig-name descname"><span class="pre">traducir_nombre</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nombre_rol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proyecto</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#rol.shortcuts.traducir_nombre" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Traducir el nombre de un rol a como se guarda en el sistema
+Date 02-09-2021.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nombre_rol</strong> – El nombre del rol</p></li>
+<li><p><strong>proyecto</strong> – El proyecto al que pertenece el rol</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<span class="target" id="module-product_backlog.shortcuts"></span><div class="section" id="product-backlog-shortcuts-py">
+<h2>product_backlog/shortcuts.py<a class="headerlink" href="#product-backlog-shortcuts-py" title="Enlazar permanentemente con este título">¶</a></h2>
+<p>shortcuts de la App product_backlog</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="product_backlog.shortcuts.backlog_agregar_us">
+<span class="sig-prename descclassname"><span class="pre">product_backlog.shortcuts.</span></span><span class="sig-name descname"><span class="pre">backlog_agregar_us</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_story</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proyecto</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#product_backlog.shortcuts.backlog_agregar_us" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Agrega una User Story al Product Backlog de un Proyecto. También le añade numeración automática.</p>
+<p>Date: 07-09-2021.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>user_story</strong> – La US a agregar (debe contener su descripción y su prioridad)</p></li>
+<li><p><strong>proyecto</strong> – El proyecto en el cual agregar la US</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="product_backlog.shortcuts.get_backlog_ustories">
+<span class="sig-prename descclassname"><span class="pre">product_backlog.shortcuts.</span></span><span class="sig-name descname"><span class="pre">get_backlog_ustories</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">proyecto</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#product_backlog.shortcuts.get_backlog_ustories" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Obtener todas las user stories del product backlog.</p>
+<p>Date: 06-09-2021.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><p><strong>proyecto</strong> – El proyecto del cual obtener todas las US</p>
+</dd>
+<dt class="field-even">Devuelve</dt>
+<dd class="field-even"><p>Las User Stories que pertenecen al product backlog del proyecto</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<span class="target" id="module-historial_user_stories.shortcuts"></span><div class="section" id="historial-user-stories-shortcuts-py">
+<h2>historial_user_stories/shortcuts.py<a class="headerlink" href="#historial-user-stories-shortcuts-py" title="Enlazar permanentemente con este título">¶</a></h2>
+<p>shortcuts de la App historial_user_stories</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="historial_user_stories.shortcuts.get_diff_historial">
+<span class="sig-prename descclassname"><span class="pre">historial_user_stories.shortcuts.</span></span><span class="sig-name descname"><span class="pre">get_diff_historial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_story</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proyecto</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#historial_user_stories.shortcuts.get_diff_historial" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Devuelve una lista con el historial del US junto con los cambios que tuvo</p>
+<p>Date: 13-09-2021.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>proyecto</strong> – El proyecto del cual ver el historial diferenciado del US</p></li>
+<li><p><strong>user_story</strong> – El US del cual ver su historial diferenciado</p></li>
+</ul>
+</dd>
+<dt class="field-even">Devuelve</dt>
+<dd class="field-even"><p>Lista <code class="docutils literal notranslate"><span class="pre">[historia,</span> <span class="pre">cambios]</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="admin.html" class="btn btn-neutral float-right" title="Admins" accesskey="n" rel="next">Siguiente <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="tests.html" class="btn btn-neutral float-left" title="Tests" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; GRUPO 1
+
+    </p>
+  </div>
+    
+    
+    
+    Construido con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

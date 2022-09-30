@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content%}
+<br>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3">
+
+        </div>
+        <div class="col-md-6">
+            <ins>
+                <h4 align="center">Historial de cambios</h4>
+            </ins>
+            <table class="table">
+                <tbody>
+                    {% for msj in mensajes %}
+                    <tr>
+                        <td>{{msj}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-3">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <p align="center">
+                <a href="{% url 'proyectos:ver_proyecto' idProyecto  %}" class="btn btn-primary"
+                    role="button">Volver</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

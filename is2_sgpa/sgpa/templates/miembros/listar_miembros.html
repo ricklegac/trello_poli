@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br>
+<div class="container-fluid">
+    <ins>
+        <h3 align="center">Miembros del proyecto</h3>
+    </ins>
+    <br>
+    <div class="row">
+        <div class="col-md-3">
+
+        </div>
+        <div class="col-md-6">
+            <table class="table">
+                <thead>
+                    <tr class="table-primary">
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Apellido</th>
+                        <th scope="col">Proyecto</th>
+                        <th scope="col">Accion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if object_list %}
+                    {% for miembros in object_list %}
+                    <tr>
+                        <td> {{ miembros.idPerfil.user.first_name }} </td>
+                        <td> {{ miembros.idPerfil.user.last_name }} </td>
+                        <td> {{ miembros.idProyecto.nombre }} </td>
+                        <td> <a class="btn btn-danger" href="{% url 'miembros:eliminar' miembros.id %}">Eliminar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% else %}
+                    <h3>No hay miembros</h3>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-3">
+
+        </div>
+    </div>
+</div>
+{% endblock %}

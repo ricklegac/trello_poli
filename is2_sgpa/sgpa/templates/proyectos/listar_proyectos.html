@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <ins>
+        <h3 align="center">Proyectos</h3>
+    </ins>
+    <br>
+    <div class="row">
+        <div class="col-md-1">
+
+        </div>
+        <div class="col-md-10">
+            {% if object_list %}
+            <table class="table">
+                <thead>
+                    <tr class="table-primary">
+                        <th scope="col">ID</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Descripcion</th>
+                        <th scope="col">Scrum Master</th>
+                        <th scope="col">Fecha de creacion</th>
+                        <th scope="col">Sprints</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if messages %}
+                    {% for message in messages %}
+                    {% if 'error' in message.tags %}
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        {{ message }}
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                    {% endif %}
+                    {% for proyecto in object_list%}
+                    <tr>
+                        <td>{{ proyecto.id }}</td>
+                        <td><a href="{% url 'proyectos:ver_proyecto' proyecto.id %}">
+                                {{ proyecto.nombre}} </a></td>
+                        <td>{{ proyecto.descripcion }}</td>
+                        <td>{{ proyecto.scrumMaster }}</td>
+                        <td>{{ proyecto.fechaCreacion }}</td>
+                        <td>{{ proyecto.numSprints }}</td>
+                        <td>{{ proyecto.estado }}</td>
+                        <td>
+                            <a class="btn btn-danger" role="button"
+                                href="{% url 'proyectos:eliminar_proyectos' proyecto.id %}"><i
+                                    class="fas fa-trash"></i></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <h3 align="center"> No existen proyectos creados </h3>
+            {% endif %}
+            <div align="right">
+                <a class="btn boton-color" href="{% url 'proyectos:nuevo_proyecto' %}"> Crear Proyecto </a>
+                <a class="btn boton-color" href="{% url 'usuarios:administrador' %}"> Volver </a>
+            </div>
+        </div>
+        <div class="col-md-1">
+
+        </div>
+    </div>
+</div>
+{% endblock %}

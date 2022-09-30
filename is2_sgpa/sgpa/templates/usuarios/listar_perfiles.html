@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br>
+<div class="container">
+    <ins>
+        <h3 align="center">Usuarios del Sistema</h3>
+    </ins>
+    <br>
+    <div class="row">
+        <div class="col-md-1">
+
+        </div>
+        <div class="col-md-10">
+            {% if object_list %}
+            <table class="table">
+                <thead>
+                    <tr class="table-primary">
+                        <th scope="col">Id</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Apellido</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">CI</th>
+                        <th scope="col">Teléfono</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if messages %}
+                    {% for message in messages %}
+                    {% if 'error' in message.tags %}
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        {{ message }}
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                    {% endif %}
+                    {% for perfil in object_list %}
+                    <tr>
+                        <td>{{perfil.id}}</td>
+                        <td>{{perfil.user.first_name}}</td>
+                        <td>{{perfil.user.last_name}} </td>
+                        <td>{{perfil.user.email}}</td>
+                        <td>{{perfil.ci}}</td>
+                        <td>{{perfil.telefono}}</td>
+                        <td><a class="btn boton-color" role="button"
+                                href="{% url 'usuarios:editar_perfil' perfil.id %}"><i class="fas fa-pen"></i></a>
+                            <a class="btn btn-danger" role="button"
+                                href="{% url 'usuarios:eliminar_perfil' perfil.id %}"><i class="fas fa-trash"></i></a>
+                        </td>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <p align="center">
+                <a class="btn boton-color" role="button" href="{% url 'usuarios:administrador'%}">Volver</a>
+            </p>
+            {% else %}
+            <h1>No hay perfiles</h1>
+            {% endif %}
+        </div>
+        <div class="col-md-1">
+
+        </div>
+    </div>
+</div>
+{% endblock %}

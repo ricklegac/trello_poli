@@ -1,0 +1,23 @@
+Vistas
+======
+
+.. automodule:: pantalla_inicial.views
+    :members:
+
+.. automodule:: login.views
+    :members:
+
+.. automodule:: proyecto.views
+    :members:
+
+.. automodule:: rol.views
+    :members:
+    
+.. automodule:: sprint.views
+    :members:
+
+.. automodule:: product_backlog.views
+    :members:
+
+.. automodule:: historial_user_stories.views
+    :members:

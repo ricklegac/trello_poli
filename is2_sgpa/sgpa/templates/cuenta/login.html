@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="login-container vh-100 d-flex flex-column justify-content-center align-items-center">
+    <div class="bg-white d-flex flex-column shadow-lg px-5 py-5 rounded-3 align-items-center justify-content-center">
+        <h4>SGPA</h4>
+        <h6>Sistema Gerenciador de Proyectos Ágiles</h6>
+        <hr class="h-divider mb-5">
+        <p class="lead text-center mb-5">¡Gestiona tus proyectos utilizando<br>
+            la metodología <span class="fst-italic">Scrum</span> y <span class="fst-italic">Kanban</span>!</p>
+        {% load socialaccount %}
+        {% get_providers as socialaccount_providers %}
+        {% for provider in socialaccount_providers %}
+        <a title="{{provider.name}}" class="h5 fw-bold text-white login-btn socialaccount_provider {{provider.id}}"
+            href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params action='reauthenticate'%}"
+            role="button">Iniciar Sesión</a>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
