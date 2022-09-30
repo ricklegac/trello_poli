@@ -1,6 +1,0 @@
-Modelos
-=======
-
-.. automodule:: proyecto.models
-    :members:
-    :special-members:
