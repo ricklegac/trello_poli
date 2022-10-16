@@ -2,11 +2,8 @@ import pytest
 import datetime
 from django.test import Client
 from django.contrib.auth.models import User
-from django.test.client import RequestFactory
-from django.contrib.messages.storage.fallback import FallbackStorage
-from proyectos.views import finalizarProyecto
 from usuarios.models import Perfil
-from proyectos.models import Proyecto, Sprint, UserStory
+from proyectos.models import Proyecto
 
 
 # --- Test Listar Proyectos --- #
@@ -22,33 +19,31 @@ def test_ListarProyecto():
     # Verifica que la vista responda correctamente a un pedido GET
     response = client.get("http://127.0.0.1:8000/proyectos/listar/")
 
-    print(response)
-
     assert response.status_code == 200
 
 
-# # --- Test Crear Proyecto --- #
-# # Verifica la creación de un proyecto
-# @pytest.mark.django_db
-# def test_CrearProyecto():
-#     usuario = User.objects.create_user("Won", "won@seo.com", "hyungwon")
-#     usuario.save()
-#     perfil = Perfil.objects.create(ci=108108, telefono=108108, user=usuario)
-#     perfil.save()
-#     proyecto = Proyecto.objects.create(
-#         nombre="Bartender",
-#         descripcion="Curso de Bartender",
-#         fechaCreacion=datetime.date.today(),
-#         numSprints=0,
-#         estado="Pendiente",
-#         scrumMaster=perfil,
-#     )
-#     assert Proyecto.objects.count() == 1
+# --- Test Crear Proyecto --- #
+# Verifica la creación de un proyecto
+@pytest.mark.django_db
+def test_CrearProyecto():
+    usuario = User.objects.create_user("Won", "won@seo.com", "hyungwon")
+    usuario.save()
+    perfil = Perfil.objects.create(ci=108108, telefono=108108, user=usuario)
+    perfil.save()
+    proyecto = Proyecto.objects.create(
+        nombre="Bartender",
+        descripcion="Curso de Bartender",
+        fechaCreacion=datetime.date.today(),
+        numSprints=0,
+        estado="Pendiente",
+        scrumMaster=perfil,
+    )
+    assert Proyecto.objects.count() == 1
 
 
-# # --- Test Finalizar Proyecto --- #
-# # Verifica la correcta finalizacion de un proyecto
-# @pytest.mark.django_db
+# --- Test Finalizar Proyecto --- #
+# Verifica la correcta finalizacion de un proyecto
+# @pytest.mark.django_db(transaction=True)
 # def test_FinalizarProyecto():
 #     usuario = User.objects.create_user("Won", "won@seo.com", "hyungwon")
 #     usuario.save()
