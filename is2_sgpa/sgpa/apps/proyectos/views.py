@@ -13,9 +13,10 @@ from proyectos.models import (
     Rol,
     Sprint,
     Historial,
+    TipoUserStory,
     UserStory,
 )
-from django.shortcuts import reverse, redirect, render, get_object_or_404
+from django.shortcuts import reverse, redirect, render
 from django.contrib.auth.models import Group, User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from proyectos.forms import (
@@ -24,11 +25,12 @@ from proyectos.forms import (
     ProyectoEdit_Form,
     Rol_Form,
     Sprint_Form,
+    TipoUserStoryForm,
     UserStoryEdit_Form,
     UserStoryForm,
 )
-from django.views.generic.edit import CreateView, UpdateView
-from django.contrib.auth.decorators import login_required, permission_required
+from django.views.generic.edit import CreateView
+from django.contrib.auth.decorators import login_required
 
 
 def base(request):
@@ -206,7 +208,6 @@ def iniciarProyecto(request, id_proyecto):
     contador = 0
     if len(sprints) == proyecto.numSprints:
         contador += 1
-        print("Existen Sprints xD")
     else:
         messages.add_message(
             request, messages.ERROR, "El sprint planning aún no fue realizado"
@@ -217,15 +218,12 @@ def iniciarProyecto(request, id_proyecto):
         for tareas in range(0, len(sprints)):
             if len(UserStory.objects.filter(sprint=sprints[tareas])) > 0:
                 contador += 1
-                print("Encontró US")
             else:
-                print("No se encontraron US")
                 messages.add_message(
                     request,
                     messages.ERROR,
                     "No se encontraron Historias de Usuario para este sprint",
                 )
-    print("Contador es igual a = ", contador)
     contador += 1
     if contador == 2:
         proyecto.estado = "Iniciado"
@@ -386,7 +384,6 @@ def finalizarProyecto(request, id_proyecto):
 #     Requiere inicio de sesión
 #     """
 #     sprints = Sprint.objects.filter(proyecto_id=id_proyecto)
-#     print("OBJ SPRINT: ", sprints)
 
 #     return render(
 #         request,
@@ -434,9 +431,7 @@ def crearSprint(request, id_proyecto):
 
     elif request.method == "POST":
         form = Sprint_Form(request.POST)
-        print("LLEGA")
         if form.is_valid():
-            print("VALIDO")
             proyecto.numSprints += 1
             proyecto.save()
             Backlog.objects.create(
@@ -463,7 +458,6 @@ def crearSprint(request, id_proyecto):
                 categoria="User Story",
             )
             return redirect("proyectos:listar_sprints", id_proyecto)
-        print("NO VALIDO")
         data["form"] = form
         return render(request, "sprints/nuevo_sprint.html", data)
 
@@ -882,7 +876,6 @@ def verRoles(request, idProyecto, idMiembro):
     roles_asignados = []
     roles_noasignados = []
     user = User.objects.get(id=idMiembro)
-    print(user.id)
     for x in roles:
         roles_noasignados.append(x)
 
@@ -969,7 +962,6 @@ class ListarUserStory(LoginRequiredMixin, ListView):
     def get_queryset(self):
         proyecto = Proyecto.objects.get(id=self.kwargs["idProyecto"])
         backlog = Backlog.objects.get(proyecto=proyecto, tipo="Product_Backlog")
-        print("IMPRESION", backlog)
         return UserStory.objects.filter(backlog=backlog)
 
 
@@ -1111,3 +1103,37 @@ def asignarSprint(request, idProyecto, idMiembro, id_tarea):
     return redirect(
         "proyectos:listar_tareas", idProyecto=idProyecto, idMiembro=idMiembro
     )
+
+
+# Agregar tipo de US
+@login_required
+def crearTipoUS(request, idProyecto):
+    proyecto = Proyecto.objects.get(id=idProyecto)
+    data = {"idProyecto": idProyecto}
+
+    if request.method == "GET":
+        data["form"] = TipoUserStoryForm()
+        return render(request, "tareas/tipo.html", data)
+
+    elif request.method == "POST":
+        form = TipoUserStoryForm(request.POST)
+
+        if form.is_valid():
+            form.cleaned_data["proyecto"] = idProyecto
+            tipo = TipoUserStory.objects.create(
+                nombre=form.cleaned_data["nombre"],
+                proyecto=proyecto,
+            )
+            tipo.save()
+
+            user = User.objects.get(username=request.user)
+            perfil = Perfil.objects.get(user=user)
+            Historial.objects.create(
+                operacion="Crear User Story",
+                autor=perfil.__str__(),
+                proyecto=proyecto,
+                categoria="User Story",
+            )
+            return redirect("proyectos:crear_tarea", idProyecto)
+        data["form"] = form
+        return render(request, "tareas/nuevo_userStory.html", data)

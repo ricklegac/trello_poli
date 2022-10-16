@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import Group
+from django.utils import timezone
 
-# from usuarios.models import Perfil
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 ESTADOPROY_CHOICES = [
@@ -28,6 +28,13 @@ TIPOBL_CHOICES = [
     ("Sprint_Backlog", "Sprint_Backlog"),
     ("Doing", "Doing"),
     ("To_Do", "To_Do"),
+    ("Done", "Done"),
+]
+
+ESTADOUS_CHOICES = [
+    ("En_Cola", "En Cola"),
+    ("To_Do", "To Do"),
+    ("Doing", "Doing"),
     ("Done", "Done"),
 ]
 
@@ -129,12 +136,21 @@ class Rol(models.Model):
         )
 
 
-ESTADOUS_CHOICES = [
-    ("En_Cola", "En Cola"),
-    ("To_Do", "To Do"),
-    ("Doing", "Doing"),
-    ("Done", "Done"),
-]
+class TipoUserStory(models.Model):
+    nombre = models.CharField(max_length=150)
+    proyecto = models.ForeignKey(
+        Proyecto, on_delete=models.CASCADE, related_name="proyectos"
+    )
+
+    def __str__(self):
+        return self.nombre
+
+
+class Columnas(models.Model):
+    nombre = models.CharField(max_length=20)
+    tipo_us = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="columnas"
+    )
 
 
 class UserStory(models.Model):
@@ -152,7 +168,7 @@ class UserStory(models.Model):
         to="usuarios.Perfil", on_delete=models.CASCADE, null=True, blank=True
     )
     fechaCreacion = models.DateField(auto_now_add=True)
-    fechaInicio = models.DateField(null=True)
+    fechaInicio = models.DateField(default=timezone.now)
     fechaFin = models.DateField(null=True)
     sprint = models.ForeignKey(
         to="proyectos.Sprint", on_delete=models.CASCADE, null=True
@@ -160,6 +176,9 @@ class UserStory(models.Model):
     identificador = models.CharField(max_length=80, null=True)
     prioridad = models.PositiveIntegerField(
         validators=[MinValueValidator(0), MaxValueValidator(100)], default=0
+    )
+    tipo = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="user_stories"
     )
 
     class Meta:

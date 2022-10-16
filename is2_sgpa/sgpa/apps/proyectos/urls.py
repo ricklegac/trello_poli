@@ -4,6 +4,7 @@ from proyectos.views import (
     ListarRol,
     ListarUserStory,
     asignarRol,
+    crearTipoUS,
     crearUserStory,
     desasignarRol,
     editarRol,
@@ -53,21 +54,16 @@ urlpatterns = [
         name="eliminar_sprint",
     ),
     path("<int:id_proyecto>/historial/", verHistorial, name="ver_historial"),
-]
-
-urlpatterns += [
     # Miembros
     path("<int:idProyecto>/miembros/listar/", verMiembros, name="listar_miembros"),
     path("<int:idProyecto>/miembros/nuevo/", miembroCrear, name="nuevo_miembro"),
     path(
-        "<int:idProyecto>/miembros/<int:idMiembro>/eliminar/",
+        "<int:idProyecto>/miembros/eliminar/<int:idMiembro>/",
         miembroEliminar,
         name="eliminar_miembro",
     ),
     path(
-        "<int:idProyecto>/miembros/<int:idMiembro>/roles/",
-        verRoles,
-        name="ver_roles",
+        "<int:idProyecto>/miembros/<int:idMiembro>/roles/", verRoles, name="ver_roles"
     ),
     path(
         "<int:idProyecto>/miembros/<int:idMiembro>/roles/<int:idRol>/asignar/",
@@ -81,21 +77,13 @@ urlpatterns += [
     ),
     # Roles
     path("<int:idProyecto>/roles/nuevo/", CrearRol.as_view(), name="crear_rol"),
-    path(
-        "<int:idProyecto>/roles/listar/",
-        ListarRol.as_view(),
-        name="listar_roles",
-    ),
+    path("<int:idProyecto>/roles/listar/", ListarRol.as_view(), name="listar_roles"),
     path(
         "<int:idProyecto>/roles/eliminar/<int:id_rol>/",
         eliminarRol,
         name="eliminar_rol",
     ),
-    path(
-        "<int:idProyecto>/roles/editar/<int:id_rol>/",
-        editarRol,
-        name="editar_rol",
-    ),
+    path("<int:idProyecto>/roles/editar/<int:id_rol>/", editarRol, name="editar_rol"),
     # User Stories
     path("<int:idProyecto>/tareas/nuevo/", crearUserStory, name="crear_tarea"),
     path(
@@ -112,5 +100,10 @@ urlpatterns += [
         "<int:idProyecto>/tareas/editar/<int:id_tarea>/",
         modificarUserStory,
         name="modificar_tarea",
+    ),
+    path(
+        "<int:idProyecto>/tareas/tipo/",
+        crearTipoUS,
+        name="tipos_us",
     ),
 ]

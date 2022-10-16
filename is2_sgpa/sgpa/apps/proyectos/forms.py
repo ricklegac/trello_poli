@@ -1,7 +1,7 @@
 from django import forms
 from django.db.models import Q
 from usuarios.models import Perfil
-from proyectos.models import Miembro, Proyecto, Rol, Sprint, UserStory
+from proyectos.models import Miembro, Proyecto, Rol, Sprint, TipoUserStory, UserStory
 from django.contrib.auth.models import Permission
 from django.forms import Form, CharField, IntegerField
 
@@ -117,7 +117,7 @@ class Rol_Form(forms.ModelForm):
         "name", "codename"
     )
     select = forms.MultipleChoiceField(
-        choices=permissions, widget=forms.CheckboxSelectMultiple()
+        choices=permisos, widget=forms.CheckboxSelectMultiple()
     )
 
     def __init__(self, *args, **kwargs):
@@ -142,10 +142,37 @@ class Rol_Form(forms.ModelForm):
         }
 
 
-class UserStoryForm(Form):
-    nombre = CharField()
-    descripcion = CharField()
-    prioridad = IntegerField()
+class UserStoryForm(forms.ModelForm):
+    class Meta:
+        model = UserStory
+        fields = [
+            "nombre",
+            "descripcion",
+            "prioridad",
+            "estado",
+            "desarrollador",
+            "fechaInicio",
+            "fechaFin",
+            "tipo",
+        ]
+        labels = {
+            "nombre": "Nombre",
+            "descripcion": "Descripcion",
+            "prioridad": "Prioridad",
+            "desarrollador": "Desarrollador",
+            "fechaInicio": "Fecha de inicio",
+            "fechaFin": "Fecha de finalización",
+            "tipo": "Tipo",
+        }
+        widgets = {
+            "nombre": forms.TextInput(attrs={"class": "form-control"}),
+            "descripcion": forms.TextInput(attrs={"class": "form-control"}),
+            "prioridad": forms.TextInput(attrs={"class": "form-control"}),
+            "desarrollador": forms.Select(attrs={"class": "form-control"}),
+            "fechaInicio": forms.DateInput(attrs={"type": "date"}),
+            "fechaFin": forms.DateInput(attrs={"type": "date"}),
+            "tipo": forms.Select(attrs={"class": "form-control"}),
+        }
 
 
 class UserStoryEdit_Form(forms.ModelForm):
@@ -173,3 +200,17 @@ class UserStoryEdit_Form(forms.ModelForm):
         def init(self, args, **kwargs):
             super(UserStoryEdit_Form, self).init(args, **kwargs)
             self.fields["desarrollador"].queryset = Miembro.objects.filter(~Q(id=1))
+
+
+class TipoUserStoryForm(forms.ModelForm):
+    class Meta:
+        model = TipoUserStory
+        fields = [
+            "nombre",
+        ]
+        labels = {
+            "nombre": "Nombre",
+        }
+        widgets = {
+            "nombre": forms.TextInput(attrs={"class": "form-control"}),
+        }
