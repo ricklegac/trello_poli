@@ -32,8 +32,8 @@
                             {% endif %}
                         </td>
                         <td class="text-center">
-                            <a class="btn btn-danger" href="{% url 'proyectos:desasignar_rol' idProyecto idMiembro
-                                rol.id %}">Desasignar
+                            <a class="btn btn-danger"
+                                href="{% url 'proyectos:desasignar_rol' idProyecto idMiembro rol.id%}">Desasignar
                                 Rol</a>
                         </td>
                     </tr>
@@ -70,8 +70,8 @@
                             {% endif %}
                         </td>
                         <td class="text-center">
-                            <a class="btn boton-color" href="{% url " proyectos:asignar_rol' idProyecto idMiembro rol.id
-                                %}">Asignar Rol</a>
+                            <a class="btn boton-color"
+                                href="{% url 'proyectos:asignar_rol' idProyecto idMiembro rol.id%}">Asignar Rol</a>
                         </td>
                     </tr>
                     {% endfor %}
@@ -83,7 +83,7 @@
         </div>
     </div>
     <p align="center">
-        <a href="{% url " proyectos:listar_miembros' idProyecto %}" class="btn boton-color" role="button">Volver</a>
+        <a href="{% url 'proyectos:listar_miembros' idProyecto %}" class="btn boton-color" role="button">Volver</a>
     </p>
 </div>
 {% endblock %}

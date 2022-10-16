@@ -28,10 +28,10 @@
                         <td> {{ miembro.idPerfil.user.first_name }} </td>
                         <td> {{ miembro.idPerfil.user.last_name }} </td>
                         <td> {{ miembro.idProyecto.nombre }} </td>
-                        <td> <a class="btn btn-danger" href="{% url 'proyectos:eliminar_miembro' miembro.idProyecto.id
-                                miembro.idPerfil.id %}">Eliminar</a>
-                            <a class="btn btn-primary" href="{% url 'proyectos:ver_roles' miembro.idProyecto.id
-                                miembro.idPerfil.id %}">Ver
+                        <td> <a class="btn btn-danger"
+                                href="{% url 'proyectos:eliminar_miembro' idProyecto miembro.idPerfil.id %}">Eliminar</a>
+                            <a class="btn btn-primary"
+                                href="{% url 'proyectos:ver_roles' idProyecto miembro.idPerfil.id %}">Ver
                                 Roles</a>
                         </td>
                     </tr>

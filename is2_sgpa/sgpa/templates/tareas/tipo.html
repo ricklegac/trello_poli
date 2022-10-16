@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="col-md-6">
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label class="col-form-label">Nombre:</label>
+            {{ form.nombre }}
+        </div>
+        <br>
+        <p align="center">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <a href="{% url 'proyectos:listar_tareas' idProyecto %}" class="btn btn-primary" role="button">Cancelar</a>
+        </p>
+    </form>
+</div>
+{% endblock %}
