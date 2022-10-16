@@ -1,8 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-from proyectos.models import Rol
-
 # Create your models here.
 
 
@@ -14,7 +12,7 @@ class Perfil(models.Model):
         unique=True,
         error_messages={"unique": "CI no disponible"},
     )
-    roles = models.ManyToManyField(Rol)
+    roles = models.ManyToManyField(to="proyectos.Rol")
     telefono = models.PositiveIntegerField(blank=False, null=True)
 
     class Meta:
