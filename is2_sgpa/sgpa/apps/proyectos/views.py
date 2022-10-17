@@ -25,6 +25,7 @@ from proyectos.forms import (
     ProyectoEdit_Form,
     Rol_Form,
     Sprint_Form,
+    SprintEdit_Form,
     TipoUserStoryForm,
     UserStoryEdit_Form,
     UserStoryForm,
@@ -69,7 +70,10 @@ class crearProyecto(LoginRequiredMixin, CreateView):
         equipo = Group.objects.create(name="equipo%s" % self.object.pk)
         proyecto.equipo = equipo
         proyecto.save()
-        Backlog.objects.create(proyecto=proyecto, tipo="Product_Backlog")
+        backlog = Backlog.objects.create(
+            nombre="Product backlog", proyecto=proyecto, tipo="Product_Backlog"
+        )
+        backlog.save()
         user = User.objects.get(username=self.request.user)
         perfil = Perfil.objects.get(user=user)
         Historial.objects.create(
@@ -435,11 +439,14 @@ def crearSprint(request, id_proyecto):
             proyecto.numSprints += 1
             proyecto.save()
             Backlog.objects.create(
-                posicion=proyecto.numSprints, proyecto=proyecto, tipo="Sprint_Backlog"
+                nombre="Sprint backlog",
+                posicion=proyecto.numSprints,
+                proyecto=proyecto,
+                tipo="Sprint_Backlog",
             )
-            Backlog.objects.create(proyecto=proyecto, tipo="To_Do")
-            Backlog.objects.create(proyecto=proyecto, tipo="Doing")
-            Backlog.objects.create(proyecto=proyecto, tipo="Done")
+            Backlog.objects.create(nombre="To Do", proyecto=proyecto, tipo="To_Do")
+            Backlog.objects.create(nombre="Doing", proyecto=proyecto, tipo="Doing")
+            Backlog.objects.create(nombre="Done", proyecto=proyecto, tipo="Done")
 
             sprint = Sprint.objects.create(
                 objetivos=form.cleaned_data["objetivos"],
@@ -464,7 +471,7 @@ def crearSprint(request, id_proyecto):
 
 # --- Modificar Sprints --- #
 @login_required
-def modificarSprints(request, id_proyecto):
+def modificarSprints(request, id_proyecto, id_sprint):
     """
     Vista basada en funcion para modificar las Fases de un Proyecto existente.
     Recibe un 'request' y el 'id' del Proyecto correspondiente como parametros.
@@ -472,23 +479,14 @@ def modificarSprints(request, id_proyecto):
     actualizada y redirige a la lista de los proyectos asociados.
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
-    SprintFormSet = inlineformset_factory(
-        Proyecto,
-        Sprint,
-        fields=(
-            "objetivos",
-            "posicion",
-        ),
-        can_delete=False,
-        extra=proyecto.numSprints,
-        max_num=proyecto.numSprints,
-    )
+    sprint = Sprint.objects.get(id=id_sprint)
 
     if request.method == "GET":
-        formset = SprintFormSet(instance=proyecto)
+        sprint_Form = SprintEdit_Form(instance=sprint)
     else:
-        formset = SprintFormSet(request.POST, instance=proyecto)
-        if formset.is_valid():
+        sprint_Form = SprintEdit_Form(request.POST, instance=sprint)
+        if sprint_Form.is_valid():
+            sprint_Form.save()
             # for x in range(0, len(formset)):
             #     if formset[x].cleaned_data.get("posicion") > proyecto.numSprints:
             #         messages.add_message(
@@ -511,14 +509,14 @@ def modificarSprints(request, id_proyecto):
             #                 ),
             #             )
             #             return redirect("proyectos:modificar_sprints", id_proyecto)
-            formset.save()
+            sprint_Form.save()
 
         return redirect("proyectos:ver_proyecto", id_proyecto)
 
     return render(
         request,
-        "sprints/nuevo_sprint.html",
-        {"formset": formset, "id_proyecto": id_proyecto},
+        "sprints/modificar_sprint.html",
+        {"sprint_Form": sprint_Form, "id_proyecto": id_proyecto},
     )
 
 
@@ -978,7 +976,9 @@ def crearUserStory(request, idProyecto):
     elif request.method == "POST":
         form = UserStoryForm(request.POST)
 
+        print("llega")
         if form.is_valid():
+            print("entra")
             backlog = Backlog.objects.get(proyecto=proyecto, tipo="Product_Backlog")
             backlog.numTareas += 1
             backlog.save()
@@ -988,6 +988,12 @@ def crearUserStory(request, idProyecto):
                 nombre=form.cleaned_data["nombre"],
                 descripcion=form.cleaned_data["descripcion"],
                 prioridad=form.cleaned_data["prioridad"],
+                estado="En_Cola",
+                desarrollador=form.cleaned_data["desarrollador"],
+                fechaInicio=form.cleaned_data["fechaInicio"],
+                fechaFin=form.cleaned_data["fechaFin"],
+                tipo=form.cleaned_data["tipo"],
+                sprint=form.cleaned_data["sprint"],
             )
             userStory.save()
             user = User.objects.get(username=request.user)
@@ -999,6 +1005,8 @@ def crearUserStory(request, idProyecto):
                 categoria="User Story",
             )
             return redirect("proyectos:listar_tareas", idProyecto)
+        else:
+            print(form.errors.items())
         data["form"] = form
         return render(request, "tareas/nuevo_userStory.html", data)
 
@@ -1017,7 +1025,7 @@ def eliminarUserStory(request, idProyecto, id_tarea):
     if request.method == "POST":
         nombre = userStory.nombre
         userStory.delete()
-        backlog = Backlog.objects.get(id=userStory.backlog)
+        backlog = Backlog.objects.get(id=userStory.backlog.id)
         backlog.numTareas -= 1
         backlog.save()
         user = User.objects.get(username=request.user)
@@ -1055,16 +1063,16 @@ def modificarUserStory(request, idProyecto, id_tarea):
         if tarea_Form.is_valid():
             tarea_Form.save()
             desarrollador = tarea.desarrollador
-            send_mail(
-                "El User Story ha sido modificado",
-                "Usted es desarrollador del User Story '{0}' y este acaba de ser modificado, ingrese a la plataforma para observar los cambios".format(
-                    tarea.nombre
-                ),
-                "is2.sgpa@gmail.com",
-                desarrollador,
-            )
-            backlog = Backlog.objects.get(id=tarea.backlog)
-            proyecto = Proyecto.objects.get(id=backlog.proyecto)
+            # send_mail(
+            #     "El User Story ha sido modificado",
+            #     "Usted es desarrollador del User Story '{0}' y este acaba de ser modificado, ingrese a la plataforma para observar los cambios".format(
+            #         tarea.nombre
+            #     ),
+            #     "is2.sgpa@gmail.com",
+            #     desarrollador,
+            # )
+            backlog = Backlog.objects.get(id=tarea.backlog.id)
+            proyecto = Proyecto.objects.get(id=backlog.proyecto.id)
 
             user = User.objects.get(username=request.user)
             perfil = Perfil.objects.get(user=user)

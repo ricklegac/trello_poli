@@ -2,7 +2,7 @@ import pytest
 import datetime
 from django.contrib.auth.models import User
 from usuarios.models import Perfil
-from proyectos.models import Proyecto, Sprint, UserStory
+from proyectos.models import Proyecto, Sprint, TipoUserStory, UserStory
 
 
 @pytest.mark.django_db
@@ -20,12 +20,18 @@ def test_crearUserStory():
     )
     sprint = Sprint.objects.create(numTareas=1, estado="Iniciado", proyecto=proyecto)
 
+    tipo = TipoUserStory.objects.create(
+        nombre="Tipo A",
+        proyecto=proyecto,
+    )
+
     tarea = UserStory.objects.create(
         nombre="Prueba",
         descripcion="Descripcion",
         fechaCreacion=datetime.date.today(),
         estado="En_Cola",
         desarrollador=perfil,
+        tipo=tipo,
     )
 
     assert UserStory.objects.count() == 1

@@ -30,7 +30,8 @@
                         <td scope="col">{{sprint.estado}}</td>
                         <td scope="col">{{sprint.numTareas}}</td>
                         <td scope="col">
-                            <a href="" class="btn boton-color"><i class="fas fa-pen"></i></a>
+                            <a href="{% url 'proyectos:modificar_sprint' proyecto sprint.id %}"
+                                class="btn boton-color"><i class="fas fa-pen"></i></a>
                             <a href="{% url 'proyectos:eliminar_sprint' proyecto sprint.id %}" class="btn btn-danger"><i
                                     class="fas fa-trash"></i></a>
                         </td>

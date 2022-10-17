@@ -1,9 +1,10 @@
 import pytest
 import datetime
-from django.test import Client
+from django.test import Client, RequestFactory
+from django.contrib.messages.storage.fallback import FallbackStorage
 from django.contrib.auth.models import User
 from usuarios.models import Perfil
-from proyectos.models import Proyecto
+from proyectos.models import Proyecto, Sprint, UserStory
 
 
 # --- Test Listar Proyectos --- #
@@ -119,77 +120,77 @@ def test_CrearProyecto():
 #     assert proyecto.estado == "Finalizado", "Existe un sprint sin finalizar"
 
 
-# ####
-# #   Sprint Tests
-# ####
+####
+#   Sprint Tests
+####
 
-# # --- Crear Sprint --- #
-# @pytest.mark.django_db
-# def test_creaSprint():
-#     usuario = User.objects.create_user("Won", "won@seo.com", "hyungwon")
-#     usuario.save()
-#     perfil = Perfil.objects.create(ci=108108, telefono=108108, user=usuario)
-#     perfil.save()
-#     # Verifica que la vista guarde las Fases vinculadas a un proyecto
-#     proyecto = Proyecto.objects.create(
-#         nombre="Bartender",
-#         descripcion="Curso de Bartender",
-#         fechaCreacion=datetime.date.today(),
-#         numSprints=0,
-#         estado="Pendiente",
-#         scrumMaster=perfil,
-#     )
-#     sprint1 = Sprint.objects.create(numTareas=0, estado="Iniciado", proyecto=proyecto)
-#     sprint2 = Sprint.objects.create(numTareas=0, estado="Iniciado", proyecto=proyecto)
-#     assert Sprint.objects.count() == 2
+# --- Crear Sprint --- #
+@pytest.mark.django_db
+def test_creaSprint():
+    usuario = User.objects.create_user("Won", "won@seo.com", "hyungwon")
+    usuario.save()
+    perfil = Perfil.objects.create(ci=108108, telefono=108108, user=usuario)
+    perfil.save()
+    # Verifica que la vista guarde las Fases vinculadas a un proyecto
+    proyecto = Proyecto.objects.create(
+        nombre="Bartender",
+        descripcion="Curso de Bartender",
+        fechaCreacion=datetime.date.today(),
+        numSprints=0,
+        estado="Pendiente",
+        scrumMaster=perfil,
+    )
+    sprint1 = Sprint.objects.create(numTareas=0, estado="Iniciado", proyecto=proyecto)
+    sprint2 = Sprint.objects.create(numTareas=0, estado="Iniciado", proyecto=proyecto)
+    assert Sprint.objects.count() == 2
 
 
-# # --- Test Finalizar Sprint --- #
-# # Verifica la correcta finalizacion de un Sprint
-# @pytest.mark.django_db
-# def test_finalizarSprint():
-#     usuario = User.objects.create_user("Won", "won@seo.com", "hyungwon")
-#     usuario.save()
-#     perfil = Perfil.objects.create(ci=108108, telefono=108108, user=usuario)
-#     perfil.save()
-#     proyecto = Proyecto.objects.create(
-#         nombre="Bartender",
-#         descripcion="Curso de Bartender",
-#         fechaCreacion=datetime.date.today(),
-#         numSprints=0,
-#         estado="Pendiente",
-#         scrumMaster=perfil,
-#     )
-#     sprint = Sprint.objects.create(numTareas=2, proyecto=proyecto)
-#     tarea1 = UserStory.objects.create(
-#         nombre="Prueba1",
-#         descripcion="Descripcion1",
-#         fechaCreacion=datetime.date.today(),
-#         desarrollador=perfil,
-#     )
-#     tarea2 = UserStory.objects.create(
-#         nombre="Prueba2",
-#         descripcion="Descripcion2",
-#         fechaCreacion=datetime.date.today(),
-#         desarrollador=perfil,
-#     )
+# --- Test Finalizar Sprint --- #
+# Verifica la correcta finalizacion de un Sprint
+@pytest.mark.django_db
+def test_finalizarSprint():
+    usuario = User.objects.create_user("Won", "won@seo.com", "hyungwon")
+    usuario.save()
+    perfil = Perfil.objects.create(ci=108108, telefono=108108, user=usuario)
+    perfil.save()
+    proyecto = Proyecto.objects.create(
+        nombre="Bartender",
+        descripcion="Curso de Bartender",
+        fechaCreacion=datetime.date.today(),
+        numSprints=0,
+        estado="Pendiente",
+        scrumMaster=perfil,
+    )
+    sprint = Sprint.objects.create(numTareas=2, proyecto=proyecto)
+    tarea1 = UserStory.objects.create(
+        nombre="Prueba1",
+        descripcion="Descripcion1",
+        fechaCreacion=datetime.date.today(),
+        desarrollador=perfil,
+    )
+    tarea2 = UserStory.objects.create(
+        nombre="Prueba2",
+        descripcion="Descripcion2",
+        fechaCreacion=datetime.date.today(),
+        desarrollador=perfil,
+    )
 
-#     tarea1.estado = "Done"
-#     tarea2.estado = "Done"
-#     tarea1.save()
-#     tarea2.save()
-#     sprint.estado = "Finalizado"
-#     sprint.save()
+    tarea1.estado = "Done"
+    tarea2.estado = "Done"
+    tarea1.save()
+    tarea2.save()
+    sprint.estado = "Finalizado"
+    sprint.save()
 
-#     # Finalización del Sprint
-#     path = "<int:id_proyecto>/sprint/<int:id_sprint>/finalizar/"
-#     request1 = RequestFactory().get(path)
-#     request1.user = usuario
+    # Finalización del Sprint
+    path = "<int:id_proyecto>/sprint/<int:id_sprint>/finalizar/"
+    request1 = RequestFactory().get(path)
+    request1.user = usuario
 
-#     setattr(request1, "session", "session")
-#     messages = FallbackStorage(request1)
-#     setattr(request1, "_messages", messages)
+    setattr(request1, "session", "session")
+    messages = FallbackStorage(request1)
+    setattr(request1, "_messages", messages)
 
-#     # finalizarSprint(request1, proyecto.id, sprint.id)
-#     sprint = Sprint.objects.get(id=sprint.id)
-#     assert sprint.estado == "Finalizado", print(messages)
+    # finalizarSprint(request1, proyecto.id, sprint.id)
+    sprint = Sprint.objects.get(id=sprint.id)
+    assert sprint.estado == "Finalizado", print(messages)

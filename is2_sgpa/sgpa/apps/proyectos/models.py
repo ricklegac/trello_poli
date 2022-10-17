@@ -61,6 +61,7 @@ class Proyecto(models.Model):
 
 
 class Backlog(models.Model):
+    nombre = models.CharField(max_length=20)
     posicion = models.IntegerField(blank=False, null=True)
     tipo = models.CharField(max_length=16, choices=TIPOBL_CHOICES)
     estado = models.CharField(max_length=8, choices=ESTADOBL_CHOICES, default="Vacio")
@@ -71,7 +72,7 @@ class Backlog(models.Model):
     )
 
     def __str__(self):
-        return "{}".format(self.estado)
+        return "{}".format(self.nombre)
 
 
 class Sprint(models.Model):
@@ -89,8 +90,8 @@ class Sprint(models.Model):
     fechaInicio = models.DateField(null=True)
     fechaFin = models.DateField(null=True)
 
-    def str(self):
-        return "{}".format(self.estado)
+    def __str__(self):
+        return self.objetivos
 
 
 class Historial(models.Model):
@@ -163,7 +164,7 @@ class UserStory(models.Model):
     )
     nombre = models.CharField(max_length=150, blank=False)
     descripcion = models.TextField(max_length=300, blank=False)
-    estado = models.CharField(default="En_Cola", max_length=7)
+    estado = models.CharField(blank=True, default="En_Cola", max_length=7)
     desarrollador = models.ForeignKey(
         to="usuarios.Perfil", on_delete=models.CASCADE, null=True, blank=True
     )
@@ -173,7 +174,6 @@ class UserStory(models.Model):
     sprint = models.ForeignKey(
         to="proyectos.Sprint", on_delete=models.CASCADE, null=True
     )
-    identificador = models.CharField(max_length=80, null=True)
     prioridad = models.PositiveIntegerField(
         validators=[MinValueValidator(0), MaxValueValidator(100)], default=0
     )
@@ -181,8 +181,5 @@ class UserStory(models.Model):
         TipoUserStory, on_delete=models.CASCADE, related_name="user_stories"
     )
 
-    class Meta:
-        unique_together = ["identificador", "sprint"]
-
     def __str__(self):
-        return "{}".format(self.identificador)
+        return "{}".format(self.nombre)

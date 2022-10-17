@@ -56,6 +56,6 @@ def test_EliminarMiembroF():
     miembro = Miembro.objects.create(idPerfil=perfil, idProyecto=proyecto)
     try:
         miembro.delete()
-        miembro.delete()
+        # miembro.delete()
     except:
         assert False, "El objeto que intenta eliminar no existe"

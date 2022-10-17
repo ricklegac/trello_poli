@@ -1,7 +1,15 @@
 from django import forms
 from django.db.models import Q
 from usuarios.models import Perfil
-from proyectos.models import Miembro, Proyecto, Rol, Sprint, TipoUserStory, UserStory
+from proyectos.models import (
+    Backlog,
+    Miembro,
+    Proyecto,
+    Rol,
+    Sprint,
+    TipoUserStory,
+    UserStory,
+)
 from django.contrib.auth.models import Permission
 from django.forms import Form, CharField, IntegerField
 
@@ -35,6 +43,22 @@ class Sprint_Form(forms.ModelForm):
             "fechaInicio",
             "fechaFin",
         ]
+        labels = {
+            "objetivos": "Objetivos",
+            "fechaInicio": "Fecha de inicio",
+            "fechaFin": "Fecha de finalización",
+        }
+        widgets = {
+            "objetivos": forms.TextInput(attrs={"class": "form-control"}),
+            "fechaInicio": forms.DateInput(attrs={"type": "date"}),
+            "fechaFin": forms.DateInput(attrs={"type": "date"}),
+        }
+
+
+class SprintEdit_Form(forms.ModelForm):
+    class Meta:
+        model = Sprint
+        fields = ["objetivos", "fechaInicio", "fechaFin", "duracion"]
         labels = {
             "objetivos": "Objetivos",
             "fechaInicio": "Fecha de inicio",
@@ -146,6 +170,7 @@ class UserStoryForm(forms.ModelForm):
     class Meta:
         model = UserStory
         fields = [
+            "backlog",
             "nombre",
             "descripcion",
             "prioridad",
@@ -154,8 +179,10 @@ class UserStoryForm(forms.ModelForm):
             "fechaInicio",
             "fechaFin",
             "tipo",
+            "sprint",
         ]
         labels = {
+            "backlog": "Backlog",
             "nombre": "Nombre",
             "descripcion": "Descripcion",
             "prioridad": "Prioridad",
@@ -163,8 +190,10 @@ class UserStoryForm(forms.ModelForm):
             "fechaInicio": "Fecha de inicio",
             "fechaFin": "Fecha de finalización",
             "tipo": "Tipo",
+            "sprint": "Sprint",
         }
         widgets = {
+            "backlog": forms.Select(attrs={"class": "form-control"}),
             "nombre": forms.TextInput(attrs={"class": "form-control"}),
             "descripcion": forms.TextInput(attrs={"class": "form-control"}),
             "prioridad": forms.TextInput(attrs={"class": "form-control"}),
@@ -172,6 +201,7 @@ class UserStoryForm(forms.ModelForm):
             "fechaInicio": forms.DateInput(attrs={"type": "date"}),
             "fechaFin": forms.DateInput(attrs={"type": "date"}),
             "tipo": forms.Select(attrs={"class": "form-control"}),
+            "sprint": forms.Select(attrs={"class": "form-control"}),
         }
 
 
@@ -179,27 +209,46 @@ class UserStoryEdit_Form(forms.ModelForm):
     class Meta:
         model = UserStory
         fields = [
+            "backlog",
             "nombre",
             "descripcion",
+            "prioridad",
             "estado",
             "desarrollador",
+            "fechaInicio",
+            "fechaFin",
+            "tipo",
+            "sprint",
         ]
         labels = {
+            "backlog": "Backlog",
             "nombre": "Nombre",
             "descripcion": "Descripcion",
-            "estado": "Estado",
+            "prioridad": "Prioridad",
             "desarrollador": "Desarrollador",
+            "fechaInicio": "Fecha de inicio",
+            "fechaFin": "Fecha de finalización",
+            "tipo": "Tipo",
+            "sprint": "Sprint",
         }
         widgets = {
+            "backlog": forms.Select(attrs={"class": "form-control"}),
             "nombre": forms.TextInput(attrs={"class": "form-control"}),
             "descripcion": forms.TextInput(attrs={"class": "form-control"}),
-            "estado": forms.Select(attrs={"class": "form-control"}),
+            "prioridad": forms.TextInput(attrs={"class": "form-control"}),
             "desarrollador": forms.Select(attrs={"class": "form-control"}),
+            "fechaInicio": forms.DateInput(attrs={"type": "date"}),
+            "fechaFin": forms.DateInput(attrs={"type": "date"}),
+            "tipo": forms.Select(attrs={"class": "form-control"}),
+            "sprint": forms.Select(attrs={"class": "form-control"}),
         }
 
         def init(self, args, **kwargs):
             super(UserStoryEdit_Form, self).init(args, **kwargs)
             self.fields["desarrollador"].queryset = Miembro.objects.filter(~Q(id=1))
+            self.fields["backlog"].queryset = Backlog.objects.filter(
+                ~Q(proyecto=self.fields["sprint"].proyecto.id)
+            )
 
 
 class TipoUserStoryForm(forms.ModelForm):

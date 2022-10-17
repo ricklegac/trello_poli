@@ -45,7 +45,9 @@ urlpatterns = [
     path("<int:id_proyecto>/cancelar/", cancelarProyecto, name="cancelar_proyecto"),
     path("<int:id_proyecto>/sprint", crearSprint, name="nuevo_sprint"),
     path(
-        "<int:id_proyecto>/sprint/modificar", modificarSprints, name="modificar_sprint"
+        "<int:id_proyecto>/sprint/modificar/<int:id_sprint>",
+        modificarSprints,
+        name="modificar_sprint",
     ),
     path("<int:id_proyecto>/sprint/listar", listarSprints, name="listar_sprints"),
     path(
