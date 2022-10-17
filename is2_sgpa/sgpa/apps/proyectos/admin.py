@@ -1,6 +1,5 @@
 from django.contrib import admin
-from proyectos.models import Proyecto, Sprint
+from proyectos.models import Miembro, Proyecto, Rol, Sprint, TipoUserStory, UserStory
 
 # Register your models here.
-admin.site.register(Proyecto)
-admin.site.register(Sprint)
+admin.site.register([Proyecto, Sprint, Miembro, Rol, UserStory, TipoUserStory])

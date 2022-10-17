@@ -8,7 +8,7 @@
         el proyecto {{ miembros.idProyecto.nombre }}? </h3>
 
     <button class="btn btn-danger" type="submit">Confirmar</button>
-    <a class="btn btn-default" href="{% url 'miembros:listar' idProyecto %}">Cancelar</a>
+    <a class="btn btn-default" href="{% url 'proyectos:listar_miembros' idProyecto %}">Cancelar</a>
 </form>
 
 {% endblock %}

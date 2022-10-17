@@ -33,10 +33,10 @@
                             {% endif %}
                         </td>
                         <td scope="col">
-                            <a href="{% url 'tareas:modificar_tarea' idProyecto us.id %}"
+                            <a href="{% url 'proyectos:modificar_tarea' idProyecto us.id %}"
                                 class="btn boton-color">Modificar
                                 US</a>
-                            <a href="{% url 'tareas:eliminar_tarea' idProyecto us.id %}"
+                            <a href="{% url 'proyectos:eliminar_tarea' idProyecto us.id %}"
                                 class="btn boton-color">Eliminar
                                 US</a>
                         </td>
@@ -50,7 +50,7 @@
     <h4 align="center">El proyecto no tiene US creados</h4><br>
     {% endif %}
     <p align="center">
-        <a href="{% url 'tareas:crear_tarea' idProyecto %}" class="btn boton-color">Crear US</a>
+        <a href="{% url 'proyectos:crear_tarea' idProyecto %}" class="btn boton-color">Crear US</a>
         <a href="{% url 'proyectos:ver_proyecto' idProyecto %}" class="btn boton-color" role="button">Volver</a>
     </p>
 </div>

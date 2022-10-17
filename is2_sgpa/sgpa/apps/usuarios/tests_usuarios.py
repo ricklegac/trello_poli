@@ -57,25 +57,25 @@ def test_crearPerfil():
 @pytest.mark.django_db
 def test_crearSegundoPerfil():
     data = {
-        "firs_name": "Lorenzo",
-        "last_name": "Cabrera",
-        "email": "lorenzocabrea8@fpuna.edu.py",
+        "firs_name": "Carlos",
+        "last_name": "Perez",
+        "email": "asd@fpuna.edu.py",
     }
     form = Usuario_Form(data=data)
     form.save()
-    usuario = User.objects.get(email="lorenzocabrea8@fpuna.edu.py")
+    usuario = User.objects.get(email="asd@fpuna.edu.py")
     data = {
         "user": usuario,
-        "ci": 4177075,
-        "telefono": "0982186022",
+        "ci": 41770756,
+        "telefono": "0498212",
     }
     perfil_Form = Perfil_Form(data=data)
     if perfil_Form.is_valid():
-        perfil_Form.save(ci=4177075, usuario=usuario, telefono="0982186022")
+        perfil_Form.save(ci=41770756, usuario=usuario, telefono="0498212")
 
     perfil_Form = Perfil_Form(data=data)
     if perfil_Form.is_valid():
-        perfil_Form.save(ci=4177075, usuario=usuario, telefono="0982186022")
+        perfil_Form.save(ci=41770756, usuario=usuario, telefono="0498212")
 
     assert perfil_Form.is_valid() is True, perfil_Form.errors
 

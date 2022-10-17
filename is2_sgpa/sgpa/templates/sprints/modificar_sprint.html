@@ -4,7 +4,7 @@
 <br>
 <div class="container-fluid">
     <ins>
-        <h3 align="center">Crear nuevo rol</h3>
+        <h3 align="center">Crear nuevo US</h3>
     </ins>
     <br>
     <div class="row">
@@ -15,16 +15,20 @@
             <form method="post">
                 {% csrf_token %}
                 <div class="form-group">
-                    <label class="col-form-label">Nombre:</label>
-                    {{ form.nombre }}
+                    <label class="col-form-label">Objetivos:</label>
+                    {{ sprint_Form.objetivos }}
                 </div>
                 <div class="form-group">
-                    <label class="col-form-label">Permisos:</label>
-                    {{ form.select }}
+                    <label class="col-form-label">Fecha de Inicio:</label>
+                    {{ sprint_Form.fechaInicio }}
+                </div>
+                <div class="form-group">
+                    <label class="col-form-label">Feche de Finalización:</label>
+                    {{ sprint_Form.fechaFin }}
                 </div>
                 <p align="center">
                     <button type="submit" class="btn btn-primary">Guardar</button>
-                    <a href="{% url 'proyectos:listar_roles' idProyecto %}" class="btn btn-primary"
+                    <a href="{% url 'proyectos:listar_sprints' id_proyecto %}" class="btn btn-primary"
                         role="button">Cancelar</a>
                 </p>
             </form>

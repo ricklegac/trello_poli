@@ -1,9 +1,21 @@
-from os import name
-from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
 from proyectos.views import (
+    CrearRol,
+    ListarRol,
+    ListarUserStory,
+    asignarRol,
+    crearTipoUS,
+    crearUserStory,
+    desasignarRol,
+    editarRol,
+    eliminarRol,
+    eliminarUserStory,
     finalizarProyecto,
     home,
+    miembroCrear,
+    miembroEliminar,
+    modificarUserStory,
+    verMiembros,
     verProyecto,
     crearProyecto,
     iniciarProyecto,
@@ -17,6 +29,7 @@ from proyectos.views import (
     verHistorial,
     modificarSprints,
     eliminarSprint,
+    verRoles,
 )
 
 urlpatterns = [
@@ -32,7 +45,9 @@ urlpatterns = [
     path("<int:id_proyecto>/cancelar/", cancelarProyecto, name="cancelar_proyecto"),
     path("<int:id_proyecto>/sprint", crearSprint, name="nuevo_sprint"),
     path(
-        "<int:id_proyecto>/sprint/modificar", modificarSprints, name="modificar_sprint"
+        "<int:id_proyecto>/sprint/modificar/<int:id_sprint>",
+        modificarSprints,
+        name="modificar_sprint",
     ),
     path("<int:id_proyecto>/sprint/listar", listarSprints, name="listar_sprints"),
     path(
@@ -41,4 +56,56 @@ urlpatterns = [
         name="eliminar_sprint",
     ),
     path("<int:id_proyecto>/historial/", verHistorial, name="ver_historial"),
+    # Miembros
+    path("<int:idProyecto>/miembros/listar/", verMiembros, name="listar_miembros"),
+    path("<int:idProyecto>/miembros/nuevo/", miembroCrear, name="nuevo_miembro"),
+    path(
+        "<int:idProyecto>/miembros/eliminar/<int:idMiembro>/",
+        miembroEliminar,
+        name="eliminar_miembro",
+    ),
+    path(
+        "<int:idProyecto>/miembros/<int:idMiembro>/roles/", verRoles, name="ver_roles"
+    ),
+    path(
+        "<int:idProyecto>/miembros/<int:idMiembro>/roles/<int:idRol>/asignar/",
+        asignarRol,
+        name="asignar_rol",
+    ),
+    path(
+        "<int:idProyecto>/miembros/<int:idMiembro>/roles/<int:idRol>/desasignar/",
+        desasignarRol,
+        name="desasignar_rol",
+    ),
+    # Roles
+    path("<int:idProyecto>/roles/nuevo/", CrearRol.as_view(), name="crear_rol"),
+    path("<int:idProyecto>/roles/listar/", ListarRol.as_view(), name="listar_roles"),
+    path(
+        "<int:idProyecto>/roles/eliminar/<int:id_rol>/",
+        eliminarRol,
+        name="eliminar_rol",
+    ),
+    path("<int:idProyecto>/roles/editar/<int:id_rol>/", editarRol, name="editar_rol"),
+    # User Stories
+    path("<int:idProyecto>/tareas/nuevo/", crearUserStory, name="crear_tarea"),
+    path(
+        "<int:idProyecto>/tareas/listar/",
+        ListarUserStory.as_view(),
+        name="listar_tareas",
+    ),
+    path(
+        "<int:idProyecto>/tareas/eliminar/<int:id_tarea>/",
+        eliminarUserStory,
+        name="eliminar_tarea",
+    ),
+    path(
+        "<int:idProyecto>/tareas/editar/<int:id_tarea>/",
+        modificarUserStory,
+        name="modificar_tarea",
+    ),
+    path(
+        "<int:idProyecto>/tareas/tipo/",
+        crearTipoUS,
+        name="tipos_us",
+    ),
 ]

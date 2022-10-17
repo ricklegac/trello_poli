@@ -1,43 +1,50 @@
-.login-container{
+.login-container {
     background-image: url(https://colorlib.com/etc/lf/Login_v4/images/bg-01.jpg);
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
 }
 
-.h-divider{
-    margin-top:5px;
-    margin-bottom:5px;
-    height:1px;
-    width:100%;
-    border-top:1px solid gray;
+.h-divider {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    height: 1px;
+    width: 100%;
+    border-top: 1px solid gray;
 }
 
-.login-btn{
+.login-btn {
     background: #a64bf4;
-    background: -webkit-linear-gradient(right,#00dbde,#fc00ff);
-    background: linear-gradient(right,#00dbde,#fc00ff);
-    background: -o-linear-gradient(right,#00dbde,#fc00ff);
-    background: -moz-linear-gradient(right,#00dbde,#fc00ff);
+    background: -webkit-linear-gradient(right, #00dbde, #fc00ff);
+    background: linear-gradient(right, #00dbde, #fc00ff);
+    background: -o-linear-gradient(right, #00dbde, #fc00ff);
+    background: -moz-linear-gradient(right, #00dbde, #fc00ff);
     padding: 20px 100px;
     border-radius: 25px;
     text-decoration: none;
 }
 
-.aside-color{
+.aside-color {
     background-color: #161b22;
 }
 
-.boton-color{
+.boton-color {
     text-decoration: none;
     color: #fff;
     background-color: #4723D9;
     border-color: #4723D9;
 }
 
+.buton-add {
+    text-decoration: none;
+    color: #fff;
+    background-color: #056406;
+    border-color: #4723D9;
+}
+
 /* Tablero Kanban */
 
-.tittle{
+.tittle {
     text-align: center;
     font-size: 30px;
 }

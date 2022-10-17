@@ -26,18 +26,6 @@ urlpatterns = [
     path("usuarios/", include(("usuarios.urls", "usuarios"), namespace="usuarios")),
     path("proyectos/", include(("proyectos.urls", "proyectos"), namespace="proyectos")),
     path(
-        "proyectos/<int:idProyecto>/tareas/",
-        include(("tareas.urls", "tareas"), namespace="tareas"),
-    ),
-    path(
-        "proyectos/<int:idProyecto>/miembros/",
-        include(("miembros.urls", "miembros"), namespace="miembros"),
-    ),
-    path(
-        "proyectos/<int:idProyecto>/roles/",
-        include(("roles.urls", "roles"), namespace="roles"),
-    ),
-    path(
         "login",
         auth_views.LoginView.as_view(template_name="cuenta/login.html"),
         name="login",

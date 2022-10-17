@@ -47,9 +47,6 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.google",
     "usuarios",
     "proyectos",
-    "roles",
-    "miembros",
-    "tareas",
 ]
 
 MIDDLEWARE = [
@@ -100,8 +97,8 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
         "NAME": "is2",
-        "USER": "postgres",
-        "PASSWORD": "admin",
+        "USER": "is2",
+        "PASSWORD": "is2",
         "HOST": "localhost",
         "PORT": "5432",
     }
@@ -169,6 +166,8 @@ SOCIALACCOUNT_PROVIDERS = {
         },
     }
 }
+
+SOCIALACCOUNT_LOGIN_ON_GET = True
 
 # EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 # EMAIL_HOST_USER = "is2.sgpa@gmail.com"

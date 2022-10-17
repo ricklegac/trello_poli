@@ -15,6 +15,24 @@
             <form method="post">
                 {% csrf_token %}
                 <div class="form-group">
+                    <label class="col-form-label">Tipo:</label>
+                    {{ form.tipo }}
+                </div>
+                <td>
+                    <a href="{% url 'proyectos:tipos_us' idProyecto %}" class="btn buton-add" role="button">
+                        </i>Añadir Tipo
+                    </a>
+                </td>
+                <div class="form-group">
+                    <label class="col-form-label">Sprint:</label>
+                    {{ form.sprint }}
+                </div>
+                <div class="form-group">
+                    <label class="col-form-label">Backlog:</label>
+                    {{ form.backlog }}
+                </div>
+
+                <div class="form-group">
                     <label class="col-form-label">Nombre:</label>
                     {{ form.nombre }}
                 </div>
@@ -26,9 +44,24 @@
                     <label class="col-form-label">Prioridad:</label>
                     {{ form.prioridad }}
                 </div>
+                <div class="form-group">
+                    <label class="col-form-label">Desarrollador:</label>
+                    {{ form.desarrollador }}
+                </div>
+                <div class="form-group">
+                    <label class="col-form-label">Fecha de Inicio:</label>
+                    {{ form.fechaInicio }}
+                </div>
+                <div class="form-group">
+                    <label class="col-form-label">Fecha de Finalización:</label>
+                    {{ form.fechaFin }}
+                </div>
+
+
+                <br>
                 <p align="center">
                     <button type="submit" class="btn btn-primary">Guardar</button>
-                    <a href="{% url 'tareas:listar_tareas' idProyecto %}" class="btn btn-primary"
+                    <a href="{% url 'proyectos:listar_tareas' idProyecto %}" class="btn btn-primary"
                         role="button">Cancelar</a>
                 </p>
             </form>

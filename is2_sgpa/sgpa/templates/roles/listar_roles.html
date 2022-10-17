@@ -31,9 +31,11 @@
                             {% endif %}
                         </td>
                         <td scope="col">
-                            <a href="{% url 'roles:editar_rol' idProyecto rol.id %}" class="btn boton-color">Modificar
+                            <a href="{% url 'proyectos:editar_rol' idProyecto rol.id %}"
+                                class="btn boton-color">Modificar
                                 Rol</a>
-                            <a href="{% url 'roles:eliminar_rol' idProyecto rol.id %}" class="btn boton-color">Eliminar
+                            <a href="{% url 'proyectos:eliminar_rol' idProyecto rol.id %}"
+                                class="btn boton-color">Eliminar
                                 Rol</a>
                         </td>
                     </tr>
@@ -46,7 +48,7 @@
     <h4 align="center">El proyecto no tiene roles creados</h4><br>
     {% endif %}
     <p align="center">
-        <a href="{% url 'roles:crear_rol' idProyecto %}" class="btn boton-color">Crear Rol</a>
+        <a href="{% url 'proyectos:crear_rol' idProyecto %}" class="btn boton-color">Crear Rol</a>
         <a href="{% url 'proyectos:ver_proyecto' idProyecto %}" class="btn boton-color" role="button">Volver</a>
     </p>
 </div>

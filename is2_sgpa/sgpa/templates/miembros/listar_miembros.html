@@ -28,7 +28,8 @@
                         <td> {{ miembros.idPerfil.user.first_name }} </td>
                         <td> {{ miembros.idPerfil.user.last_name }} </td>
                         <td> {{ miembros.idProyecto.nombre }} </td>
-                        <td> <a class="btn btn-danger" href="{% url 'miembros:eliminar' miembros.id %}">Eliminar</a>
+                        <td> <a class="btn btn-danger" href="{% url 'proyectos:eliminar_miembro' miembros.id
+                                %}">Eliminar</a>
                         </td>
                     </tr>
                     {% endfor %}
