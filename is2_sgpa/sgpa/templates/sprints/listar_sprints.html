@@ -1,6 +1,26 @@
 {% extends 'base.html' %}
 {% block content%}
 <br>
+{% if messages %}
+{% for message in messages %}
+{% if 'error' in message.tags %}
+<div class="alert alert-danger alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    {{ message }}
+</div>
+{% endif %}
+{% if 'info' in message.tags %}
+<div class="alert alert-dismissible alert-info" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    {{ message }}
+</div>
+{% endif %}
+{% endfor %}
+{% endif %}
 <div class="container-fluid">
     <ins>
         <h3 align="center">Sprints del Proyecto</h3>
@@ -34,6 +54,12 @@
                                 class="btn boton-color"><i class="fas fa-pen"></i></a>
                             <a href="{% url 'proyectos:eliminar_sprint' proyecto sprint.id %}" class="btn btn-danger"><i
                                     class="fas fa-trash"></i></a>
+                            <a href="{% url 'proyectos:iniciar_sprint' proyecto sprint.id %}"
+                                class="btn boton-iniciar"><i class="fa-solid fa-play"></i>Iniciar</a>
+                            <a href="{% url 'proyectos:finalizar_sprint' proyecto sprint.id %}"
+                                class="btn boton-iniciar"><i class="fa-solid fa-play"></i>Finalizar</a>
+                            <a href="{% url 'proyectos:cancelar_sprint' proyecto sprint.id %}"
+                                class="btn boton-iniciar"><i class="fa-solid fa-play"></i>Cancelar</a>
                         </td>
                     </tr>
                     {% endfor %}

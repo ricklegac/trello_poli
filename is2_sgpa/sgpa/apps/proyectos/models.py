@@ -26,9 +26,6 @@ ESTADOBL_CHOICES = [
 TIPOBL_CHOICES = [
     ("Product_Backlog", "Product_Backlog"),
     ("Sprint_Backlog", "Sprint_Backlog"),
-    ("Doing", "Doing"),
-    ("To_Do", "To_Do"),
-    ("Done", "Done"),
 ]
 
 ESTADOUS_CHOICES = [
@@ -56,8 +53,8 @@ class Proyecto(models.Model):
     scrumMaster = models.ForeignKey(to="usuarios.Perfil", on_delete=models.CASCADE)
     equipo = models.OneToOneField(Group, on_delete=models.CASCADE, null=True)
 
-    def str(self):
-        return "{}".format(self.nombre)
+    def __str__(self):
+        return self.nombre
 
 
 class Backlog(models.Model):
@@ -72,7 +69,7 @@ class Backlog(models.Model):
     )
 
     def __str__(self):
-        return "{}".format(self.nombre)
+        return self.nombre
 
 
 class Sprint(models.Model):
@@ -136,6 +133,9 @@ class Rol(models.Model):
             ("Eliminar user story", "Permite eliminar un user story"),
         )
 
+    def __str__(self):
+        return self.nombre
+
 
 class TipoUserStory(models.Model):
     nombre = models.CharField(max_length=150)
@@ -152,6 +152,9 @@ class Columnas(models.Model):
     tipo_us = models.ForeignKey(
         TipoUserStory, on_delete=models.CASCADE, related_name="columnas"
     )
+
+    def __str__(self):
+        return self.nombre
 
 
 class UserStory(models.Model):
@@ -182,4 +185,4 @@ class UserStory(models.Model):
     )
 
     def __str__(self):
-        return "{}".format(self.nombre)
+        return self.nombre

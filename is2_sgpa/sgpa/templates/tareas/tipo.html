@@ -5,7 +5,7 @@
     <form method="post">
         {% csrf_token %}
         <div class="form-group">
-            <label class="col-form-label">Nombre:</label>
+            <label class="col-form-label">Nombre del Tipo:</label>
             {{ form.nombre }}
         </div>
         <br>
@@ -14,5 +14,12 @@
             <a href="{% url 'proyectos:listar_tareas' idProyecto %}" class="btn btn-primary" role="button">Cancelar</a>
         </p>
     </form>
+    <form>
+        <div id="forms">
+            {{ d_form.nombre }}
+        </div>
+        <button id="add-more">add another</button>
+    </form>
+    <br>
 </div>
 {% endblock %}

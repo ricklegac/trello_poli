@@ -1,8 +1,10 @@
+from datetime import datetime
 from django import forms
 from django.db.models import Q
 from usuarios.models import Perfil
 from proyectos.models import (
     Backlog,
+    Columnas,
     Miembro,
     Proyecto,
     Rol,
@@ -167,6 +169,25 @@ class Rol_Form(forms.ModelForm):
 
 
 class UserStoryForm(forms.ModelForm):
+    def __init__(self, idProyecto, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        tipos = TipoUserStory.objects.filter(proyecto=idProyecto).order_by("id")
+        backlogs = Backlog.objects.filter(proyecto=idProyecto)
+        sprints = (
+            Sprint.objects.filter(proyecto=idProyecto)
+            .order_by("posicion")
+            .exclude(estado="Cancelado")
+            .exclude(estado="Finalizado")
+        )
+
+        self.fields["tipo"].queryset = tipos
+        self.fields["tipo"].initial = tipos.first()
+        self.fields["backlog"].queryset = backlogs
+        self.fields["backlog"].initial = backlogs.first()
+        self.fields["sprint"].queryset = sprints
+        self.fields["sprint"].initial = sprints.first()
+
     class Meta:
         model = UserStory
         fields = [
@@ -206,6 +227,21 @@ class UserStoryForm(forms.ModelForm):
 
 
 class UserStoryEdit_Form(forms.ModelForm):
+    def __init__(self, idProyecto, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        tipos = TipoUserStory.objects.filter(proyecto=idProyecto).order_by("id")
+        backlogs = Backlog.objects.filter(proyecto=idProyecto)
+        sprints = (
+            Sprint.objects.filter(proyecto=idProyecto)
+            .order_by("posicion")
+            .exclude(estado="Cancelado")
+            .exclude(estado="Finalizado")
+        )
+        self.fields["tipo"].queryset = tipos
+        self.fields["backlog"].queryset = backlogs
+        self.fields["sprint"].queryset = sprints
+
     class Meta:
         model = UserStory
         fields = [
@@ -243,17 +279,24 @@ class UserStoryEdit_Form(forms.ModelForm):
             "sprint": forms.Select(attrs={"class": "form-control"}),
         }
 
-        def init(self, args, **kwargs):
-            super(UserStoryEdit_Form, self).init(args, **kwargs)
-            self.fields["desarrollador"].queryset = Miembro.objects.filter(~Q(id=1))
-            self.fields["backlog"].queryset = Backlog.objects.filter(
-                ~Q(proyecto=self.fields["sprint"].proyecto.id)
-            )
-
 
 class TipoUserStoryForm(forms.ModelForm):
     class Meta:
         model = TipoUserStory
+        fields = [
+            "nombre",
+        ]
+        labels = {
+            "nombre": "Nombre",
+        }
+        widgets = {
+            "nombre": forms.TextInput(attrs={"class": "form-control"}),
+        }
+
+
+class ColumnasForm(forms.ModelForm):
+    class Meta:
+        model = Columnas
         fields = [
             "nombre",
         ]
