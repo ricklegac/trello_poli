@@ -18,6 +18,7 @@ from proyectos.views import (
     miembroCrear,
     miembroEliminar,
     modificarUserStory,
+    tableroKanban,
     verMiembros,
     verProyecto,
     crearProyecto,
@@ -72,6 +73,11 @@ urlpatterns = [
         "<int:id_proyecto>/sprint/finalizar/<int:id_sprint>/",
         finalizarSprint,
         name="finalizar_sprint",
+    ),
+    path(
+        "<int:idProyecto>/sprint/kanban/<int:idSprint>/",
+        tableroKanban,
+        name="kanban",
     ),
     path("<int:id_proyecto>/historial/", verHistorial, name="ver_historial"),
     # Miembros

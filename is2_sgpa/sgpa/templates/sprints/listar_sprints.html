@@ -45,8 +45,8 @@
                     {% for sprint in sprints %}
                     <tr>
                         <td scope="col">{{sprint.posicion}}</td>
-                        </td>
-                        <td scope="col">{{sprint.objetivos}}</td>
+                        <td scope="col"><a href="{% url 'proyectos:kanban' proyecto sprint.id %}">
+                                {{sprint.objetivos}} </a></td>
                         <td scope="col">{{sprint.estado}}</td>
                         <td scope="col">{{sprint.numTareas}}</td>
                         <td scope="col">

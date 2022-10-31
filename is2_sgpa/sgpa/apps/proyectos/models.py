@@ -28,13 +28,6 @@ TIPOBL_CHOICES = [
     ("Sprint_Backlog", "Sprint_Backlog"),
 ]
 
-ESTADOUS_CHOICES = [
-    ("En_Cola", "En Cola"),
-    ("To_Do", "To Do"),
-    ("Doing", "Doing"),
-    ("Done", "Done"),
-]
-
 
 class Proyecto(models.Model):
     nombre = models.CharField(max_length=50, blank=False)
@@ -167,7 +160,9 @@ class UserStory(models.Model):
     )
     nombre = models.CharField(max_length=150, blank=False)
     descripcion = models.TextField(max_length=300, blank=False)
-    estado = models.CharField(blank=True, default="En_Cola", max_length=7)
+    estado = models.ForeignKey(
+        to=Columnas, on_delete=models.CASCADE, null=True, blank=True
+    )
     desarrollador = models.ForeignKey(
         to="usuarios.Perfil", on_delete=models.CASCADE, null=True, blank=True
     )

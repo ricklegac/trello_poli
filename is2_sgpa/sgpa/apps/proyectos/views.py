@@ -23,6 +23,7 @@ from django.contrib.auth.models import Group, User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from proyectos.forms import (
     ColumnasForm,
+    KanbanForm,
     MiembrosForm,
     Proyecto_Form,
     ProyectoEdit_Form,
@@ -1069,16 +1070,18 @@ def crearUserStory(request, idProyecto):
             backlog.numTareas += 1
             backlog.save()
             proyecto.save()
+            tipo = form.cleaned_data["tipo"]
+            estado = Columnas.objects.filter(tipo_us=tipo).first()
             userStory = UserStory.objects.create(
                 backlog=backlog,
                 nombre=form.cleaned_data["nombre"],
                 descripcion=form.cleaned_data["descripcion"],
                 prioridad=form.cleaned_data["prioridad"],
-                estado="En_Cola",
+                estado=estado,
                 desarrollador=form.cleaned_data["desarrollador"],
                 fechaInicio=form.cleaned_data["fechaInicio"],
                 fechaFin=form.cleaned_data["fechaFin"],
-                tipo=form.cleaned_data["tipo"],
+                tipo=tipo,
                 sprint=form.cleaned_data["sprint"],
             )
             userStory.save()
@@ -1266,3 +1269,42 @@ def crearTipoUS(request, idProyecto):
         data["form"] = form
         data["d_form"] = d_form
         return render(request, "tareas/tipo.html", context)
+
+
+# --- Crear User Story --- #
+@login_required
+def tableroKanban(request, idProyecto, idSprint):
+    proyecto = Proyecto.objects.get(id=idProyecto)
+    context = {"idProyecto": idProyecto}
+
+    if request.method == "GET":
+        context["form"] = KanbanForm(idProyecto)
+        tipos = TipoUserStory.objects.filter(proyecto=idProyecto).order_by("id")
+        tipo = tipos.first()
+        columnas = Columnas.objects.filter(tipo_us=tipo)
+        datos = []
+        for columna in columnas:
+            datos.append(
+                {
+                    "columna": columna.nombre,
+                    "tareas": UserStory.objects.filter(estado=columna),
+                }
+            )
+        context["datos"] = datos
+        return render(request, "sprints/tablero_kanban.html", context)
+
+    elif request.method == "POST":
+        form = KanbanForm(idProyecto, request.POST)
+        tipo = TipoUserStory.objects.get(id=form.data["tipo"])
+        columnas = Columnas.objects.filter(tipo_us=tipo)
+        datos = []
+        for columna in columnas:
+            datos.append(
+                {
+                    "columna": columna.nombre,
+                    "tareas": UserStory.objects.filter(estado=columna),
+                }
+            )
+        context["datos"] = datos
+        context["form"] = form
+        return render(request, "sprints/tablero_kanban.html", context)

@@ -306,3 +306,27 @@ class ColumnasForm(forms.ModelForm):
         widgets = {
             "nombre": forms.TextInput(attrs={"class": "form-control"}),
         }
+
+
+class KanbanForm(forms.ModelForm):
+    def __init__(self, idProyecto, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        tipos = TipoUserStory.objects.filter(proyecto=idProyecto).order_by("id")
+        self.fields["tipo"].queryset = tipos
+        self.fields["tipo"].initial = tipos.first()
+
+    class Meta:
+        model = UserStory
+        fields = [
+            "nombre",
+            "tipo",
+        ]
+        labels = {
+            "nombre": "Nombre",
+            "tipo": "Tipo",
+        }
+        widgets = {
+            "nombre": forms.TextInput(attrs={"class": "form-control"}),
+            "tipo": forms.Select(attrs={"class": "form-control"}),
+        }
