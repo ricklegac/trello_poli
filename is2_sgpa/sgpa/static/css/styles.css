@@ -45,8 +45,29 @@
 .boton-iniciar {
     text-decoration: none;
     color: #fff;
+    background-color: #088cb8;
+    border-color: #088cb8;
+}
+
+.boton-finalizar {
+    text-decoration: none;
+    color: #fff;
     background-color: #056406;
-    border-color: #4723D9;
+    border-color: #056406;
+}
+
+.boton-cancelar {
+    text-decoration: none;
+    color: #fff;
+    background-color: #c6c621;
+    border-color: #9d9d0a;
+}
+
+.boton-agregar {
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+    background-color: #cfe2ff;
+    border-color: #a8c6f2;
 }
 
 /* Tablero Kanban */

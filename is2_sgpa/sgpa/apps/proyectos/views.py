@@ -443,7 +443,19 @@ def modificarSprints(request, id_proyecto, id_sprint):
     else:
         sprint_Form = SprintEdit_Form(request.POST, instance=sprint)
         if sprint_Form.is_valid():
+            print(sprint_Form.data)
             sprint_Form.save()
+            duracion = round(
+                (
+                    sprint_Form.cleaned_data["fechaFin"]
+                    - sprint_Form.cleaned_data["fechaInicio"]
+                ).days
+                / 7,
+                2,
+            )
+            sprint.duracion = duracion
+            sprint.tiempo_disponible = duracion
+            sprint.save()
         else:
             print(sprint_Form.errors.items())
 
@@ -1148,6 +1160,9 @@ def asignarSprint(request, idProyecto, idSprint, idTarea):
     sprint = Sprint.objects.get(id=idSprint)
     sprint.numTareas += 1
 
+    print("td", sprint.tiempo_disponible)
+    print("us", round((tarea.fechaFin - tarea.fechaInicio).days / 7, 2))
+
     if sprint.tiempo_disponible == 0:
         messages.error(
             request,
@@ -1273,6 +1288,7 @@ def tableroKanban(request, idProyecto, idSprint):
     sprint = Sprint.objects.get(id=idSprint)
     context = {"idProyecto": idProyecto}
     context["idSprint"] = idSprint
+    context["sprint"] = sprint
 
     if request.method == "GET":
         context["form"] = KanbanForm(idProyecto)
@@ -1299,7 +1315,7 @@ def tableroKanban(request, idProyecto, idSprint):
             datos.append(
                 {
                     "columna": columna.nombre,
-                    "tareas": UserStory.objects.filter(estado=columna),
+                    "tareas": UserStory.objects.filter(estado=columna, sprint=sprint),
                 }
             )
         context["datos"] = datos
