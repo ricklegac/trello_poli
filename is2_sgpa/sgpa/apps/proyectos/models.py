@@ -69,7 +69,8 @@ class Sprint(models.Model):
     objetivos = models.CharField(max_length=300, blank=False, null=True)
     posicion = models.IntegerField(blank=False, null=True)
     numTareas = models.IntegerField(default=0)
-    duracion = models.IntegerField(default=0)  # entero referido al numero de semanas
+    duracion = models.FloatField(default=0)  # numero referido al numero de semanas
+    tiempo_disponible = models.FloatField(default=0)
     estado = models.CharField(
         max_length=10, choices=ESTADOSPR_CHOICES, default="En_cola"
     )
@@ -156,6 +157,7 @@ class UserStory(models.Model):
         to="proyectos.Backlog",
         on_delete=models.CASCADE,
         null=True,
+        blank=True,
         related_name="user_stories",
     )
     nombre = models.CharField(max_length=150, blank=False)
@@ -170,7 +172,7 @@ class UserStory(models.Model):
     fechaInicio = models.DateField(default=timezone.now)
     fechaFin = models.DateField(null=True)
     sprint = models.ForeignKey(
-        to="proyectos.Sprint", on_delete=models.CASCADE, null=True
+        to="proyectos.Sprint", on_delete=models.CASCADE, null=True, blank=True
     )
     prioridad = models.PositiveIntegerField(
         validators=[MinValueValidator(0), MaxValueValidator(100)], default=0

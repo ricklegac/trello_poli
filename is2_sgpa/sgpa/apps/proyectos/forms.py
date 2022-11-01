@@ -60,7 +60,7 @@ class Sprint_Form(forms.ModelForm):
 class SprintEdit_Form(forms.ModelForm):
     class Meta:
         model = Sprint
-        fields = ["objetivos", "fechaInicio", "fechaFin", "duracion"]
+        fields = ["objetivos", "fechaInicio", "fechaFin"]
         labels = {
             "objetivos": "Objetivos",
             "fechaInicio": "Fecha de inicio",
