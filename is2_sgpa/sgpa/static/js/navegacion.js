@@ -47,15 +47,29 @@ function habilitar() {
 activar_op.addEventListener('click', habilitar, true)
 
 
-/*(function reloj(){
-    var fecha=new Date();
-    document.write(fecha);
-    document.log(fecha.getHours());
-    document.log(fecha.getMinutes());
-    document.log(fecha.getSeconds());
-    
-    document.log(fecha.getDay());
-    document.log(fecha.getDate());
-    document.log(fecha.getMonth());
-    document.log(fecha.getFullYear());
-}())*/
+
+// Form dinamico 1
+
+let form_count = Number($("[name=extra_field_count]").val());
+// get extra form count so we know what index to use for the next item.
+
+$("#add-another").click(function () {
+    form_count++;
+
+    let element = $('<input type="text"/>');
+    element.attr('name', 'extra_field_' + form_count);
+    $("#forms").append(element);
+    // build element and append it to our forms container
+
+    $("[name=extra_field_count]").val(form_count);
+    // increment form count so our view knows to populate 
+    // that many fields for validation
+})
+
+
+// Form dinamico 2
+const addMoreBtn = document.getElementById('add-more')
+addMoreBtn.addEventListener('click', add_new_form)
+function add_new_form(args) {
+    console.log(args)
+}

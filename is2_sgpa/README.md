@@ -1,4 +1,5 @@
-# SGPA
+# trello_poli
+sistema de gestión ágil de proyectos
 
 ## Requerimientos
 - Python 3.8 o superior.

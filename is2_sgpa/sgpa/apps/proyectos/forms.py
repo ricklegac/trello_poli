@@ -1,8 +1,10 @@
+from datetime import datetime
 from django import forms
 from django.db.models import Q
 from usuarios.models import Perfil
 from proyectos.models import (
     Backlog,
+    Columnas,
     Miembro,
     Proyecto,
     Rol,
@@ -11,7 +13,6 @@ from proyectos.models import (
     UserStory,
 )
 from django.contrib.auth.models import Permission
-from django.forms import Form, CharField, IntegerField
 
 
 class Proyecto_Form(forms.ModelForm):
@@ -58,7 +59,7 @@ class Sprint_Form(forms.ModelForm):
 class SprintEdit_Form(forms.ModelForm):
     class Meta:
         model = Sprint
-        fields = ["objetivos", "fechaInicio", "fechaFin", "duracion"]
+        fields = ["objetivos", "fechaInicio", "fechaFin"]
         labels = {
             "objetivos": "Objetivos",
             "fechaInicio": "Fecha de inicio",
@@ -167,6 +168,25 @@ class Rol_Form(forms.ModelForm):
 
 
 class UserStoryForm(forms.ModelForm):
+    def __init__(self, idProyecto, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        tipos = TipoUserStory.objects.filter(proyecto=idProyecto).order_by("id")
+        backlogs = Backlog.objects.filter(proyecto=idProyecto)
+        sprints = (
+            Sprint.objects.filter(proyecto=idProyecto)
+            .order_by("posicion")
+            .exclude(estado="Cancelado")
+            .exclude(estado="Finalizado")
+        )
+
+        self.fields["tipo"].queryset = tipos
+        self.fields["tipo"].initial = tipos.first()
+        self.fields["backlog"].queryset = backlogs
+        self.fields["backlog"].initial = backlogs.first()
+        self.fields["sprint"].queryset = sprints
+        self.fields["sprint"].initial = sprints.first()
+
     class Meta:
         model = UserStory
         fields = [
@@ -206,14 +226,25 @@ class UserStoryForm(forms.ModelForm):
 
 
 class UserStoryEdit_Form(forms.ModelForm):
+    def __init__(self, idProyecto, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        tipos = TipoUserStory.objects.filter(proyecto=idProyecto).order_by("id")
+        sprints = (
+            Sprint.objects.filter(proyecto=idProyecto)
+            .order_by("posicion")
+            .exclude(estado="Cancelado")
+            .exclude(estado="Finalizado")
+        )
+        self.fields["tipo"].queryset = tipos
+        self.fields["sprint"].queryset = sprints
+
     class Meta:
         model = UserStory
         fields = [
-            "backlog",
             "nombre",
             "descripcion",
             "prioridad",
-            "estado",
             "desarrollador",
             "fechaInicio",
             "fechaFin",
@@ -221,7 +252,6 @@ class UserStoryEdit_Form(forms.ModelForm):
             "sprint",
         ]
         labels = {
-            "backlog": "Backlog",
             "nombre": "Nombre",
             "descripcion": "Descripcion",
             "prioridad": "Prioridad",
@@ -232,7 +262,6 @@ class UserStoryEdit_Form(forms.ModelForm):
             "sprint": "Sprint",
         }
         widgets = {
-            "backlog": forms.Select(attrs={"class": "form-control"}),
             "nombre": forms.TextInput(attrs={"class": "form-control"}),
             "descripcion": forms.TextInput(attrs={"class": "form-control"}),
             "prioridad": forms.TextInput(attrs={"class": "form-control"}),
@@ -242,13 +271,6 @@ class UserStoryEdit_Form(forms.ModelForm):
             "tipo": forms.Select(attrs={"class": "form-control"}),
             "sprint": forms.Select(attrs={"class": "form-control"}),
         }
-
-        def init(self, args, **kwargs):
-            super(UserStoryEdit_Form, self).init(args, **kwargs)
-            self.fields["desarrollador"].queryset = Miembro.objects.filter(~Q(id=1))
-            self.fields["backlog"].queryset = Backlog.objects.filter(
-                ~Q(proyecto=self.fields["sprint"].proyecto.id)
-            )
 
 
 class TipoUserStoryForm(forms.ModelForm):
@@ -262,4 +284,42 @@ class TipoUserStoryForm(forms.ModelForm):
         }
         widgets = {
             "nombre": forms.TextInput(attrs={"class": "form-control"}),
+        }
+
+
+class ColumnasForm(forms.ModelForm):
+    class Meta:
+        model = Columnas
+        fields = [
+            "nombre",
+        ]
+        labels = {
+            "nombre": "Nombre",
+        }
+        widgets = {
+            "nombre": forms.TextInput(attrs={"class": "form-control"}),
+        }
+
+
+class KanbanForm(forms.ModelForm):
+    def __init__(self, idProyecto, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        tipos = TipoUserStory.objects.filter(proyecto=idProyecto).order_by("id")
+        self.fields["tipo"].queryset = tipos
+        self.fields["tipo"].initial = tipos.first()
+
+    class Meta:
+        model = UserStory
+        fields = [
+            "nombre",
+            "tipo",
+        ]
+        labels = {
+            "nombre": "Nombre",
+            "tipo": "Tipo",
+        }
+        widgets = {
+            "nombre": forms.TextInput(attrs={"class": "form-control"}),
+            "tipo": forms.Select(attrs={"class": "form-control"}),
         }

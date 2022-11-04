@@ -1,6 +1,26 @@
 {% extends 'base.html' %}
 {% block content%}
 <br>
+{% if messages %}
+{% for message in messages %}
+{% if 'error' in message.tags %}
+<div class="alert alert-danger alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    {{ message }}
+</div>
+{% endif %}
+{% if 'info' in message.tags %}
+<div class="alert alert-dismissible alert-info" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    {{ message }}
+</div>
+{% endif %}
+{% endfor %}
+{% endif %}
 <div class="container-fluid">
     <ins>
         <h3 align="center">Sprints del Proyecto</h3>
@@ -18,6 +38,8 @@
                         <th>Objetivo</th>
                         <th>Estado</th>
                         <th>Num. Tareas</th>
+                        <th>Duración</th>
+                        <th>Tiempo Disponible</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -25,15 +47,25 @@
                     {% for sprint in sprints %}
                     <tr>
                         <td scope="col">{{sprint.posicion}}</td>
-                        </td>
-                        <td scope="col">{{sprint.objetivos}}</td>
+                        <td scope="col"><a href="{% url 'proyectos:kanban' proyecto sprint.id %}">
+                                {{sprint.objetivos}} </a></td>
                         <td scope="col">{{sprint.estado}}</td>
                         <td scope="col">{{sprint.numTareas}}</td>
+                        <td scope="col">{{sprint.duracion}}</td>
+                        <td scope="col">{{sprint.tiempo_disponible}}</td>
                         <td scope="col">
                             <a href="{% url 'proyectos:modificar_sprint' proyecto sprint.id %}"
                                 class="btn boton-color"><i class="fas fa-pen"></i></a>
                             <a href="{% url 'proyectos:eliminar_sprint' proyecto sprint.id %}" class="btn btn-danger"><i
                                     class="fas fa-trash"></i></a>
+                            <a href="{% url 'proyectos:iniciar_sprint' proyecto sprint.id %}"
+                                class="btn boton-iniciar"><i class="fa-solid fa-play"></i></a>
+                            <a href="{% url 'proyectos:finalizar_sprint' proyecto sprint.id %}"
+                                class="btn boton-finalizar"><i class="fa-solid fa-check"></i></a>
+                            <a href="{% url 'proyectos:cancelar_sprint' proyecto sprint.id %}"
+                                class="btn boton-cancelar"><i class="fa-solid fa-xmark"></i></a>
+                            <a href="{% url 'proyectos:sprint_tareas' proyecto sprint.id %}"
+                                class="btn boton-agregar">Agregar Tareas</a>
                         </td>
                     </tr>
                     {% endfor %}
