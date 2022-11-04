@@ -66,30 +66,30 @@ class Backlog(models.Model):
 
 
 class Sprint(models.Model):
-    objetivos = models.CharField(max_length=300, blank=False, null=True)
-    posicion = models.IntegerField(blank=False, null=True)
-    numTareas = models.IntegerField(default=0)
+    objetivos = models.CharField(max_length=300, blank=False, null=True) # objetivos
+    posicion = models.IntegerField(blank=False, null=True) # posicion
+    numTareas = models.IntegerField(default=0) #num tareas
     duracion = models.FloatField(default=0)  # numero referido al numero de semanas
-    tiempo_disponible = models.FloatField(default=0)
+    tiempo_disponible = models.FloatField(default=0) # tiempo disponible
     estado = models.CharField(
         max_length=10, choices=ESTADOSPR_CHOICES, default="En_cola"
     )
     proyecto = models.ForeignKey(
         Proyecto, null=True, blank=False, on_delete=models.CASCADE
     )
-    fechaCreacion = models.DateField(auto_now_add=True)
-    fechaInicio = models.DateField(null=True)
-    fechaFin = models.DateField(null=True)
+    fechaCreacion = models.DateField(auto_now_add=True) #fecha creacion
+    fechaInicio = models.DateField(null=True) # fecha inicio
+    fechaFin = models.DateField(null=True) #fecha fin
 
     def __str__(self):
         return self.objetivos
 
 
 class Historial(models.Model):
-    categoria = models.CharField(max_length=80)
-    operacion = models.CharField(max_length=150)
-    fecha = models.DateTimeField(auto_now_add=True)
-    autor = models.CharField(max_length=80, null=True)
+    categoria = models.CharField(max_length=80) # categoria
+    operacion = models.CharField(max_length=150) # operacion
+    fecha = models.DateTimeField(auto_now_add=True) # fecha
+    autor = models.CharField(max_length=80, null=True) # autor
     proyecto = models.ForeignKey(
         Proyecto, null=False, blank=False, on_delete=models.CASCADE
     )
@@ -106,7 +106,7 @@ class Miembro(models.Model):
 
 
 class Rol(models.Model):
-    grupo = models.OneToOneField(Group, on_delete=models.CASCADE)
+    grupo = models.OneToOneField(Group, on_delete=models.CASCADE) #grupo
     nombre = models.CharField(max_length=50)
     proyecto = models.ForeignKey(
         Proyecto, on_delete=models.CASCADE, null=True, blank=True
