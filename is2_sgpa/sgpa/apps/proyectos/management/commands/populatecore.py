@@ -52,10 +52,10 @@ class Command(BaseCommand):
         user.save()
 
         user = User.objects.create(
-            username="marito",
-            email="marito@gmail.com",
-            first_name="Marito",
-            last_name="Presidente",
+            username="Jesús",
+            email="jesus@gmail.com",
+            first_name="Jesús",
+            last_name="Gonzalez",
             is_active=True,
             is_staff=True,
             is_superuser=True,
