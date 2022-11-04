@@ -3,6 +3,11 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
+"""_summary_
+
+    Returns:models
+        _type_: _description_ mod
+"""
 
 class Perfil(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
