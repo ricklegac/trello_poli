@@ -305,3 +305,173 @@ class Command(BaseCommand):
         )
 
         #!Activo
+        perfiles = Perfil.objects.all()
+        scrummaster = Perfil.objects.get(id=perfiles[0].id)
+        proyecto = Proyecto.objects.create(
+            nombre="Proyecto 1 Prueba Activo",
+            descripcion="Esta es una prueba generada por el script",
+            fechaCreacion="2022-11-04",
+            fechaInicio="2022-11-04",
+            fechaFin="2022-11-04",
+            scrumMaster=scrummaster,
+        )
+        Miembro.objects.create(idPerfil=scrummaster, idProyecto=proyecto)
+        equipo = Group.objects.create(name="equipo%s" % proyecto.id)
+        proyecto.equipo = equipo
+        proyecto.save()
+
+        Historial.objects.create(
+            operacion="Creacion del Proyecto {}".format(proyecto.nombre),
+            autor=perfiles[0].__str__(),
+            proyecto=Proyecto.objects.get(id=proyecto.id),
+            categoria="Proyecto",
+        )
+
+        backlog = Backlog.objects.create(
+            nombre="Product backlog", proyecto=proyecto, tipo="Product_Backlog"
+        )
+        backlog.save()
+        Historial.objects.create(
+            operacion="Creacion del Product Backlog del proyecto {}".format(
+                proyecto.nombre
+            ),
+            autor=perfiles[0].__str__(),
+            proyecto=Proyecto.objects.get(id=proyecto.id),
+            categoria="Backlog",
+        )
+
+        # Rol
+        nombreRol = "Desarrollador"
+        nombreGrupo = "{}{}".format(nombreRol, proyecto.id)
+        grupo = Group.objects.create(name=nombreGrupo)
+        perms_names = ["Crear user story", "Permite crear un user story"]
+        permisos = Permission.objects.filter(name__in=perms_names)
+        grupo.permissions.set(permisos)
+        rol = Rol.objects.create(
+            nombre=nombreRol,
+            grupo=grupo,
+            proyecto=proyecto,
+        )
+        Historial.objects.create(
+            operacion="Se crea el rol {}".format(rol.nombre),
+            autor=perfiles[0].__str__(),
+            proyecto=Proyecto.objects.get(id=proyecto.id),
+            categoria="Rol",
+        )
+
+        rol.grupo.user_set.add(users[0])
+        rol.save()
+        Historial.objects.create(
+            operacion="Se asigna el rol {} al usuario {}".format(
+                rol.nombre, f"{users[0].first_name} {users[0].last_name}"
+            ),
+            autor=perfiles[0].__str__(),
+            proyecto=Proyecto.objects.get(id=proyecto.id),
+            categoria="Rol",
+        )
+
+        tipo_us = TipoUserStory.objects.create(nombre="Default", proyecto=proyecto)
+        tipo_us.save
+        columna1 = Columnas.objects.create(nombre="To Do", tipo_us=tipo_us)
+        columna1.save
+        columna2 = Columnas.objects.create(nombre="Doing", tipo_us=tipo_us)
+        columna2.save
+        columna3 = Columnas.objects.create(nombre="Pending Review", tipo_us=tipo_us)
+        columna3.save
+        columna4 = Columnas.objects.create(nombre="Done", tipo_us=tipo_us)
+        columna4.save
+
+        Historial.objects.create(
+            operacion="Creacion del tipo de US {}".format(tipo_us.nombre),
+            autor=perfiles[0].__str__(),
+            proyecto=Proyecto.objects.get(id=proyecto.id),
+            categoria="Tipo User Story",
+        )
+
+        sprint = Sprint.objects.create(
+            objetivos="Sprint test",
+            estado="En_cola",
+            proyecto=proyecto,
+            fechaCreacion="2022-11-04",
+            fechaInicio="2022-11-04",
+            fechaFin="2022-11-04",
+        )
+        sprint.estado = "Activo"
+        sprint.save()
+
+        Historial.objects.create(
+            operacion="Creacion del sprint con objetivo:{} del proyecto {}".format(
+                sprint.objetivos, proyecto.nombre
+            ),
+            autor=perfiles[0].__str__(),
+            proyecto=Proyecto.objects.get(id=proyecto.id),
+            categoria="Proyecto",
+        )
+
+        tarea = UserStory.objects.create(
+            nombre="Tarea de Prueba",
+            descripcion="generada por el script",
+            estado=columna1,
+            desarrollador=perfiles[0],
+            fechaCreacion="2022-11-04",
+            fechaInicio="2022-11-04",
+            fechaFin="2022-11-04",
+            tipo=tipo_us,
+            sprint=sprint,
+            backlog=backlog,
+        )
+        tarea.save()
+        Historial.objects.create(
+            operacion="Creacion del User Story {}".format(tarea.nombre),
+            autor=perfiles[0].__str__(),
+            proyecto=Proyecto.objects.get(id=proyecto.id),
+            categoria="User Story",
+        )
+
+        tarea.estado = columna2
+        tarea.save()
+        Historial.objects.create(
+            operacion="User Story avanza de estado a {}".format(tarea.estado.nombre),
+            autor=perfiles[0].__str__(),
+            proyecto=Proyecto.objects.get(id=proyecto.id),
+            categoria="User Story",
+        )
+
+        tarea.estado = columna3
+        tarea.save()
+        Historial.objects.create(
+            operacion="User Story avanza de estado a {}".format(tarea.estado.nombre),
+            autor=perfiles[0].__str__(),
+            proyecto=Proyecto.objects.get(id=proyecto.id),
+            categoria="User Story",
+        )
+
+        tarea.estado = columna4
+        tarea.save()
+        Historial.objects.create(
+            operacion="User Story avanza de estado a {}".format(tarea.estado.nombre),
+            autor=perfiles[0].__str__(),
+            proyecto=Proyecto.objects.get(id=proyecto.id),
+            categoria="User Story",
+        )
+
+        sprint.numTareas = 1
+        sprint.estado = "Finalizado"
+        sprint.save()
+        Historial.objects.create(
+            operacion="Se completan las tareas del sprint con objetivo:{}".format(
+                sprint.objetivos
+            ),
+            autor=perfiles[0].__str__(),
+            proyecto=Proyecto.objects.get(id=proyecto.id),
+            categoria="Sprint",
+        )
+
+        proyecto.estado = "Iniciado"
+        proyecto.save()
+        Historial.objects.create(
+            operacion="El proyecto {} se ha iniciado".format(proyecto.nombre),
+            autor=perfiles[0].__str__(),
+            proyecto=Proyecto.objects.get(id=proyecto.id),
+            categoria="Proyecto",
+        )

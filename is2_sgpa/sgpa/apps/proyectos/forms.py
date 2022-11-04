@@ -275,11 +275,13 @@ class UserStoryEdit_Form(forms.ModelForm):
 
 class TipoUserStoryForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        id = kwargs.pop("id")
-        proyecto = Proyecto.objects.get(id=id)
-        self.proyecto = proyecto
+        try:
+            id = kwargs.pop("id")
+            proyecto = Proyecto.objects.get(id=id)
+            self.proyecto = proyecto
+        except:
+            pass
         super(TipoUserStoryForm, self).__init__(*args, **kwargs)
-        # self.fields["proyecto"].required = False
 
     def save(self, commit=True, *args, **kwargs):
         proyecto = kwargs.get("proyecto")
