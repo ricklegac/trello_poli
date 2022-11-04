@@ -13,7 +13,6 @@ from proyectos.models import (
     UserStory,
 )
 from django.contrib.auth.models import Permission
-from django.forms import Form, CharField, IntegerField
 
 
 class Proyecto_Form(forms.ModelForm):
@@ -231,7 +230,6 @@ class UserStoryEdit_Form(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         tipos = TipoUserStory.objects.filter(proyecto=idProyecto).order_by("id")
-        backlogs = Backlog.objects.filter(proyecto=idProyecto)
         sprints = (
             Sprint.objects.filter(proyecto=idProyecto)
             .order_by("posicion")
@@ -239,17 +237,14 @@ class UserStoryEdit_Form(forms.ModelForm):
             .exclude(estado="Finalizado")
         )
         self.fields["tipo"].queryset = tipos
-        self.fields["backlog"].queryset = backlogs
         self.fields["sprint"].queryset = sprints
 
     class Meta:
         model = UserStory
         fields = [
-            "backlog",
             "nombre",
             "descripcion",
             "prioridad",
-            "estado",
             "desarrollador",
             "fechaInicio",
             "fechaFin",
@@ -257,7 +252,6 @@ class UserStoryEdit_Form(forms.ModelForm):
             "sprint",
         ]
         labels = {
-            "backlog": "Backlog",
             "nombre": "Nombre",
             "descripcion": "Descripcion",
             "prioridad": "Prioridad",
@@ -268,7 +262,6 @@ class UserStoryEdit_Form(forms.ModelForm):
             "sprint": "Sprint",
         }
         widgets = {
-            "backlog": forms.Select(attrs={"class": "form-control"}),
             "nombre": forms.TextInput(attrs={"class": "form-control"}),
             "descripcion": forms.TextInput(attrs={"class": "form-control"}),
             "prioridad": forms.TextInput(attrs={"class": "form-control"}),

@@ -1116,13 +1116,16 @@ def modificarUserStory(request, idProyecto, id_tarea):
     Requiere inicio de sesión y permisos de Scrum Master o administrador
     """
     tarea = UserStory.objects.get(id=id_tarea)
-    print(tarea)
+    backlog = tarea.backlog
     if request.method == "GET":
         tarea_Form = UserStoryEdit_Form(idProyecto, instance=tarea)
     else:
         tarea_Form = UserStoryEdit_Form(idProyecto, request.POST, instance=tarea)
+        print("llega", tarea.id)
         if tarea_Form.is_valid():
+            print("es valido")
             tarea_Form.save()
+            print("save")
             # desarrollador = tarea.desarrollador
             # send_mail(
             #     "El User Story ha sido modificado",
@@ -1132,9 +1135,7 @@ def modificarUserStory(request, idProyecto, id_tarea):
             #     "is2.sgpa@gmail.com",
             #     desarrollador,
             # )
-            backlog = Backlog.objects.get(id=tarea.backlog.id)
-            proyecto = Proyecto.objects.get(id=backlog.proyecto.id)
-
+            proyecto = Proyecto.objects.get(id=idProyecto)
             user = User.objects.get(username=request.user)
             perfil = Perfil.objects.get(user=user)
             Historial.objects.create(

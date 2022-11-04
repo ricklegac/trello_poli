@@ -41,11 +41,11 @@
                     <a href="{% url 'usuarios:editar_perfilGeneral' user.id%}" class="nav_link"> <i
                             class='bx bx-user nav_icon'></i>
                         <span class="nav_name">Perfil</span> </a>
-                    <a href="{% url 'proyectos:proy'%}" class="nav_link"> <i
+                    <!-- <a href="{% url 'proyectos:proy'%}" class="nav_link"> <i
                             class='bx bx-message-square-detail nav_icon'></i>
-                        <span class="nav_name">Tareas</span> </a>
-                    <a href="#" class="nav_link"> <i class='bx bx-bar-chart-alt-2 nav_icon'></i>
-                        <span class="nav_name">Burdownchart</span> </a>
+                        <span class="nav_name">Tareas</span> </a> -->
+                    <!-- <a href="#" class="nav_link"> <i class='bx bx-bar-chart-alt-2 nav_icon'></i>
+                        <span class="nav_name">Burdownchart</span> </a> -->
                     {% elif perms.usuarios.autorizar_usuario %}
                     <a href="{% url 'usuarios:administrador' %}" class="nav_link"> <i class="fas fa-users-cog"></i>
                         <span class="nav_name">Administrador</span> </a>
