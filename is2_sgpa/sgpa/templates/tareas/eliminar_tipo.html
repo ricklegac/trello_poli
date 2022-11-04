@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4">
+
+        </div>
+        <div class="col-md-4">
+            <form method="POST">
+                {% csrf_token %}
+                <h3>Estás a punto de eliminar el siguiente sprint:</h3>
+                <div class="form-group">
+                    <label class="col-form-label">Nombre:</label>
+                    <input class="form-control" id="readOnlyInput" type="text" placeholder="{{ tipo.nombre }}"
+                        readonly="">
+                </div>
+                <div class="form-group">
+                    <label class="col-form-label">Proyecto:</label>
+                    <input class="form-control" id="readOnlyInput" type="text" placeholder="{{ tipo.proyecto }}"
+                        readonly="">
+                </div>
+                <!-- <div class="form-group">
+                    <label class="col-form-label">Núm. Tareas:</label>
+                    <input class="form-control" id="readOnlyInput" type="text" placeholder="{{ tipo.numTareas }}"
+                        readonly="">
+                </div> -->
+                <br>
+                <button type="submit" class="btn btn-danger">Confirmar</button>
+                <a href="{% url 'proyectos:listar_tipos' idProyecto %}" class="btn btn-primary"
+                    role="button">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

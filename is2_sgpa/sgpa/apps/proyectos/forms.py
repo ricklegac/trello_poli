@@ -1,4 +1,3 @@
-from datetime import datetime
 from django import forms
 from django.db.models import Q
 from usuarios.models import Perfil
@@ -13,6 +12,7 @@ from proyectos.models import (
     UserStory,
 )
 from django.contrib.auth.models import Permission
+from django.forms import modelformset_factory
 
 
 class Proyecto_Form(forms.ModelForm):
@@ -274,6 +274,21 @@ class UserStoryEdit_Form(forms.ModelForm):
 
 
 class TipoUserStoryForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        id = kwargs.pop("id")
+        proyecto = Proyecto.objects.get(id=id)
+        self.proyecto = proyecto
+        super(TipoUserStoryForm, self).__init__(*args, **kwargs)
+        # self.fields["proyecto"].required = False
+
+    def save(self, commit=True, *args, **kwargs):
+        proyecto = kwargs.get("proyecto")
+        instance = super(TipoUserStoryForm, self).save(commit=False)
+        instance.proyecto = proyecto
+        if commit:
+            instance.save()
+        return instance
+
     class Meta:
         model = TipoUserStory
         fields = [
@@ -287,18 +302,35 @@ class TipoUserStoryForm(forms.ModelForm):
         }
 
 
-class ColumnasForm(forms.ModelForm):
-    class Meta:
-        model = Columnas
-        fields = [
-            "nombre",
-        ]
-        labels = {
-            "nombre": "Nombre",
-        }
-        widgets = {
-            "nombre": forms.TextInput(attrs={"class": "form-control"}),
-        }
+AdicionalColumnaFormset = modelformset_factory(
+    Columnas,
+    fields=("nombre", "opcional"),
+    extra=1,
+    widgets={
+        "nombre": forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "style": "max-width: 50%",
+                "placeholder": "Ingrese nombre de la columna",
+            },
+        ),
+        "opcional": forms.CheckboxInput(),
+    },
+)
+
+
+# class ColumnasForm(forms.ModelForm):
+#     class Meta:
+#         model = Columnas
+#         fields = [
+#             "nombre",
+#         ]
+#         labels = {
+#             "nombre": "Nombre",
+#         }
+#         widgets = {
+#             "nombre": forms.TextInput(attrs={"class": "form-control"}),
+#         }
 
 
 class KanbanForm(forms.ModelForm):

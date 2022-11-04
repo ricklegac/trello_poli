@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <ins>
+        <h3 align="center">Lista de Tipos de User Stories</h3>
+    </ins>
+    {% if object_list %}
+    <div class="row">
+        <div class="col-md-2">
+
+        </div>
+        <div class="col-md-8">
+            <table class="table">
+                <thead align="center">
+                    <tr class="table-primary">
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Proyecto</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for us in object_list %}
+                    <tr>
+                        <td scope="col">{{ us.nombre }}</td>
+                        <td scope="col">{{ us.proyecto }}</td>
+                        <td scope="col">
+                            {% if user.id == proyecto.scrumMaster.user.id%}
+                            <a href="{% url 'proyectos:modificar_tipo' idProyecto us.id %}"
+                                class="btn boton-color">Modificar
+                            </a>
+                            <a href="{% url 'proyectos:eliminar_tipo' idProyecto us.id %}"
+                                class="btn boton-color">Eliminar
+                            </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <h4 align="center">El proyecto no tiene US creados</h4><br>
+    {% endif %}
+    <p align="center">
+        {% if user.id == proyecto.scrumMaster.user.id%}
+        <a href="{% url 'proyectos:tipos_us' idProyecto %}" class="btn boton-color">Crear Tipo</a>
+        {% endif %}
+        <a href="{% url 'proyectos:ver_proyecto' idProyecto %}" class="btn boton-color" role="button">Volver</a>
+    </p>
+</div>
+{% endblock %}
