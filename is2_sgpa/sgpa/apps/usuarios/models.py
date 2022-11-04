@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
-
+#class
 class Perfil(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     ci = models.PositiveIntegerField(
@@ -12,8 +12,8 @@ class Perfil(models.Model):
         unique=True,
         error_messages={"unique": "CI no disponible"},
     )
-    roles = models.ManyToManyField(to="proyectos.Rol")
-    telefono = models.PositiveIntegerField(blank=False, null=True)
+    roles = models.ManyToManyField(to="proyectos.Rol") #roles
+    telefono = models.PositiveIntegerField(blank=False, null=True) #telefono
 
     class Meta:
         ordering = ["id"]
@@ -25,4 +25,4 @@ class Perfil(models.Model):
         )
 
     def __str__(self):
-        return "{} {}".format(self.user.first_name, self.user.last_name)
+        return "{} {}".format(self.user.first_name, self.user.last_name) #return
