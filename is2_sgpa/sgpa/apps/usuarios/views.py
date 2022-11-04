@@ -15,6 +15,10 @@ from django.contrib.auth.decorators import login_required, permission_required
 
 
 def home(request):
+    """
+        :param root_path: root path to search isHiddenWithinTree, defaults to "../data_in/"
+        :type root_path: str, optional
+    """
     if request.user.is_authenticated:
         return render(request, "home.html")
     else:
