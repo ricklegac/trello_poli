@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<br>
+{% if messages %}
+{% for message in messages %}
+{% if 'error' in message.tags %}
+<div class="alert alert-danger alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    {{ message }}
+</div>
+{% endif %}
+{% endfor %}
+{% endif %}
+<div class="container-fluid">
+
+    <form method="POST" class="mb-5">
+        {% csrf_token %}
+        <h3>Kanban:</h3>
+        <div class="form-group mb-3" style="max-width: 30%;">
+            <label class="col-form-label">Tipo de US:</label>
+            {{ form.tipo }}
+        </div>
+        <button type="submit" class="btn btn-danger">Confirmar</button>
+        <a href="{% url 'proyectos:listar_sprints' idProyecto %}" class="btn btn-primary">Volver</a>
+    </form>
+</div>
+
+
+
+<div style="display: flex; justify-content: space-between;">
+    {% for dato in datos %}
+    <div style="display: flex; flex-direction: column;">
+        <h3 style="text-align-last: center;">{{ dato.columna }}</h3>
+        <div class="kanban-tablero">
+            {% for tarea in dato.tareas %}
+            <div class="kanban-container">
+                <div class="kanban-card">
+                    <div class="kanban-card-body">
+                        <div style="width: 100%; justify-content: space-between; display: flex;">
+                            <span class="kanban-tag kanban-tag-teal mb-3">{{ tarea.fechaFin }}</span>
+                            <a href="{% url 'proyectos:modificar_tarea' idProyecto tarea.id %}"
+                                class="btn kanban-tag-teal"><i class="fas fa-pen"></i></a>
+                        </div>
+                        <h4>{{ tarea.nombre }}</h4>
+                        <p>{{ tarea.descripcion }}</p>
+                        <div class="kanban-user">
+                            <div class="kanban-user-info">
+                                <h5>{{ tarea.desarrollador }}</h5>
+                                {% for rol in tarea.desarrollador.roles.all %}
+                                {% if forloop.last %}
+                                <small>{{ rol.nombre }}</small>
+                                {% else %}
+                                <small>{{ rol.nombre }},</small>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% if sprint.estado == "Activo" %}
+                        <div style="display: flex; width: 100%; justify-content: flex-end;">
+                            <a href="{% url 'proyectos:retroceder_tarea' idProyecto idSprint tarea.id %}"
+                                class="btn kanban-tag-teal" style="transform: scaleX(-1); width: 30px; height: 35px;"><i
+                                    class="fa-solid fa-play"></i></a>
+                            <a href="{% url 'proyectos:avanzar_tarea' idProyecto idSprint tarea.id %}"
+                                class="btn kanban-tag-teal" style=" width: 30px; height: 35px;"><i
+                                    class="fa-solid fa-play"></i></a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+
+
+{% endblock %}

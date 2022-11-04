@@ -26,16 +26,6 @@ ESTADOBL_CHOICES = [
 TIPOBL_CHOICES = [
     ("Product_Backlog", "Product_Backlog"),
     ("Sprint_Backlog", "Sprint_Backlog"),
-    ("Doing", "Doing"),
-    ("To_Do", "To_Do"),
-    ("Done", "Done"),
-]
-
-ESTADOUS_CHOICES = [
-    ("En_Cola", "En Cola"),
-    ("To_Do", "To Do"),
-    ("Doing", "Doing"),
-    ("Done", "Done"),
 ]
 
 
@@ -56,8 +46,8 @@ class Proyecto(models.Model):
     scrumMaster = models.ForeignKey(to="usuarios.Perfil", on_delete=models.CASCADE)
     equipo = models.OneToOneField(Group, on_delete=models.CASCADE, null=True)
 
-    def str(self):
-        return "{}".format(self.nombre)
+    def __str__(self):
+        return self.nombre
 
 
 class Backlog(models.Model):
@@ -72,14 +62,15 @@ class Backlog(models.Model):
     )
 
     def __str__(self):
-        return "{}".format(self.nombre)
+        return self.nombre
 
 
 class Sprint(models.Model):
     objetivos = models.CharField(max_length=300, blank=False, null=True)
     posicion = models.IntegerField(blank=False, null=True)
     numTareas = models.IntegerField(default=0)
-    duracion = models.IntegerField(default=0)  # entero referido al numero de semanas
+    duracion = models.FloatField(default=0)  # numero referido al numero de semanas
+    tiempo_disponible = models.FloatField(default=0)
     estado = models.CharField(
         max_length=10, choices=ESTADOSPR_CHOICES, default="En_cola"
     )
@@ -136,6 +127,9 @@ class Rol(models.Model):
             ("Eliminar user story", "Permite eliminar un user story"),
         )
 
+    def __str__(self):
+        return self.nombre
+
 
 class TipoUserStory(models.Model):
     nombre = models.CharField(max_length=150)
@@ -153,6 +147,9 @@ class Columnas(models.Model):
         TipoUserStory, on_delete=models.CASCADE, related_name="columnas"
     )
 
+    def __str__(self):
+        return self.nombre
+
 
 class UserStory(models.Model):
 
@@ -160,11 +157,14 @@ class UserStory(models.Model):
         to="proyectos.Backlog",
         on_delete=models.CASCADE,
         null=True,
+        blank=True,
         related_name="user_stories",
     )
     nombre = models.CharField(max_length=150, blank=False)
     descripcion = models.TextField(max_length=300, blank=False)
-    estado = models.CharField(blank=True, default="En_Cola", max_length=7)
+    estado = models.ForeignKey(
+        to=Columnas, on_delete=models.CASCADE, null=True, blank=True
+    )
     desarrollador = models.ForeignKey(
         to="usuarios.Perfil", on_delete=models.CASCADE, null=True, blank=True
     )
@@ -172,7 +172,7 @@ class UserStory(models.Model):
     fechaInicio = models.DateField(default=timezone.now)
     fechaFin = models.DateField(null=True)
     sprint = models.ForeignKey(
-        to="proyectos.Sprint", on_delete=models.CASCADE, null=True
+        to="proyectos.Sprint", on_delete=models.CASCADE, null=True, blank=True
     )
     prioridad = models.PositiveIntegerField(
         validators=[MinValueValidator(0), MaxValueValidator(100)], default=0
@@ -182,4 +182,4 @@ class UserStory(models.Model):
     )
 
     def __str__(self):
-        return "{}".format(self.nombre)
+        return self.nombre

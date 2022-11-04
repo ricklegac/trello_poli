@@ -108,8 +108,18 @@
 
 
             {% else %}
+            <a href="{% url 'proyectos:listar_sprints' proyecto.id %}" class="btn btn-primary">Sprints</a>
+            <a href="{% url 'proyectos:listar_tareas' proyecto.id %}" class="btn btn-primary" role="button">Product
+                Backlog</a>
+            <a href="{% url 'proyectos:modificar_proyecto' proyecto.id %}" class="btn btn-primary">Modificar
+                Proyecto</a>
+            <a href="{% url 'proyectos:listar_miembros' proyecto.id %}" class="btn btn-primary"
+                role="button">Miembros</a>
+            <a href="{% url 'proyectos:listar_roles' proyecto.id %}" class="btn btn-primary" role="button">Roles</a>
+
+            {% endif %}
+            {% endif %}
             {% if proyecto.estado == 'Pendiente' %}
-            <a href="{% url 'proyectos:listar_sprints' proyecto.id %}">Sprints</a>
             <a href="{% url 'proyectos:iniciar_proyecto' proyecto.id %}" class="btn btn-success"
                 role="button">Iniciar</a>
             {% elif proyecto.estado == 'Iniciado'%}
@@ -117,17 +127,6 @@
                 role="button">Finalizar</a>
             <a href="{% url 'proyectos:cancelar_proyecto' proyecto.id %}" class="btn btn-danger"
                 role="button">Cancelar</a>
-            <h3>Cancelar Sprint</h3>
-            {% endif %}
-
-            <a href="{% url 'proyectos:modificar_proyecto' proyecto.id %}" class="btn btn-primary">Modificar
-                Proyecto</a>
-            <a href="{% url 'proyectos:listar_miembros' proyecto.id %}" class="btn btn-primary"
-                role="button">Miembros</a>
-            <a href="{% url 'proyectos:listar_tareas' proyecto.id %}" class="btn btn-primary" role="button">Product
-                Backlog</a>
-            <a href="{% url 'proyectos:listar_roles' proyecto.id %}" class="btn btn-primary" role="button">Roles</a>
-            {% endif %}
             {% endif %}
 
 

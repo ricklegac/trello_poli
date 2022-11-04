@@ -29,7 +29,7 @@ SECRET_KEY = "django-insecure-*th+n6m01$1615v4#qjn@mh-js%^9$aix2j^o&^8b&mp%b7o9s
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["djangoproject.localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -90,7 +90,7 @@ AUTHENTICATION_BACKENDS = [
 WSGI_APPLICATION = "sgpa.wsgi.application"
 
 
-# Database
+# Database devLorenzo
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
