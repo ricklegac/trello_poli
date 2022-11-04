@@ -140,12 +140,16 @@ class TipoUserStory(models.Model):
     def __str__(self):
         return self.nombre
 
+    # class Meta:
+    #     unique_together = ['nombre', 'proyecto']
+
 
 class Columnas(models.Model):
     nombre = models.CharField(max_length=20)
     tipo_us = models.ForeignKey(
         TipoUserStory, on_delete=models.CASCADE, related_name="columnas"
     )
+    opcional = models.BooleanField(null=True, blank=True)
 
     def __str__(self):
         return self.nombre

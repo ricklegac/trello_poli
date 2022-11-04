@@ -22,7 +22,7 @@ from django.shortcuts import reverse, redirect, render
 from django.contrib.auth.models import Group, User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from proyectos.forms import (
-    ColumnasForm,
+    AdicionalColumnaFormset,
     KanbanForm,
     MiembrosForm,
     Proyecto_Form,
@@ -481,7 +481,11 @@ def listarSprints(request, id_proyecto):
     return render(
         request,
         "sprints/listar_sprints.html",
-        {"sprints": sprint, "proyecto": id_proyecto},
+        {
+            "sprints": sprint,
+            "idProyecto": id_proyecto,
+            "proyecto": proyecto,
+        },
     )
 
 
@@ -726,11 +730,13 @@ def verMiembros(request, idProyecto):
     Requiere inicio de sesión
     """
     miembros = Miembro.objects.filter(idProyecto=idProyecto)
+    proyecto = Proyecto.objects.get(id=idProyecto)
 
     return render(
         request,
         "miembros/ver_miembros.html",
         {
+            "proyecto": proyecto,
             "miembros": miembros,
             "idProyecto": idProyecto,
         },
@@ -802,6 +808,8 @@ class ListarRol(LoginRequiredMixin, ListView):
     def get_context_data(self, *args, **kwargs):
         context = super(ListarRol, self).get_context_data()
         context["idProyecto"] = self.kwargs["idProyecto"]
+        proyecto = Proyecto.objects.get(id=context["idProyecto"])
+        context["proyecto"] = proyecto
         return context
 
     def get_queryset(self):
@@ -928,6 +936,7 @@ def verRoles(request, idProyecto, idMiembro):
     Requiere inicio de sesión
     """
 
+    proyecto = Proyecto.objects.get(id=idProyecto)
     roles = Rol.objects.filter(proyecto=idProyecto)
     user = User.objects.get(id=idMiembro)
     roles_asignados = []
@@ -947,6 +956,7 @@ def verRoles(request, idProyecto, idMiembro):
         request,
         "miembros/ver_roles.html",
         {
+            "proyecto": proyecto,
             "roles_a": roles_asignados,
             "roles_sa": roles_noasignados,
             "idProyecto": idProyecto,
@@ -957,45 +967,10 @@ def verRoles(request, idProyecto, idMiembro):
 
 # ! User Stories
 # --- Crear User Story --- #
-# class CrearUserStory(LoginRequiredMixin, CreateView):
-#     """
 #     Vista basada en modelos que permite crear un User Story con los campos correspondientes
 #     No recibe parámetros
 #     Requiere inicio de sesión
 #     """
-
-#     redirect_field_name = "redirect_to"
-#     model = UserStory
-#     form_class = UserStoryForm
-#     template_name = "tareas/nuevo_userStory.html"
-
-#     def get_success_url(self):
-#         return reverse("proyectos:listar_tareas", args=(self.kwargs["idProyecto"],))
-
-#     def get_form_kwargs(self, **kwargs):
-#         form_kwargs = super(CrearUserStory, self).get_form_kwargs(**kwargs)
-#         form_kwargs["idProyecto"] = self.kwargs["idProyecto"]
-#         return form_kwargs
-
-#     def form_valid(self, form):
-#         proyecto = Proyecto.objects.get(id=self.kwargs["idProyecto"])
-#         form.instance.proyecto = proyecto
-#         backlog = Backlog.objects.get(proyecto=proyecto, tipo="Product_Backlog")
-#         backlog.numTareas += 1
-#         user = User.objects.get(username=self.request.user)
-#         perfil = Perfil.objects.get(user=user)
-#         Historial.objects.create(
-#             operacion="Crear User Story {}".format(form.instance.nombre),
-#             autor=perfil.__str__(),
-#             proyecto=proyecto,
-#             categoria="User Story",
-#         )
-#         return super(CrearUserStory, self).form_valid(form)
-
-#     def get_context_data(self, **kwargs):
-#         context = super(CrearUserStory, self).get_context_data(**kwargs)
-#         context["idProyecto"] = self.kwargs["idProyecto"]
-#         return context
 
 
 # --- Listar User Story --- #
@@ -1014,6 +989,8 @@ class ListarUserStory(LoginRequiredMixin, ListView):
     def get_context_data(self, *args, **kwargs):
         context = super(ListarUserStory, self).get_context_data()
         context["idProyecto"] = self.kwargs["idProyecto"]
+        proyecto = Proyecto.objects.get(id=context["idProyecto"])
+        context["proyecto"] = proyecto
         return context
 
     def get_queryset(self):
@@ -1153,6 +1130,40 @@ def modificarUserStory(request, idProyecto, id_tarea):
     )
 
 
+# --- Eliminar Tipo --- #
+@login_required
+def eliminarTipo(request, idProyecto, id_tipo):
+    """
+    Vista basada en funciones que permite eliminar un Tipo de User Story seleccionado
+    Recibe el request HTTP y el id del rol a eliminar
+    Requiere inicio de sesión
+    """
+    tipo = TipoUserStory.objects.get(id=id_tipo)
+    columnas = Columnas.objects.filter(tipo_us=tipo)
+
+    if request.method == "POST":
+        nombre = tipo.nombre
+        tipo.delete()
+        for col in columnas:
+            columnas.delete()
+        proyecto = Proyecto.objects.get(id=idProyecto)
+        user = User.objects.get(username=request.user)
+        perfil = Perfil.objects.get(user=user)
+        Historial.objects.create(
+            operacion="Eliminar tipo de US: {}".format(nombre),
+            autor=perfil.__str__(),
+            proyecto=Proyecto.objects.get(id=idProyecto),
+            categoria="Tipo de User Story",
+        )
+
+        return redirect("proyectos:listar_tipos", idProyecto)
+    return render(
+        request,
+        "tareas/eliminar_tipo.html",
+        {"tipo": tipo, "idProyecto": idProyecto},
+    )
+
+
 # --- Asignación de una tarea a un Sprint--- #
 @login_required
 def asignarSprint(request, idProyecto, idSprint, idTarea):
@@ -1233,56 +1244,132 @@ def crearTipoUS(request, idProyecto):
 
     if request.method == "GET":
         data["form"] = TipoUserStoryForm()
-        data["d_form"] = ColumnasForm()
+        #  = ColumnasForm()
+        data["formset1"] = AdicionalColumnaFormset(
+            queryset=Columnas.objects.none(), prefix="form1"
+        )
         return render(request, "tareas/tipo.html", data)
 
     elif request.method == "POST":
         form = TipoUserStoryForm(request.POST)
-        d_form = ColumnasForm(request.POST)
+        vacio1 = True
+        formset1 = AdicionalColumnaFormset(request.POST, prefix="form1")
+        i = 0
+        for form1 in formset1:
+            field = "form1-{}-nombre".format(i)
+            nombre = form1.data[field]
+            if nombre != "":
+                vacio1 = False
+            i += 1
 
-        if form.is_valid():
-            form.cleaned_data["proyecto"] = idProyecto
-            tipo = TipoUserStory.objects.create(
-                nombre=form.cleaned_data["nombre"],
-                proyecto=proyecto,
-            )
-            tipo.save()
+        if form.is_valid() and formset1.is_valid() or vacio1:
+            tipo_us = form.save(proyecto=proyecto)
+
+            if not vacio1:
+                for form1 in formset1:
+                    adicional = form1.save(commit=False)
+                    adicional.tipo_us = tipo_us
+                    adicional.save()
 
             user = User.objects.get(username=request.user)
             perfil = Perfil.objects.get(user=user)
             Historial.objects.create(
-                operacion="Crear User Story",
+                operacion="Crear Tipo de User Story",
                 autor=perfil.__str__(),
                 proyecto=proyecto,
-                categoria="User Story",
+                categoria="Tipo de User Story",
             )
-
-            form = TipoUserStoryForm(request.POST, instance=tipo)
-            ColumnasFormset = modelformset_factory(Columnas, form=ColumnasForm, extra=2)
-            qs = tipo.columnas.all()
-            formset = ColumnasFormset(request.POST, queryset=qs)
-            context = {
-                "form": form,
-                "formset": formset,
-                "object": tipo,
-            }
-
-            if all([form.is_valid(), formset.is_valid()]):
-                parent = form.save(commit=False)
-                parent.save()
-
-                for form in formset:
-                    child = form.save(commit=False)
-                    child.nombre = parent
-                    child.save()
-
             return redirect("proyectos:crear_tarea", idProyecto)
         data["form"] = form
-        data["d_form"] = d_form
-        return render(request, "tareas/tipo.html", context)
+        data["formset1"] = formset1
+        return render(request, "tareas/tipo.html", data)
 
 
-# --- Crear User Story --- #
+# ===Modificar Tipo de US===
+def modificarTipoUS(request, idProyecto, id_tipo):
+    """
+    Modifica un tipo de US.
+    Recibe la petición http, el id del proyecto y el id del tipo de US.
+    Muestra la información del tipo de US especificado para su modificación y luego guarda
+    los cambios realizados.
+    """
+    tipo = TipoUserStory.objects.get(id=id_tipo)
+    columnas = Columnas.objects.filter(tipo_us=id_tipo)
+    proyecto = Proyecto.objects.get(id=idProyecto)
+    template_name = "tareas/tipo.html"
+    if request.method == "GET":
+        form = TipoUserStoryForm(instance=tipo, id=idProyecto)
+        formset1 = AdicionalColumnaFormset(queryset=columnas, prefix="form1")
+        return render(
+            request,
+            template_name,
+            {
+                "form": form,
+                "formset1": formset1,
+                "idProyecto": idProyecto,
+            },
+        )
+    else:
+        t = tipo
+        t.nombre = "aux_cambio_is2_123"
+        t.save()
+        form = TipoUserStoryForm(request.POST, instance=tipo, id=idProyecto)
+        vacio1 = True
+        formset1 = AdicionalColumnaFormset(request.POST, prefix="form1")
+        i = 0
+        if not len(columnas) > 0:
+            for form1 in formset1:
+                field = "form1-{}-nombre".format(i)
+                nombre = form1.data[field]
+                if nombre != "":
+                    vacio1 = False
+                i += 1
+            i = 0
+        if form.is_valid() and (formset1.is_valid() or vacio1):
+            tipo = form.save(proyecto=proyecto)
+            if not vacio1 or (len(columnas) > 0):
+                for form1 in formset1:
+                    if form1.is_valid():
+                        adicional = form1.save(commit=False)
+                        adicional.tipo_us = tipo
+                        adicional.save()
+            user = User.objects.get(username=request.user)
+            perfil = Perfil.objects.get(user=user)
+            Historial.objects.create(
+                operacion="Modificar Tipo de US {}".format(tipo.nombre),
+                autor=perfil.__str__(),
+                proyecto=Proyecto.objects.get(id=idProyecto),
+                categoria="Tipo de User Story",
+            )
+        return redirect("proyectos:listar_tipos", idProyecto=idProyecto)
+
+
+# --- Listar Tipo de User Story --- #
+class ListarTipoUserStory(LoginRequiredMixin, ListView):
+    """
+    Vista basada en modelos que permite listar todos los user stories creados
+    Muestra la lista de los user stories asociados al proyecto en forma de tabla
+    No recibe parámetros
+    Requiere inicio de sesión
+    """
+
+    redirect_field_name = "redirect_to"
+    model = TipoUserStory
+    template_name = "tareas/listar_tipos.html"
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(ListarTipoUserStory, self).get_context_data()
+        context["idProyecto"] = self.kwargs["idProyecto"]
+        proyecto = Proyecto.objects.get(id=context["idProyecto"])
+        context["proyecto"] = proyecto
+        return context
+
+    def get_queryset(self):
+        proyecto = Proyecto.objects.get(id=self.kwargs["idProyecto"])
+        return TipoUserStory.objects.filter(proyecto=proyecto)
+
+
+# --- Crear Tablero Kanban --- #
 @login_required
 def tableroKanban(request, idProyecto, idSprint):
     proyecto = Proyecto.objects.get(id=idProyecto)

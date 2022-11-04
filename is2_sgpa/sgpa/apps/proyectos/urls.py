@@ -27,6 +27,7 @@ from proyectos.views import (
     verMiembros,
     verProyecto,
     crearProyecto,
+    ListarTipoUserStory,
     iniciarProyecto,
     cancelarProyecto,
     listarProyectos,
@@ -38,7 +39,9 @@ from proyectos.views import (
     verHistorial,
     modificarSprints,
     eliminarSprint,
+    eliminarTipo,
     verRoles,
+    modificarTipoUS,
 )
 
 urlpatterns = [
@@ -147,6 +150,21 @@ urlpatterns = [
         "<int:idProyecto>/tareas/listar/",
         ListarUserStory.as_view(),
         name="listar_tareas",
+    ),
+    path(
+        "<int:idProyecto>/tipos/listar/",
+        ListarTipoUserStory.as_view(),
+        name="listar_tipos",
+    ),
+    path(
+        "<int:idProyecto>/tipos/eliminar/<int:id_tipo>/",
+        eliminarTipo,
+        name="eliminar_tipo",
+    ),
+    path(
+        "<int:idProyecto>/tipos/modificar/<int:id_tipo>/",
+        modificarTipoUS,
+        name="modificar_tipo",
     ),
     path(
         "<int:idProyecto>/tareas/eliminar/<int:id_tarea>/",

@@ -1,7 +1,73 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script type='text/javascript'>
+
+        function cloneMore2(selector, prefix) {
+            var newElement = $(selector).clone(true);
+            var total = $('#id_' + prefix + '-TOTAL_FORMS').val();
+            newElement.find(':input:not([type=button]):not([type=submit]):not([type=reset])').each(function () {
+                var name = $(this).attr('name')
+                if (name) {
+                    name = name.replace('-' + (total - 1) + '-', '-' + total + '-');
+                    var id = 'id_' + name;
+                    $(this).attr({ 'name': name, 'id': id }).removeAttr('checked');
+                }
+            });
+            newElement.find('label').each(function () {
+                var forValue = $(this).attr('for');
+                if (forValue) {
+                    forValue = forValue.replace('-' + (total - 1) + '-', '-' + total + '-');
+                    $(this).attr({ 'for': forValue });
+                }
+            });
+            total++;
+            $('#id_' + prefix + '-TOTAL_FORMS').val(total);
+            $(selector).after(newElement);
+            var conditionRow = $('.form-row2:not(:last)');
+            conditionRow.find('.btn.add-form-row2')
+                .removeClass('btn-success').addClass('btn-danger')
+                .removeClass('add-form-row2').addClass('remove-form-row2')
+                .html('-');
+            return false;
+        }
+
+        function deleteForm2(prefix, btn) {
+            var total = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
+            if (total > 1) {
+                btn.closest('.form-row2').remove();
+                var forms = $('.form-row2');
+                $('#id_' + prefix + '-TOTAL_FORMS').val(forms.length);
+                for (var i = 0, formCount = forms.length; i < formCount; i++) {
+                    $(forms.get(i)).find(':input').each(function () {
+                        updateElementIndex(this, prefix, i);
+                    });
+                }
+            }
+            return false;
+        }
+
+        $(document).on('click', '.add-form-row2', function (e) {
+            e.preventDefault();
+            cloneMore2('.form-row2:last', 'form1');
+            return false;
+        });
+
+        $(document).on('click', '.remove-form-row2', function (e) {
+            e.preventDefault();
+            deleteForm2('form1', $(this));
+            return false;
+        });
+
+    </script>
+</head>
 <div class="col-md-6">
+    <br>
     <form method="post">
         {% csrf_token %}
         <div class="form-group">
@@ -9,17 +75,35 @@
             {{ form.nombre }}
         </div>
         <br>
+        <!-- <label class="col-form-label">Columnas Adicionales:</label> -->
+        <br>
+        <label class="col-form-label">Columna:</label>
+        {{ formset1.management_form }}
+        {% for form in formset1 %}
+        {% for hidden in form.hidden_fields %}
+        {{ hidden }}
+        {% endfor %}
+        <div class="row form-row2 spacer">
+            <div class="input-group offset-1">
+                {{ form.nombre }}
+                <div class="input-group-append">
+                    <button style="margin-left: 5px;" class="btn btn-success add-form-row2">+</button>
+                </div>
+                <!-- <span class="input-group-text">Obligatorio:</span>
+                {{ form.opcional }} -->
+            </div>
+        </div>
+        {% endfor %}
+        <br>
         <p align="center">
             <button type="submit" class="btn btn-primary">Guardar</button>
-            <a href="{% url 'proyectos:listar_tareas' idProyecto %}" class="btn btn-primary" role="button">Cancelar</a>
+            <a href="{% url 'proyectos:listar_tipos' idProyecto %}" class="btn btn-primary" role="button">Cancelar</a>
         </p>
     </form>
-    <form>
-        <div id="forms">
-            {{ d_form.nombre }}
-        </div>
-        <button id="add-more">add another</button>
-    </form>
-    <br>
 </div>
+{% endblock %}
+
+{% block custom_js %}
+
+
 {% endblock %}

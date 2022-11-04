@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container-fluid">
     <ins>
-        <h3 align="center">Lista de User Stories</h3>
+        <h3 align="center">Lista de Tipos de User Stories</h3>
     </ins>
     {% if object_list %}
     <div class="row">
@@ -15,8 +15,7 @@
                 <thead align="center">
                     <tr class="table-primary">
                         <th scope="col">Nombre</th>
-                        <th scope="col">Descripcion</th>
-                        <th scope="col">Desarrollador</th>
+                        <th scope="col">Proyecto</th>
                         <th scope="col">Acciones</th>
                     </tr>
                 </thead>
@@ -24,22 +23,15 @@
                     {% for us in object_list %}
                     <tr>
                         <td scope="col">{{ us.nombre }}</td>
-                        <td scope="col">{{ us.descripcion }}</td>
-                        <td scope="col">
-                            {% if us.desarrollador %}
-                            {{ us.desarrollador }}
-                            {% else %}
-                            <p>No asignado</p>
-                            {% endif %}
-                        </td>
+                        <td scope="col">{{ us.proyecto }}</td>
                         <td scope="col">
                             {% if user.id == proyecto.scrumMaster.user.id%}
-                            <a href="{% url 'proyectos:modificar_tarea' idProyecto us.id %}"
+                            <a href="{% url 'proyectos:modificar_tipo' idProyecto us.id %}"
                                 class="btn boton-color">Modificar
-                                US</a>
-                            <a href="{% url 'proyectos:eliminar_tarea' idProyecto us.id %}"
+                            </a>
+                            <a href="{% url 'proyectos:eliminar_tipo' idProyecto us.id %}"
                                 class="btn boton-color">Eliminar
-                                US</a>
+                            </a>
                             {% endif %}
                         </td>
                     </tr>
@@ -53,7 +45,7 @@
     {% endif %}
     <p align="center">
         {% if user.id == proyecto.scrumMaster.user.id%}
-        <a href="{% url 'proyectos:crear_tarea' idProyecto %}" class="btn boton-color">Crear US</a>
+        <a href="{% url 'proyectos:tipos_us' idProyecto %}" class="btn boton-color">Crear Tipo</a>
         {% endif %}
         <a href="{% url 'proyectos:ver_proyecto' idProyecto %}" class="btn boton-color" role="button">Volver</a>
     </p>
