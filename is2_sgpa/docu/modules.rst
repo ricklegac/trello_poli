@@ -5,4 +5,4 @@ is2_sgpa
    :maxdepth: 4
 
    manage
-   views_miembros
+   sgpa

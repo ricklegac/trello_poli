@@ -19,7 +19,7 @@ author = 'Grupo 10'
 
 extensions = ['sphinx.ext.autodoc']
 
-templates_path = ['templates']
+templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 language = 'es'
