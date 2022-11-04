@@ -10,7 +10,6 @@ Welcome to Trello Poli's documentation!
    :maxdepth: 4
    :caption: Contents:
 
-   modules
 
 Indices and tables
 ==================

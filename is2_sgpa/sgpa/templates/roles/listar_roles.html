@@ -31,12 +31,14 @@
                             {% endif %}
                         </td>
                         <td scope="col">
+                            {% if user.id == proyecto.scrumMaster.user.id%}
                             <a href="{% url 'proyectos:editar_rol' idProyecto rol.id %}"
                                 class="btn boton-color">Modificar
                                 Rol</a>
                             <a href="{% url 'proyectos:eliminar_rol' idProyecto rol.id %}"
                                 class="btn boton-color">Eliminar
                                 Rol</a>
+                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}
@@ -48,7 +50,9 @@
     <h4 align="center">El proyecto no tiene roles creados</h4><br>
     {% endif %}
     <p align="center">
+        {% if user.id == proyecto.scrumMaster.user.id%}
         <a href="{% url 'proyectos:crear_rol' idProyecto %}" class="btn boton-color">Crear Rol</a>
+        {% endif %}
         <a href="{% url 'proyectos:ver_proyecto' idProyecto %}" class="btn boton-color" role="button">Volver</a>
     </p>
 </div>
