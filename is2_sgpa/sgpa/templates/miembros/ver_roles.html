@@ -32,9 +32,11 @@
                             {% endif %}
                         </td>
                         <td class="text-center">
+                            {% if user.id == proyecto.scrumMaster.user.id%}
                             <a class="btn btn-danger"
                                 href="{% url 'proyectos:desasignar_rol' idProyecto idMiembro rol.id%}">Desasignar
                                 Rol</a>
+                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}
@@ -70,8 +72,10 @@
                             {% endif %}
                         </td>
                         <td class="text-center">
+                            {% if user.id == proyecto.scrumMaster.user.id%}
                             <a class="btn boton-color"
                                 href="{% url 'proyectos:asignar_rol' idProyecto idMiembro rol.id%}">Asignar Rol</a>
+                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}

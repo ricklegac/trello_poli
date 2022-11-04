@@ -28,8 +28,11 @@
                         <td> {{ miembro.idPerfil.user.first_name }} </td>
                         <td> {{ miembro.idPerfil.user.last_name }} </td>
                         <td> {{ miembro.idProyecto.nombre }} </td>
-                        <td> <a class="btn btn-danger"
+                        <td>
+                            {% if user.id == proyecto.scrumMaster.user.id%}
+                            <a class="btn btn-danger"
                                 href="{% url 'proyectos:eliminar_miembro' idProyecto miembro.idPerfil.id %}">Eliminar</a>
+                            {% endif %}
                             <a class="btn btn-primary"
                                 href="{% url 'proyectos:ver_roles' idProyecto miembro.idPerfil.id %}">Ver
                                 Roles</a>
@@ -45,8 +48,10 @@
         <div class="col-md-3">
         </div>
         <p align=center>
+            {% if user.id == proyecto.scrumMaster.user.id%}
             <a href="{% url 'proyectos:nuevo_miembro' idProyecto %}" class="btn boton-color" role="button">Agregar
                 miembro</a>
+            {% endif %}
             <a href="{% url 'proyectos:ver_proyecto' idProyecto %}" class="btn boton-color" role="button">Volver</a>
         </p>
     </div>

@@ -481,7 +481,11 @@ def listarSprints(request, id_proyecto):
     return render(
         request,
         "sprints/listar_sprints.html",
-        {"sprints": sprint, "proyecto": id_proyecto},
+        {
+            "sprints": sprint,
+            "idProyecto": id_proyecto,
+            "proyecto": proyecto,
+        },
     )
 
 
@@ -726,11 +730,13 @@ def verMiembros(request, idProyecto):
     Requiere inicio de sesión
     """
     miembros = Miembro.objects.filter(idProyecto=idProyecto)
+    proyecto = Proyecto.objects.get(id=idProyecto)
 
     return render(
         request,
         "miembros/ver_miembros.html",
         {
+            "proyecto": proyecto,
             "miembros": miembros,
             "idProyecto": idProyecto,
         },
@@ -802,6 +808,8 @@ class ListarRol(LoginRequiredMixin, ListView):
     def get_context_data(self, *args, **kwargs):
         context = super(ListarRol, self).get_context_data()
         context["idProyecto"] = self.kwargs["idProyecto"]
+        proyecto = Proyecto.objects.get(id=context["idProyecto"])
+        context["proyecto"] = proyecto
         return context
 
     def get_queryset(self):
@@ -928,6 +936,7 @@ def verRoles(request, idProyecto, idMiembro):
     Requiere inicio de sesión
     """
 
+    proyecto = Proyecto.objects.get(id=idProyecto)
     roles = Rol.objects.filter(proyecto=idProyecto)
     user = User.objects.get(id=idMiembro)
     roles_asignados = []
@@ -947,6 +956,7 @@ def verRoles(request, idProyecto, idMiembro):
         request,
         "miembros/ver_roles.html",
         {
+            "proyecto": proyecto,
             "roles_a": roles_asignados,
             "roles_sa": roles_noasignados,
             "idProyecto": idProyecto,
@@ -957,45 +967,10 @@ def verRoles(request, idProyecto, idMiembro):
 
 # ! User Stories
 # --- Crear User Story --- #
-# class CrearUserStory(LoginRequiredMixin, CreateView):
-#     """
 #     Vista basada en modelos que permite crear un User Story con los campos correspondientes
 #     No recibe parámetros
 #     Requiere inicio de sesión
 #     """
-
-#     redirect_field_name = "redirect_to"
-#     model = UserStory
-#     form_class = UserStoryForm
-#     template_name = "tareas/nuevo_userStory.html"
-
-#     def get_success_url(self):
-#         return reverse("proyectos:listar_tareas", args=(self.kwargs["idProyecto"],))
-
-#     def get_form_kwargs(self, **kwargs):
-#         form_kwargs = super(CrearUserStory, self).get_form_kwargs(**kwargs)
-#         form_kwargs["idProyecto"] = self.kwargs["idProyecto"]
-#         return form_kwargs
-
-#     def form_valid(self, form):
-#         proyecto = Proyecto.objects.get(id=self.kwargs["idProyecto"])
-#         form.instance.proyecto = proyecto
-#         backlog = Backlog.objects.get(proyecto=proyecto, tipo="Product_Backlog")
-#         backlog.numTareas += 1
-#         user = User.objects.get(username=self.request.user)
-#         perfil = Perfil.objects.get(user=user)
-#         Historial.objects.create(
-#             operacion="Crear User Story {}".format(form.instance.nombre),
-#             autor=perfil.__str__(),
-#             proyecto=proyecto,
-#             categoria="User Story",
-#         )
-#         return super(CrearUserStory, self).form_valid(form)
-
-#     def get_context_data(self, **kwargs):
-#         context = super(CrearUserStory, self).get_context_data(**kwargs)
-#         context["idProyecto"] = self.kwargs["idProyecto"]
-#         return context
 
 
 # --- Listar User Story --- #
@@ -1014,6 +989,8 @@ class ListarUserStory(LoginRequiredMixin, ListView):
     def get_context_data(self, *args, **kwargs):
         context = super(ListarUserStory, self).get_context_data()
         context["idProyecto"] = self.kwargs["idProyecto"]
+        proyecto = Proyecto.objects.get(id=context["idProyecto"])
+        context["proyecto"] = proyecto
         return context
 
     def get_queryset(self):
