@@ -82,12 +82,12 @@
                 </div>
             </form>
         </div>
-        <div class="col-md-3">
-            <p align="center">
-                <a href="{% url 'proyectos:kanban' idProyecto idSprint %}" class="btn btn-primary"
-                    role="button">Volver</a>
-            </p>
-        </div>
+    </div>
+    <div class="col-md-3">
+        <p align="center">
+            <a href="{% url 'proyectos:kanban' idProyecto tarea.sprint.id %}" class="btn btn-primary"
+                role="button">Volver</a>
+        </p>
     </div>
 </div>
 {% endblock %}

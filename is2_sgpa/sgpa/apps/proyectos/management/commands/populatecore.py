@@ -175,16 +175,22 @@ class Command(BaseCommand):
             categoria="Rol",
         )
 
-        tipo_us = TipoUserStory.objects.create(nombre="Default", proyecto=proyecto)
+        tipo_us = TipoUserStory.objects.create(nombre="Estándar", proyecto=proyecto)
         tipo_us.save
-        columna1 = Columnas.objects.create(nombre="To Do", tipo_us=tipo_us)
-        columna1.save
-        columna2 = Columnas.objects.create(nombre="Doing", tipo_us=tipo_us)
-        columna2.save
-        columna3 = Columnas.objects.create(nombre="Pending Review", tipo_us=tipo_us)
-        columna3.save
-        columna4 = Columnas.objects.create(nombre="Done", tipo_us=tipo_us)
-        columna4.save
+        columna1 = Columnas.objects.create(
+            nombre="Cancelado", tipo_us=tipo_us, orden=-1
+        )
+        columna1.save()
+        columna2 = Columnas.objects.create(nombre="Inactivo", tipo_us=tipo_us, orden=0)
+        columna2.save()
+        columna3 = Columnas.objects.create(nombre="To Do", tipo_us=tipo_us, orden=1)
+        columna3.save()
+        columna4 = Columnas.objects.create(nombre="Doing", tipo_us=tipo_us, orden=2)
+        columna4.save()
+        columna5 = Columnas.objects.create(nombre="Done", tipo_us=tipo_us, orden=3)
+        columna5.save()
+        columna6 = Columnas.objects.create(nombre="Relese", tipo_us=tipo_us, orden=-2)
+        columna6.save()
 
         Historial.objects.create(
             operacion="Creacion del tipo de US {}".format(tipo_us.nombre),
