@@ -16,6 +16,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
         <script src="_static/translations.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Índice" href="genindex.html" />
@@ -74,11 +75,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="modules.html">is2_sgpa</a> &raquo;</li>
-          <li><a href="sgpa.html">sgpa package</a> &raquo;</li>
-          <li><a href="sgpa.apps.html">sgpa.apps package</a> &raquo;</li>
-      <li>sgpa.apps.proyectos package</li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">is2_sgpa</a></li>
+          <li class="breadcrumb-item"><a href="sgpa.html">sgpa package</a></li>
+          <li class="breadcrumb-item"><a href="sgpa.apps.html">sgpa.apps package</a></li>
+      <li class="breadcrumb-item active">sgpa.apps.proyectos package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/sgpa.apps.proyectos.rst.txt" rel="nofollow"> Ver código fuente de la página</a>
       </li>
@@ -96,8 +97,24 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="sgpa.apps.proyectos.migrations.html">sgpa.apps.proyectos.migrations package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="sgpa.apps.proyectos.migrations.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sgpa.apps.proyectos.migrations.html#module-sgpa.apps.proyectos.migrations.0001_initial">sgpa.apps.proyectos.migrations.0001_initial module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sgpa.apps.proyectos.migrations.html#module-sgpa.apps.proyectos.migrations.0002_initial">sgpa.apps.proyectos.migrations.0002_initial module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sgpa.apps.proyectos.migrations.html#module-sgpa.apps.proyectos.migrations.0001_initial">sgpa.apps.proyectos.migrations.0001_initial module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sgpa.apps.proyectos.migrations.html#sgpa.apps.proyectos.migrations.0001_initial.Migration"><code class="docutils literal notranslate"><span class="pre">Migration</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="sgpa.apps.proyectos.migrations.html#sgpa.apps.proyectos.migrations.0001_initial.Migration.dependencies"><code class="docutils literal notranslate"><span class="pre">Migration.dependencies</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sgpa.apps.proyectos.migrations.html#sgpa.apps.proyectos.migrations.0001_initial.Migration.initial"><code class="docutils literal notranslate"><span class="pre">Migration.initial</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sgpa.apps.proyectos.migrations.html#sgpa.apps.proyectos.migrations.0001_initial.Migration.operations"><code class="docutils literal notranslate"><span class="pre">Migration.operations</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sgpa.apps.proyectos.migrations.html#module-sgpa.apps.proyectos.migrations.0002_initial">sgpa.apps.proyectos.migrations.0002_initial module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sgpa.apps.proyectos.migrations.html#sgpa.apps.proyectos.migrations.0002_initial.Migration"><code class="docutils literal notranslate"><span class="pre">Migration</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="sgpa.apps.proyectos.migrations.html#sgpa.apps.proyectos.migrations.0002_initial.Migration.dependencies"><code class="docutils literal notranslate"><span class="pre">Migration.dependencies</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sgpa.apps.proyectos.migrations.html#sgpa.apps.proyectos.migrations.0002_initial.Migration.initial"><code class="docutils literal notranslate"><span class="pre">Migration.initial</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sgpa.apps.proyectos.migrations.html#sgpa.apps.proyectos.migrations.0002_initial.Migration.operations"><code class="docutils literal notranslate"><span class="pre">Migration.operations</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="sgpa.apps.proyectos.migrations.html#module-sgpa.apps.proyectos.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -131,55 +148,6 @@
 </section>
 <section id="module-sgpa.apps.proyectos.forms">
 <span id="sgpa-apps-proyectos-forms-module"></span><h2>sgpa.apps.proyectos.forms module<a class="headerlink" href="#module-sgpa.apps.proyectos.forms" title="Enlace permanente a este encabezado"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="sgpa.apps.proyectos.forms.ColumnasForm">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sgpa.apps.proyectos.forms.</span></span><span class="sig-name descname"><span class="pre">ColumnasForm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">files=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_id='id_%s'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_class=&lt;class</span> <span class="pre">'django.forms.utils.ErrorList'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_suffix=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">empty_permitted=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_required_attribute=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">renderer=None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sgpa.apps.proyectos.forms.ColumnasForm" title="Enlazar permanentemente con esta definición"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ModelForm</span></code></p>
-<dl class="py class">
-<dt class="sig sig-object py" id="sgpa.apps.proyectos.forms.ColumnasForm.Meta">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#sgpa.apps.proyectos.forms.ColumnasForm.Meta" title="Enlazar permanentemente con esta definición"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="sgpa.apps.proyectos.forms.ColumnasForm.Meta.fields">
-<span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['nombre']</span></em><a class="headerlink" href="#sgpa.apps.proyectos.forms.ColumnasForm.Meta.fields" title="Enlazar permanentemente con esta definición"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="sgpa.apps.proyectos.forms.ColumnasForm.Meta.labels">
-<span class="sig-name descname"><span class="pre">labels</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'nombre':</span> <span class="pre">'Nombre'}</span></em><a class="headerlink" href="#sgpa.apps.proyectos.forms.ColumnasForm.Meta.labels" title="Enlazar permanentemente con esta definición"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="sgpa.apps.proyectos.forms.ColumnasForm.Meta.model">
-<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#sgpa.apps.proyectos.forms.ColumnasForm.Meta.model" title="Enlazar permanentemente con esta definición"></a></dt>
-<dd><p>alias de <code class="xref py py-class docutils literal notranslate"><span class="pre">Columnas</span></code></p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="sgpa.apps.proyectos.forms.ColumnasForm.Meta.widgets">
-<span class="sig-name descname"><span class="pre">widgets</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'nombre':</span> <span class="pre">&lt;django.forms.widgets.TextInput</span> <span class="pre">object&gt;}</span></em><a class="headerlink" href="#sgpa.apps.proyectos.forms.ColumnasForm.Meta.widgets" title="Enlazar permanentemente con esta definición"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="sgpa.apps.proyectos.forms.ColumnasForm.base_fields">
-<span class="sig-name descname"><span class="pre">base_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'nombre':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;}</span></em><a class="headerlink" href="#sgpa.apps.proyectos.forms.ColumnasForm.base_fields" title="Enlazar permanentemente con esta definición"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="sgpa.apps.proyectos.forms.ColumnasForm.declared_fields">
-<span class="sig-name descname"><span class="pre">declared_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#sgpa.apps.proyectos.forms.ColumnasForm.declared_fields" title="Enlazar permanentemente con esta definición"></a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="sgpa.apps.proyectos.forms.ColumnasForm.media">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">media</span></span><a class="headerlink" href="#sgpa.apps.proyectos.forms.ColumnasForm.media" title="Enlazar permanentemente con esta definición"></a></dt>
-<dd><p>Return all media required to render the widgets on this form.</p>
-</dd></dl>
-
-</dd></dl>
-
 <dl class="py class">
 <dt class="sig sig-object py" id="sgpa.apps.proyectos.forms.KanbanForm">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sgpa.apps.proyectos.forms.</span></span><span class="sig-name descname"><span class="pre">KanbanForm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idProyecto</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sgpa.apps.proyectos.forms.KanbanForm" title="Enlazar permanentemente con esta definición"></a></dt>
@@ -430,7 +398,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="sgpa.apps.proyectos.forms.Rol_Form.permisos">
-<span class="sig-name descname"><span class="pre">permisos</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;QuerySet</span> <span class="pre">[('Permite</span> <span class="pre">cancelar</span> <span class="pre">un</span> <span class="pre">sprint',</span> <span class="pre">'Cancelar</span> <span class="pre">Sprint'),</span> <span class="pre">('Permite</span> <span class="pre">crear</span> <span class="pre">proyectos',</span> <span class="pre">'Crear</span> <span class="pre">proyecto'),</span> <span class="pre">('Permite</span> <span class="pre">crear</span> <span class="pre">un</span> <span class="pre">sprint',</span> <span class="pre">'Crear</span> <span class="pre">Sprint'),</span> <span class="pre">('Permite</span> <span class="pre">crear</span> <span class="pre">un</span> <span class="pre">user</span> <span class="pre">story',</span> <span class="pre">'Crear</span> <span class="pre">user</span> <span class="pre">story'),</span> <span class="pre">('Permite</span> <span class="pre">eliminar</span> <span class="pre">proyectos',</span> <span class="pre">'Eliminar</span> <span class="pre">proyecto'),</span> <span class="pre">('Permite</span> <span class="pre">modificar</span> <span class="pre">proyectos',</span> <span class="pre">'Modificar</span> <span class="pre">proyecto'),</span> <span class="pre">('Permite</span> <span class="pre">modificar</span> <span class="pre">un</span> <span class="pre">sprint',</span> <span class="pre">'Modificar</span> <span class="pre">Sprint')]&gt;</span></em><a class="headerlink" href="#sgpa.apps.proyectos.forms.Rol_Form.permisos" title="Enlazar permanentemente con esta definición"></a></dt>
+<span class="sig-name descname"><span class="pre">permisos</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;QuerySet</span> <span class="pre">[]&gt;</span></em><a class="headerlink" href="#sgpa.apps.proyectos.forms.Rol_Form.permisos" title="Enlazar permanentemente con esta definición"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -540,7 +508,7 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="sgpa.apps.proyectos.forms.TipoUserStoryForm">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sgpa.apps.proyectos.forms.</span></span><span class="sig-name descname"><span class="pre">TipoUserStoryForm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">files=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_id='id_%s'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_class=&lt;class</span> <span class="pre">'django.forms.utils.ErrorList'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_suffix=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">empty_permitted=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_required_attribute=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">renderer=None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sgpa.apps.proyectos.forms.TipoUserStoryForm" title="Enlazar permanentemente con esta definición"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sgpa.apps.proyectos.forms.</span></span><span class="sig-name descname"><span class="pre">TipoUserStoryForm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sgpa.apps.proyectos.forms.TipoUserStoryForm" title="Enlazar permanentemente con esta definición"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ModelForm</span></code></p>
 <dl class="py class">
 <dt class="sig sig-object py" id="sgpa.apps.proyectos.forms.TipoUserStoryForm.Meta">
@@ -585,6 +553,14 @@
 <dd><p>Return all media required to render the widgets on this form.</p>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="sgpa.apps.proyectos.forms.TipoUserStoryForm.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">commit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sgpa.apps.proyectos.forms.TipoUserStoryForm.save" title="Enlazar permanentemente con esta definición"></a></dt>
+<dd><p>Save this form’s self.instance object if commit=True. Otherwise, add
+a save_m2m() method to the form which can be called after the instance
+is saved manually at a later time. Return the model instance.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -597,12 +573,12 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="sgpa.apps.proyectos.forms.UserStoryEdit_Form.Meta.fields">
-<span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['backlog',</span> <span class="pre">'nombre',</span> <span class="pre">'descripcion',</span> <span class="pre">'prioridad',</span> <span class="pre">'estado',</span> <span class="pre">'desarrollador',</span> <span class="pre">'fechaInicio',</span> <span class="pre">'fechaFin',</span> <span class="pre">'tipo',</span> <span class="pre">'sprint']</span></em><a class="headerlink" href="#sgpa.apps.proyectos.forms.UserStoryEdit_Form.Meta.fields" title="Enlazar permanentemente con esta definición"></a></dt>
+<span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['nombre',</span> <span class="pre">'descripcion',</span> <span class="pre">'prioridad',</span> <span class="pre">'desarrollador',</span> <span class="pre">'fechaInicio',</span> <span class="pre">'fechaFin',</span> <span class="pre">'tipo',</span> <span class="pre">'sprint']</span></em><a class="headerlink" href="#sgpa.apps.proyectos.forms.UserStoryEdit_Form.Meta.fields" title="Enlazar permanentemente con esta definición"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="sgpa.apps.proyectos.forms.UserStoryEdit_Form.Meta.labels">
-<span class="sig-name descname"><span class="pre">labels</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'backlog':</span> <span class="pre">'Backlog',</span> <span class="pre">'desarrollador':</span> <span class="pre">'Desarrollador',</span> <span class="pre">'descripcion':</span> <span class="pre">'Descripcion',</span> <span class="pre">'fechaFin':</span> <span class="pre">'Fecha</span> <span class="pre">de</span> <span class="pre">finalización',</span> <span class="pre">'fechaInicio':</span> <span class="pre">'Fecha</span> <span class="pre">de</span> <span class="pre">inicio',</span> <span class="pre">'nombre':</span> <span class="pre">'Nombre',</span> <span class="pre">'prioridad':</span> <span class="pre">'Prioridad',</span> <span class="pre">'sprint':</span> <span class="pre">'Sprint',</span> <span class="pre">'tipo':</span> <span class="pre">'Tipo'}</span></em><a class="headerlink" href="#sgpa.apps.proyectos.forms.UserStoryEdit_Form.Meta.labels" title="Enlazar permanentemente con esta definición"></a></dt>
+<span class="sig-name descname"><span class="pre">labels</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'desarrollador':</span> <span class="pre">'Desarrollador',</span> <span class="pre">'descripcion':</span> <span class="pre">'Descripcion',</span> <span class="pre">'fechaFin':</span> <span class="pre">'Fecha</span> <span class="pre">de</span> <span class="pre">finalización',</span> <span class="pre">'fechaInicio':</span> <span class="pre">'Fecha</span> <span class="pre">de</span> <span class="pre">inicio',</span> <span class="pre">'nombre':</span> <span class="pre">'Nombre',</span> <span class="pre">'prioridad':</span> <span class="pre">'Prioridad',</span> <span class="pre">'sprint':</span> <span class="pre">'Sprint',</span> <span class="pre">'tipo':</span> <span class="pre">'Tipo'}</span></em><a class="headerlink" href="#sgpa.apps.proyectos.forms.UserStoryEdit_Form.Meta.labels" title="Enlazar permanentemente con esta definición"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -613,14 +589,14 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="sgpa.apps.proyectos.forms.UserStoryEdit_Form.Meta.widgets">
-<span class="sig-name descname"><span class="pre">widgets</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'backlog':</span> <span class="pre">&lt;django.forms.widgets.Select</span> <span class="pre">object&gt;,</span> <span class="pre">'desarrollador':</span> <span class="pre">&lt;django.forms.widgets.Select</span> <span class="pre">object&gt;,</span> <span class="pre">'descripcion':</span> <span class="pre">&lt;django.forms.widgets.TextInput</span> <span class="pre">object&gt;,</span> <span class="pre">'fechaFin':</span> <span class="pre">&lt;django.forms.widgets.DateInput</span> <span class="pre">object&gt;,</span> <span class="pre">'fechaInicio':</span> <span class="pre">&lt;django.forms.widgets.DateInput</span> <span class="pre">object&gt;,</span> <span class="pre">'nombre':</span> <span class="pre">&lt;django.forms.widgets.TextInput</span> <span class="pre">object&gt;,</span> <span class="pre">'prioridad':</span> <span class="pre">&lt;django.forms.widgets.TextInput</span> <span class="pre">object&gt;,</span> <span class="pre">'sprint':</span> <span class="pre">&lt;django.forms.widgets.Select</span> <span class="pre">object&gt;,</span> <span class="pre">'tipo':</span> <span class="pre">&lt;django.forms.widgets.Select</span> <span class="pre">object&gt;}</span></em><a class="headerlink" href="#sgpa.apps.proyectos.forms.UserStoryEdit_Form.Meta.widgets" title="Enlazar permanentemente con esta definición"></a></dt>
+<span class="sig-name descname"><span class="pre">widgets</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'desarrollador':</span> <span class="pre">&lt;django.forms.widgets.Select</span> <span class="pre">object&gt;,</span> <span class="pre">'descripcion':</span> <span class="pre">&lt;django.forms.widgets.TextInput</span> <span class="pre">object&gt;,</span> <span class="pre">'fechaFin':</span> <span class="pre">&lt;django.forms.widgets.DateInput</span> <span class="pre">object&gt;,</span> <span class="pre">'fechaInicio':</span> <span class="pre">&lt;django.forms.widgets.DateInput</span> <span class="pre">object&gt;,</span> <span class="pre">'nombre':</span> <span class="pre">&lt;django.forms.widgets.TextInput</span> <span class="pre">object&gt;,</span> <span class="pre">'prioridad':</span> <span class="pre">&lt;django.forms.widgets.TextInput</span> <span class="pre">object&gt;,</span> <span class="pre">'sprint':</span> <span class="pre">&lt;django.forms.widgets.Select</span> <span class="pre">object&gt;,</span> <span class="pre">'tipo':</span> <span class="pre">&lt;django.forms.widgets.Select</span> <span class="pre">object&gt;}</span></em><a class="headerlink" href="#sgpa.apps.proyectos.forms.UserStoryEdit_Form.Meta.widgets" title="Enlazar permanentemente con esta definición"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="sgpa.apps.proyectos.forms.UserStoryEdit_Form.base_fields">
-<span class="sig-name descname"><span class="pre">base_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'backlog':</span> <span class="pre">&lt;django.forms.models.ModelChoiceField</span> <span class="pre">object&gt;,</span> <span class="pre">'desarrollador':</span> <span class="pre">&lt;django.forms.models.ModelChoiceField</span> <span class="pre">object&gt;,</span> <span class="pre">'descripcion':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;,</span> <span class="pre">'estado':</span> <span class="pre">&lt;django.forms.models.ModelChoiceField</span> <span class="pre">object&gt;,</span> <span class="pre">'fechaFin':</span> <span class="pre">&lt;django.forms.fields.DateField</span> <span class="pre">object&gt;,</span> <span class="pre">'fechaInicio':</span> <span class="pre">&lt;django.forms.fields.DateField</span> <span class="pre">object&gt;,</span> <span class="pre">'nombre':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;,</span> <span class="pre">'prioridad':</span> <span class="pre">&lt;django.forms.fields.IntegerField</span> <span class="pre">object&gt;,</span> <span class="pre">'sprint':</span> <span class="pre">&lt;django.forms.models.ModelChoiceField</span> <span class="pre">object&gt;,</span> <span class="pre">'tipo':</span> <span class="pre">&lt;django.forms.models.ModelChoiceField</span> <span class="pre">object&gt;}</span></em><a class="headerlink" href="#sgpa.apps.proyectos.forms.UserStoryEdit_Form.base_fields" title="Enlazar permanentemente con esta definición"></a></dt>
+<span class="sig-name descname"><span class="pre">base_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'desarrollador':</span> <span class="pre">&lt;django.forms.models.ModelChoiceField</span> <span class="pre">object&gt;,</span> <span class="pre">'descripcion':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;,</span> <span class="pre">'fechaFin':</span> <span class="pre">&lt;django.forms.fields.DateField</span> <span class="pre">object&gt;,</span> <span class="pre">'fechaInicio':</span> <span class="pre">&lt;django.forms.fields.DateField</span> <span class="pre">object&gt;,</span> <span class="pre">'nombre':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;,</span> <span class="pre">'prioridad':</span> <span class="pre">&lt;django.forms.fields.IntegerField</span> <span class="pre">object&gt;,</span> <span class="pre">'sprint':</span> <span class="pre">&lt;django.forms.models.ModelChoiceField</span> <span class="pre">object&gt;,</span> <span class="pre">'tipo':</span> <span class="pre">&lt;django.forms.models.ModelChoiceField</span> <span class="pre">object&gt;}</span></em><a class="headerlink" href="#sgpa.apps.proyectos.forms.UserStoryEdit_Form.base_fields" title="Enlazar permanentemente con esta definición"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -692,8 +668,38 @@
 <section id="module-sgpa.apps.proyectos.tests_proyectos">
 <span id="sgpa-apps-proyectos-tests-proyectos-module"></span><h2>sgpa.apps.proyectos.tests_proyectos module<a class="headerlink" href="#module-sgpa.apps.proyectos.tests_proyectos" title="Enlace permanente a este encabezado"></a></h2>
 <dl class="py function">
+<dt class="sig sig-object py" id="sgpa.apps.proyectos.tests_proyectos.test_CrearColumnas">
+<span class="sig-prename descclassname"><span class="pre">sgpa.apps.proyectos.tests_proyectos.</span></span><span class="sig-name descname"><span class="pre">test_CrearColumnas</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sgpa.apps.proyectos.tests_proyectos.test_CrearColumnas" title="Enlazar permanentemente con esta definición"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sgpa.apps.proyectos.tests_proyectos.test_CrearColumnasF">
+<span class="sig-prename descclassname"><span class="pre">sgpa.apps.proyectos.tests_proyectos.</span></span><span class="sig-name descname"><span class="pre">test_CrearColumnasF</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sgpa.apps.proyectos.tests_proyectos.test_CrearColumnasF" title="Enlazar permanentemente con esta definición"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="sgpa.apps.proyectos.tests_proyectos.test_CrearProyecto">
 <span class="sig-prename descclassname"><span class="pre">sgpa.apps.proyectos.tests_proyectos.</span></span><span class="sig-name descname"><span class="pre">test_CrearProyecto</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sgpa.apps.proyectos.tests_proyectos.test_CrearProyecto" title="Enlazar permanentemente con esta definición"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sgpa.apps.proyectos.tests_proyectos.test_CrearTipos">
+<span class="sig-prename descclassname"><span class="pre">sgpa.apps.proyectos.tests_proyectos.</span></span><span class="sig-name descname"><span class="pre">test_CrearTipos</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sgpa.apps.proyectos.tests_proyectos.test_CrearTipos" title="Enlazar permanentemente con esta definición"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sgpa.apps.proyectos.tests_proyectos.test_CrearTiposF">
+<span class="sig-prename descclassname"><span class="pre">sgpa.apps.proyectos.tests_proyectos.</span></span><span class="sig-name descname"><span class="pre">test_CrearTiposF</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sgpa.apps.proyectos.tests_proyectos.test_CrearTiposF" title="Enlazar permanentemente con esta definición"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sgpa.apps.proyectos.tests_proyectos.test_FinalizarProyecto">
+<span class="sig-prename descclassname"><span class="pre">sgpa.apps.proyectos.tests_proyectos.</span></span><span class="sig-name descname"><span class="pre">test_FinalizarProyecto</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sgpa.apps.proyectos.tests_proyectos.test_FinalizarProyecto" title="Enlazar permanentemente con esta definición"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sgpa.apps.proyectos.tests_proyectos.test_FinalizarProyecto2">
+<span class="sig-prename descclassname"><span class="pre">sgpa.apps.proyectos.tests_proyectos.</span></span><span class="sig-name descname"><span class="pre">test_FinalizarProyecto2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sgpa.apps.proyectos.tests_proyectos.test_FinalizarProyecto2" title="Enlazar permanentemente con esta definición"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
@@ -707,8 +713,8 @@
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="sgpa.apps.proyectos.tests_proyectos.test_finalizarSprint">
-<span class="sig-prename descclassname"><span class="pre">sgpa.apps.proyectos.tests_proyectos.</span></span><span class="sig-name descname"><span class="pre">test_finalizarSprint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sgpa.apps.proyectos.tests_proyectos.test_finalizarSprint" title="Enlazar permanentemente con esta definición"></a></dt>
+<dt class="sig sig-object py" id="sgpa.apps.proyectos.tests_proyectos.test_finalizarSprintF">
+<span class="sig-prename descclassname"><span class="pre">sgpa.apps.proyectos.tests_proyectos.</span></span><span class="sig-name descname"><span class="pre">test_finalizarSprintF</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sgpa.apps.proyectos.tests_proyectos.test_finalizarSprintF" title="Enlazar permanentemente con esta definición"></a></dt>
 <dd></dd></dl>
 
 </section>
@@ -809,6 +815,46 @@ Requiere inicio de sesión</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="sgpa.apps.proyectos.views.ListarRol.template_name">
 <span class="sig-name descname"><span class="pre">template_name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'roles/listar_roles.html'</span></em><a class="headerlink" href="#sgpa.apps.proyectos.views.ListarRol.template_name" title="Enlazar permanentemente con esta definición"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="sgpa.apps.proyectos.views.ListarTipoUserStory">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sgpa.apps.proyectos.views.</span></span><span class="sig-name descname"><span class="pre">ListarTipoUserStory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sgpa.apps.proyectos.views.ListarTipoUserStory" title="Enlazar permanentemente con esta definición"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">LoginRequiredMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ListView</span></code></p>
+<p>Vista basada en modelos que permite listar todos los user stories creados
+Muestra la lista de los user stories asociados al proyecto en forma de tabla
+No recibe parámetros
+Requiere inicio de sesión</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="sgpa.apps.proyectos.views.ListarTipoUserStory.get_context_data">
+<span class="sig-name descname"><span class="pre">get_context_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sgpa.apps.proyectos.views.ListarTipoUserStory.get_context_data" title="Enlazar permanentemente con esta definición"></a></dt>
+<dd><p>Get the context for this view.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sgpa.apps.proyectos.views.ListarTipoUserStory.get_queryset">
+<span class="sig-name descname"><span class="pre">get_queryset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sgpa.apps.proyectos.views.ListarTipoUserStory.get_queryset" title="Enlazar permanentemente con esta definición"></a></dt>
+<dd><p>Return the list of items for this view.</p>
+<p>The return value must be an iterable and may be an instance of
+<cite>QuerySet</cite> in which case <cite>QuerySet</cite> specific behavior will be enabled.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sgpa.apps.proyectos.views.ListarTipoUserStory.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#sgpa.apps.proyectos.views.ListarTipoUserStory.model" title="Enlazar permanentemente con esta definición"></a></dt>
+<dd><p>alias de <code class="xref py py-class docutils literal notranslate"><span class="pre">TipoUserStory</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sgpa.apps.proyectos.views.ListarTipoUserStory.redirect_field_name">
+<span class="sig-name descname"><span class="pre">redirect_field_name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'redirect_to'</span></em><a class="headerlink" href="#sgpa.apps.proyectos.views.ListarTipoUserStory.redirect_field_name" title="Enlazar permanentemente con esta definición"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sgpa.apps.proyectos.views.ListarTipoUserStory.template_name">
+<span class="sig-name descname"><span class="pre">template_name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'tareas/listar_tipos.html'</span></em><a class="headerlink" href="#sgpa.apps.proyectos.views.ListarTipoUserStory.template_name" title="Enlazar permanentemente con esta definición"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1001,6 +1047,14 @@ Requiere inicio de sesión</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="sgpa.apps.proyectos.views.eliminarTipo">
+<span class="sig-prename descclassname"><span class="pre">sgpa.apps.proyectos.views.</span></span><span class="sig-name descname"><span class="pre">eliminarTipo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idProyecto</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_tipo</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sgpa.apps.proyectos.views.eliminarTipo" title="Enlazar permanentemente con esta definición"></a></dt>
+<dd><p>Vista basada en funciones que permite eliminar un Tipo de User Story seleccionado
+Recibe el request HTTP y el id del rol a eliminar
+Requiere inicio de sesión</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="sgpa.apps.proyectos.views.eliminarUserStory">
 <span class="sig-prename descclassname"><span class="pre">sgpa.apps.proyectos.views.</span></span><span class="sig-name descname"><span class="pre">eliminarUserStory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idProyecto</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_tarea</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sgpa.apps.proyectos.views.eliminarUserStory" title="Enlazar permanentemente con esta definición"></a></dt>
 <dd><p>Vista basada en funciones que permite eliminar un User Story seleccionado
@@ -1121,6 +1175,15 @@ Requiere inicio de sesión y permisos de Scrum Master o administrador</p>
 Recibe un “request” y el “id” del Proyecto correspondiente como parametros.
 Una vez completados los cambios en los campos del formulario, guarda la informacion
 actualizada y redirige a la lista de los proyectos asociados.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sgpa.apps.proyectos.views.modificarTipoUS">
+<span class="sig-prename descclassname"><span class="pre">sgpa.apps.proyectos.views.</span></span><span class="sig-name descname"><span class="pre">modificarTipoUS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idProyecto</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_tipo</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sgpa.apps.proyectos.views.modificarTipoUS" title="Enlazar permanentemente con esta definición"></a></dt>
+<dd><p>Modifica un tipo de US.
+Recibe la petición http, el id del proyecto y el id del tipo de US.
+Muestra la información del tipo de US especificado para su modificación y luego guarda
+los cambios realizados.</p>
 </dd></dl>
 
 <dl class="py function">
