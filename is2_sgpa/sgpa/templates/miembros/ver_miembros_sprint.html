@@ -50,7 +50,7 @@
         </div>
         <p align=center>
             {% if user.id == proyecto.scrumMaster.user.id or perms.proyectos.agregar_miembros %}
-            {% if sprint.estado != "Activo" %}
+            {% if sprint.estado == "En_cola" %}
             <a href="{% url 'proyectos:nuevo_miembro_sprint' idProyecto idSprint %}" class="btn boton-color"
                 role="button">Agregar
                 miembro</a>

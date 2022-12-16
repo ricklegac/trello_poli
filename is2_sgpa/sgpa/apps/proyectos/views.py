@@ -492,6 +492,7 @@ def modificarSprints(request, id_proyecto, id_sprint):
             if sprint.tiempo_disponible + diferencia >= 0:
                 sprint.tiempo_disponible += diferencia
                 sprint.duracion = duracion_nueva
+                sprint.warning_cap = False
                 sprint.save()
             else:
                 messages.error(request, "La duración del sprint es insuficiente")
@@ -795,7 +796,7 @@ def miembroEliminar(request, idProyecto, idMiembro):
     Requiere inicio de sesión
     """
 
-    miembro = Miembro.objects.get(idPerfil=idMiembro, idProyecto=idProyecto)
+    miembro = Miembro.objects.filter(idPerfil=idMiembro, idProyecto=idProyecto).first()
     if request.method == "POST":
         miembro.delete()
         user = User.objects.get(username=request.user)
@@ -852,7 +853,7 @@ def verMiembros(request, idProyecto):
     Recibe el request y el id de un proyecto como parámtros
     Requiere inicio de sesión
     """
-    miembros = Miembro.objects.filter(idProyecto=idProyecto)
+    miembros = Miembro.objects.filter(idProyecto=idProyecto, sprint=None)
     proyecto = Proyecto.objects.get(id=idProyecto)
 
     return render(
