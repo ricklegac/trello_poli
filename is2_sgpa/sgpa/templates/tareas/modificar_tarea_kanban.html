@@ -73,7 +73,7 @@
                 </div>
                 <p align="center">
                     <button type="submit" class="btn btn-primary">Guardar</button>
-                    <a href="{% url 'proyectos:listar_tareas' idProyecto%}" class="btn btn-primary"
+                    <a href="{% url 'proyectos:kanban' idProyecto idSprint %}" class="btn btn-primary"
                         role="button">Cancelar</a>
                 </p>
             </form>

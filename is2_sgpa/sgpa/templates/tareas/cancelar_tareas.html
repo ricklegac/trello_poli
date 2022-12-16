@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4">
+
+        </div>
+        <div class="col-md-4">
+            <form method="POST">
+                {% csrf_token %}
+                <h3>Estás a punto de cancelar todas las Historias de Usuario</h3>
+                <button type="submit" class="btn btn-danger">Confirmar</button>
+                <a class="btn btn-primary" href="{% url 'proyectos:listar_tareas' idProyecto %}">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

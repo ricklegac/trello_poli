@@ -22,6 +22,7 @@ from proyectos.views import (
     miembroCrear,
     miembroEliminar,
     modificarUserStory,
+    modificarUserStoryKanban,
     retrocederEstadoTarea,
     tableroKanban,
     verMiembros,
@@ -42,6 +43,7 @@ from proyectos.views import (
     eliminarTipo,
     verRoles,
     modificarTipoUS,
+    cancelarUs,
 )
 
 urlpatterns = [
@@ -93,7 +95,7 @@ urlpatterns = [
         name="sprint_tareas",
     ),
     path(
-        "<int:idProyecto>/sprint/<int:idSprint>/tarea/<int:idTarea>/",
+        "<int:idProyecto>/sprint/<int:idSprint>/tarea/<int:idTarea>/asignar_sprint",
         asignarSprint,
         name="asignar_sprint",
     ),
@@ -111,6 +113,11 @@ urlpatterns = [
         "<int:idProyecto>/sprint/kanban/<int:idSprint>/tarea-retroceder/<int:idTarea>/",
         retrocederEstadoTarea,
         name="retroceder_tarea",
+    ),
+    path(
+        "<int:idProyecto>/sprint/kanban/tareas/editar/<int:id_tarea>/",
+        modificarUserStoryKanban,
+        name="modificar_tarea_kanban",
     ),
     # Historial
     path("<int:id_proyecto>/historial/", verHistorial, name="ver_historial"),
@@ -180,5 +187,10 @@ urlpatterns = [
         "<int:idProyecto>/tareas/tipo/",
         crearTipoUS,
         name="tipos_us",
+    ),
+    path(
+        "<int:idProyecto>/tareas/cancelar/",
+        cancelarUs,
+        name="cancelar_tareas",
     ),
 ]

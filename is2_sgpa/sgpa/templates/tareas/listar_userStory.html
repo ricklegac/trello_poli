@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container-fluid">
     <ins>
-        <h3 align="center">Lista de User Stories</h3>
+        <h3 align="center">Lista de User Stories - {{proyecto.nombre}}</h3>
     </ins>
     {% if object_list %}
     <div class="row">
@@ -15,7 +15,10 @@
                 <thead align="center">
                     <tr class="table-primary">
                         <th scope="col">Nombre</th>
-                        <th scope="col">Descripcion</th>
+                        <th scope="col">Tareas</th>
+                        <th scope="col">Prioridad</th>
+                        <th scope="col">Horas estimadas</th>
+                        <th scope="col">Estado</th>
                         <th scope="col">Desarrollador</th>
                         <th scope="col">Acciones</th>
                     </tr>
@@ -25,6 +28,9 @@
                     <tr>
                         <td scope="col">{{ us.nombre }}</td>
                         <td scope="col">{{ us.descripcion }}</td>
+                        <td scope="col">{{ us.prioridad_total }}</td>
+                        <td scope="col">{{ us.horas_estimadas }}</td>
+                        <td scope="col">{{ us.estado }}</td>
                         <td scope="col">
                             {% if us.desarrollador %}
                             {{ us.desarrollador }}
@@ -54,6 +60,7 @@
     <p align="center">
         {% if user.id == proyecto.scrumMaster.user.id%}
         <a href="{% url 'proyectos:crear_tarea' idProyecto %}" class="btn boton-color">Crear US</a>
+        <a href="{% url 'proyectos:cancelar_tareas' idProyecto %}" class="btn btn-danger">Cancelar todas las US</a>
         {% endif %}
         <a href="{% url 'proyectos:ver_proyecto' idProyecto %}" class="btn boton-color" role="button">Volver</a>
     </p>

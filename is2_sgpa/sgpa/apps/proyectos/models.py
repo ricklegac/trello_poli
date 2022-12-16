@@ -65,11 +65,34 @@ class Backlog(models.Model):
         return self.nombre
 
 
+class Miembro(models.Model):
+    idPerfil = models.ForeignKey(
+        to="usuarios.Perfil", on_delete=models.CASCADE, related_name="miembros"
+    )
+    idProyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE)
+    warning_cap = models.BooleanField(default=False)
+    activo = models.BooleanField(
+        default=False
+    )  # Estado del Miembro, si esta Activo == True sino == False
+    capacidad_pen = models.PositiveSmallIntegerField(
+        blank=True,
+        null=True,
+        default=0,
+        validators=[MinValueValidator(0), MaxValueValidator(24)],
+    )  # cantidad de horas por dia a trabajar
+    capacidad_ini = models.PositiveSmallIntegerField(
+        blank=True,
+        null=True,
+        default=0,
+        validators=[MinValueValidator(0), MaxValueValidator(24)],
+    )
+
+
 class Sprint(models.Model):
     objetivos = models.CharField(max_length=300, blank=False, null=True)
     posicion = models.IntegerField(blank=False, null=True)
     numTareas = models.IntegerField(default=0)
-    duracion = models.FloatField(default=0)  # numero referido al numero de semanas
+    duracion = models.FloatField(default=0)  # numero referido al numero de horas
     tiempo_disponible = models.FloatField(default=0)
     estado = models.CharField(
         max_length=10, choices=ESTADOSPR_CHOICES, default="En_cola"
@@ -80,6 +103,8 @@ class Sprint(models.Model):
     fechaCreacion = models.DateField(auto_now_add=True)
     fechaInicio = models.DateField(null=True)
     fechaFin = models.DateField(null=True)
+    warning_cap = models.BooleanField(default=False)
+    equipo = models.ManyToManyField(Miembro, related_name="+")
 
     def __str__(self):
         return self.objetivos
@@ -98,11 +123,6 @@ class Historial(models.Model):
         return "{} {}: {}".format(
             self.fecha.strftime("%d/%m/%Y %X"), self.autor, self.operacion
         )
-
-
-class Miembro(models.Model):
-    idPerfil = models.ForeignKey(to="usuarios.Perfil", on_delete=models.CASCADE)
-    idProyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE)
 
 
 class Rol(models.Model):
@@ -150,6 +170,7 @@ class Columnas(models.Model):
         TipoUserStory, on_delete=models.CASCADE, related_name="columnas"
     )
     opcional = models.BooleanField(null=True, blank=True)
+    orden = models.IntegerField(default=0)
 
     def __str__(self):
         return self.nombre
@@ -165,7 +186,7 @@ class UserStory(models.Model):
         related_name="user_stories",
     )
     nombre = models.CharField(max_length=150, blank=False)
-    descripcion = models.TextField(max_length=300, blank=False)
+    descripcion = models.TextField(null=True, blank=False, default="")
     estado = models.ForeignKey(
         to=Columnas, on_delete=models.CASCADE, null=True, blank=True
     )
@@ -183,6 +204,34 @@ class UserStory(models.Model):
     )
     tipo = models.ForeignKey(
         TipoUserStory, on_delete=models.CASCADE, related_name="user_stories"
+    )
+    horas_trabajadas = models.PositiveSmallIntegerField(
+        verbose_name="Horas trabajadas", null=True, blank=True, default=0
+    )
+    horas_estimadas = models.PositiveSmallIntegerField(
+        verbose_name="Horas estimadas",
+        default=0,
+        null=True,
+        blank=True,
+        validators=[MinValueValidator(0)],
+    )
+    prioridad_funcional = models.PositiveSmallIntegerField(
+        default=0,
+        null=True,
+        blank=True,
+        validators=[MinValueValidator(0), MaxValueValidator(10)],
+    )
+    prioridad_tecnica = models.PositiveSmallIntegerField(
+        default=0,
+        null=True,
+        blank=True,
+        validators=[MinValueValidator(0), MaxValueValidator(10)],
+    )
+    prioridad_total = models.FloatField(
+        default=0,
+        null=True,
+        blank=True,
+        validators=[MinValueValidator(0), MaxValueValidator(13)],
     )
 
     def __str__(self):

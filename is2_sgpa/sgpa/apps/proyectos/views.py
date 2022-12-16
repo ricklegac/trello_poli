@@ -79,16 +79,30 @@ class crearProyecto(LoginRequiredMixin, CreateView):
         )
         backlog.save()
 
-        tipo = TipoUserStory.objects.create(nombre="Por defecto", proyecto=proyecto)
+        tipo = TipoUserStory.objects.create(nombre="Estándar", proyecto=proyecto)
         tipo.save()
-        columna = Columnas.objects.create(nombre="To Do", tipo_us=tipo)
+
+        columna = Columnas.objects.create(nombre="Cancelado", tipo_us=tipo, orden=-1)
         columna.save()
-        columna = Columnas.objects.create(nombre="Doing", tipo_us=tipo)
+        columna = Columnas.objects.create(nombre="Inactivo", tipo_us=tipo, orden=0)
         columna.save()
-        columna = Columnas.objects.create(nombre="Done", tipo_us=tipo)
+        columna = Columnas.objects.create(nombre="To Do", tipo_us=tipo, orden=1)
         columna.save()
-        columna = Columnas.objects.create(nombre="In Review", tipo_us=tipo)
+        columna = Columnas.objects.create(nombre="Doing", tipo_us=tipo, orden=2)
         columna.save()
+        columna = Columnas.objects.create(nombre="Done", tipo_us=tipo, orden=3)
+        columna.save()
+        columna = Columnas.objects.create(nombre="Realese", tipo_us=tipo, orden=-2)
+        columna.save()
+        # El Done tiene que ser un backlog al que se pueda acceder para ver los US finalizados
+        # columna = Columnas.objects.create(nombre="Done", tipo_us=tipo)
+        # columna.save()
+
+        # Done backlog
+        backlog = Backlog.objects.create(
+            nombre="Done", proyecto=proyecto, tipo="Sprint_Backlog"
+        )
+        backlog.save()
 
         user = User.objects.get(username=self.request.user)
         perfil = Perfil.objects.get(user=user)
@@ -320,16 +334,41 @@ def finalizarProyecto(request, id_proyecto):
     """
 
     proyecto = Proyecto.objects.get(id=id_proyecto)
-    sprints = Sprint.objects.filter(proyecto=id_proyecto)
-    i = len(sprints)
-    for iterador in range(0, len(sprints)):
-        if sprints[iterador].estado != "Finalizado":
-            messages.add_message(request, messages.ERROR, "Sprint sin finalizar")
-            i -= 1
-    if i == len(sprints):
+    # sprints = Sprint.objects.filter(proyecto=id_proyecto)
+    # i = len(sprints)
+    # for iterador in range(0, len(sprints)):
+    #     if sprints[iterador].estado != "Finalizado":
+    #         messages.add_message(request, messages.ERROR, "Sprint sin finalizar")
+    #         i -= 1
+    # if i == len(sprints):
+
+    cancelado = Columnas.objects.filter(tipo_us__proyecto=proyecto, orden=-1).first()
+    release = Columnas.objects.filter(tipo_us__proyecto=proyecto, orden=-2).first()
+
+    if (
+        UserStory.objects.filter(backlog__proyecto=proyecto)
+        .exclude(estado=cancelado)
+        .exclude(estado=release)
+        .count()
+        == 0
+    ):
+        product_backlog = Backlog.objects.filter(
+            proyecto=proyecto, tipo="Product_Backlog"
+        ).first()
+        inactivo = Columnas.objects.filter(tipo_us__proyecto=proyecto, orden=0).first()
+        tareas = UserStory.objects.filter(
+            backlog__proyecto=proyecto, estado=release
+        ).exclude()
         proyecto.estado = "Finalizado"
         proyecto.fechaFin = datetime.now()
         proyecto.save()
+
+        for tarea in tareas:
+            tarea.estado = inactivo
+            tarea.backlog = product_backlog
+            tarea.sprint = None
+            tarea.save()
+
         miembros = Miembro.objects.filter(idProyecto=proyecto)
         correos = []
         for miembro in miembros:
@@ -350,6 +389,12 @@ def finalizarProyecto(request, id_proyecto):
             proyecto=Proyecto.objects.get(id=id_proyecto),
             categoria="Proyecto",
         )
+    else:
+        messages.add_message(
+            request,
+            messages.ERROR,
+            "No se puede finalizar el proyecto, existen historias de usuario activas. Cambie sus estados a Cancelado o a Realease",
+        )
     return redirect("proyectos:ver_proyecto", id_proyecto)
 
 
@@ -362,13 +407,14 @@ def verHistorial(request, id_proyecto):
     Muestra todos los mensajes guardados en el historial del proyecto desde que se creo.
     """
     historiales = Historial.objects.filter(proyecto=id_proyecto)
+    proyecto = Proyecto.objects.get(id=id_proyecto)
     mensajes = []
     for x in range(0, len(historiales)):
         mensajes.append(historiales[x].__str__())
     return render(
         request,
         "proyectos/ver_historial.html",
-        {"mensajes": mensajes, "idProyecto": id_proyecto},
+        {"mensajes": mensajes, "idProyecto": id_proyecto, "proyecto": proyecto},
     )
 
 
@@ -392,19 +438,12 @@ def crearSprint(request, id_proyecto):
         if form.is_valid():
             proyecto.numSprints += 1
             proyecto.save()
-            duracion = round(
-                (form.cleaned_data["fechaFin"] - form.cleaned_data["fechaInicio"]).days
-                / 7,
-                2,
-            )
             sprint = Sprint.objects.create(
                 objetivos=form.cleaned_data["objetivos"],
                 posicion=proyecto.numSprints,
                 proyecto=proyecto,
-                fechaInicio=form.cleaned_data["fechaInicio"],
-                fechaFin=form.cleaned_data["fechaFin"],
-                duracion=duracion,
-                tiempo_disponible=duracion,
+                duracion=form.cleaned_data["duracion"],
+                tiempo_disponible=form.cleaned_data["duracion"],
             )
             sprint.save()
             backlog = Backlog.objects.create(
@@ -437,25 +476,21 @@ def modificarSprints(request, id_proyecto, id_sprint):
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
     sprint = Sprint.objects.get(id=id_sprint)
-
+    duracion_anterior = sprint.duracion
     if request.method == "GET":
         sprint_Form = SprintEdit_Form(instance=sprint)
     else:
         sprint_Form = SprintEdit_Form(request.POST, instance=sprint)
         if sprint_Form.is_valid():
-            print(sprint_Form.data)
             sprint_Form.save()
-            duracion = round(
-                (
-                    sprint_Form.cleaned_data["fechaFin"]
-                    - sprint_Form.cleaned_data["fechaInicio"]
-                ).days
-                / 7,
-                2,
-            )
-            sprint.duracion = duracion
-            sprint.tiempo_disponible = duracion
-            sprint.save()
+            duracion_nueva = sprint_Form.cleaned_data["duracion"]
+            diferencia = duracion_nueva - duracion_anterior
+            if sprint.tiempo_disponible + diferencia >= 0:
+                sprint.tiempo_disponible += diferencia
+                sprint.duracion = duracion_nueva
+                sprint.save()
+            else:
+                messages.error(request, "La duración del sprint es insuficiente")
         else:
             print(sprint_Form.errors.items())
 
@@ -607,7 +642,13 @@ def finalizarSprint(request, id_proyecto, id_sprint):
     """
 
     proyecto = Proyecto.objects.get(id=id_proyecto)
+    product_backlog = Backlog.objects.filter(
+        proyecto=proyecto, tipo="Product_Backlog"
+    ).first()
     sprint = Sprint.objects.get(id=id_sprint)
+    release = Columnas.objects.filter(tipo_us__proyecto=proyecto, orden=-2).first()
+    inactivo = Columnas.objects.filter(tipo_us__proyecto=proyecto, orden=0).first()
+    tareas = UserStory.objects.filter(sprint=sprint).exclude(estado=release)
 
     if sprint.estado == "Cancelado":
         messages.error(request, "No se puede finalizar un sprint cancelado")
@@ -622,6 +663,11 @@ def finalizarSprint(request, id_proyecto, id_sprint):
         sprint.estado = "Finalizado"
         sprint.fechaFin = datetime.now()
         sprint.save()
+        for tarea in tareas:
+            tarea.estado = inactivo
+            tarea.backlog = product_backlog
+            tarea.sprint = None
+            tarea.save()
         user = User.objects.get(username=request.user)
         perfil = Perfil.objects.get(user=user)
         Historial.objects.create(
@@ -789,6 +835,7 @@ class CrearRol(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super(CrearRol, self).get_context_data()
         context["idProyecto"] = self.kwargs["idProyecto"]
+        context["proyecto"] = Proyecto.objects.get(id=self.kwargs["idProyecto"])
         return context
 
 
@@ -1020,18 +1067,19 @@ def crearUserStory(request, idProyecto):
             backlog.save()
             proyecto.save()
             tipo = form.cleaned_data["tipo"]
-            estado = Columnas.objects.filter(tipo_us=tipo).first()
+            estado = Columnas.objects.filter(tipo_us=tipo, orden=0).first()
             userStory = UserStory.objects.create(
                 backlog=backlog,
                 nombre=form.cleaned_data["nombre"],
                 descripcion=form.cleaned_data["descripcion"],
-                prioridad=form.cleaned_data["prioridad"],
                 estado=estado,
                 desarrollador=form.cleaned_data["desarrollador"],
-                fechaInicio=form.cleaned_data["fechaInicio"],
-                fechaFin=form.cleaned_data["fechaFin"],
+                horas_estimadas=form.cleaned_data["horas_estimadas"],
                 tipo=tipo,
-                sprint=form.cleaned_data["sprint"],
+                prioridad_funcional=form.cleaned_data["prioridad_funcional"],
+                prioridad_tecnica=form.cleaned_data["prioridad_funcional"],
+                prioridad_total=form.cleaned_data["prioridad_funcional"] * 0.6
+                + form.cleaned_data["prioridad_funcional"] * 0.4,
             )
             userStory.save()
             user = User.objects.get(username=request.user)
@@ -1098,11 +1146,59 @@ def modificarUserStory(request, idProyecto, id_tarea):
         tarea_Form = UserStoryEdit_Form(idProyecto, instance=tarea)
     else:
         tarea_Form = UserStoryEdit_Form(idProyecto, request.POST, instance=tarea)
-        print("llega", tarea.id)
         if tarea_Form.is_valid():
-            print("es valido")
             tarea_Form.save()
-            print("save")
+            # desarrollador = tarea.desarrollador
+            # send_mail(
+            #     "El User Story ha sido modificado",
+            #     "Usted es desarrollador del User Story '{0}' y este acaba de ser modificado, ingrese a la plataforma para observar los cambios".format(
+            #         tarea.nombre
+            #     ),
+            #     "is2.sgpa@gmail.com",
+            #     desarrollador,
+            # )
+
+            tarea.prioridad_total = (
+                tarea_Form.cleaned_data["prioridad_funcional"] * 0.6
+                + tarea_Form.cleaned_data["prioridad_tecnica"] * 0.4
+            )
+            tarea.save()
+
+            proyecto = Proyecto.objects.get(id=idProyecto)
+            user = User.objects.get(username=request.user)
+            perfil = Perfil.objects.get(user=user)
+            Historial.objects.create(
+                operacion="Modificar Proyecto",
+                autor=perfil.__str__(),
+                proyecto=proyecto,
+                categoria="User Story",
+            )
+
+        return redirect("proyectos:listar_tareas", idProyecto)
+    return render(
+        request,
+        "tareas/modificar_tarea.html",
+        {"tarea_Form": tarea_Form, "id_tarea": id_tarea, "idProyecto": idProyecto},
+    )
+
+
+# --- Modificar User Story --- #
+@login_required
+def modificarUserStoryKanban(request, idProyecto, id_tarea):
+    """
+    Vista basada en función, para actualizar un User Story existente
+    Recibe el request HTTP y el id del US correspondiente como parámetros
+    Al finalizar los cambios en los campos del formulario, guarda la información y redirige a la lista de US asociados
+    Requiere inicio de sesión y permisos de Scrum Master o administrador
+    """
+    tarea = UserStory.objects.get(id=id_tarea)
+    idSprint = tarea.sprint.id
+    if request.method == "GET":
+        tarea_Form = UserStoryEdit_Form(idProyecto, instance=tarea)
+    else:
+        tarea_Form = UserStoryEdit_Form(idProyecto, request.POST, instance=tarea)
+        if tarea_Form.is_valid():
+            tarea_Form.save()
             # desarrollador = tarea.desarrollador
             # send_mail(
             #     "El User Story ha sido modificado",
@@ -1122,11 +1218,16 @@ def modificarUserStory(request, idProyecto, id_tarea):
                 categoria="User Story",
             )
 
-        return redirect("proyectos:listar_tareas", idProyecto)
+        return redirect("proyectos:kanban", idProyecto, idSprint)
     return render(
         request,
-        "tareas/modificar_tarea.html",
-        {"tarea_Form": tarea_Form, "id_tarea": id_tarea, "idProyecto": idProyecto},
+        "tareas/modificar_tarea_kanban.html",
+        {
+            "tarea_Form": tarea_Form,
+            "id_tarea": id_tarea,
+            "idProyecto": idProyecto,
+            "idSprint": idSprint,
+        },
     )
 
 
@@ -1172,42 +1273,32 @@ def asignarSprint(request, idProyecto, idSprint, idTarea):
     sprint = Sprint.objects.get(id=idSprint)
     sprint.numTareas += 1
 
-    print("td", sprint.tiempo_disponible)
-    print("us", round((tarea.fechaFin - tarea.fechaInicio).days / 7, 2))
-
-    if sprint.tiempo_disponible == 0:
-        messages.error(
-            request,
-            "Ya no se pueden asignar tareas, se alcanzó el límite de duración del sprint",
-        )
-    elif (
-        sprint.tiempo_disponible
-        - round((tarea.fechaFin - tarea.fechaInicio).days / 7, 2)
-        < 0
+    if (
+        sprint.tiempo_disponible == 0
+        or sprint.tiempo_disponible - tarea.horas_estimadas < 0
     ):
-        messages.error(
-            request,
-            "No se pueden asignar esta tarea, supera el límite de duración del sprint",
-        )
-    else:
-        sprint.tiempo_disponible -= round(
-            (tarea.fechaFin - tarea.fechaInicio).days / 7, 2
-        )
-        sprint.save()
+        sprint.warning_cap = True
 
-        tarea.sprint = sprint
-        tarea.save()
+    sprint.tiempo_disponible -= tarea.horas_estimadas
+    sprint.save()
 
-        user = User.objects.get(username=request.user)
-        perfil = Perfil.objects.get(user=user)
-        Historial.objects.create(
-            operacion="Asignar User Story {} al sprint {}".format(
-                tarea.nombre, sprint.objetivos
-            ),
-            autor=perfil.__str__(),
-            proyecto=Proyecto.objects.get(id=idProyecto),
-            categoria="Sprint",
-        )
+    columna = Columnas.objects.filter(
+        tipo_us__proyecto=sprint.proyecto, orden=1
+    ).first()
+    tarea.sprint = sprint
+    tarea.estado = columna
+    tarea.save()
+
+    user = User.objects.get(username=request.user)
+    perfil = Perfil.objects.get(user=user)
+    Historial.objects.create(
+        operacion="Asignar User Story {} al sprint {}".format(
+            tarea.nombre, sprint.objetivos
+        ),
+        autor=perfil.__str__(),
+        proyecto=Proyecto.objects.get(id=idProyecto),
+        categoria="Sprint",
+    )
     return redirect("proyectos:sprint_tareas", idProyecto=idProyecto, idSprint=idSprint)
 
 
@@ -1220,6 +1311,13 @@ def desasignarSprint(request, idProyecto, idSprint, idTarea):
     sprint.numTareas -= 1
     sprint.save()
 
+    sprint.tiempo_disponible += tarea.horas_estimadas
+    sprint.save()
+
+    columna = Columnas.objects.filter(
+        tipo_us__proyecto=sprint.proyecto, orden=0
+    ).first()
+    tarea.estado = columna
     tarea.sprint = None
     tarea.save()
 
@@ -1244,7 +1342,6 @@ def crearTipoUS(request, idProyecto):
 
     if request.method == "GET":
         data["form"] = TipoUserStoryForm()
-        #  = ColumnasForm()
         data["formset1"] = AdicionalColumnaFormset(
             queryset=Columnas.objects.none(), prefix="form1"
         )
@@ -1270,6 +1367,12 @@ def crearTipoUS(request, idProyecto):
                     adicional = form1.save(commit=False)
                     adicional.tipo_us = tipo_us
                     adicional.save()
+
+            i = 1
+            for columna in Columnas.objects.filter(tipo_us=tipo_us.id):
+                columna.orden = i
+                columna.save()
+                i += 1
 
             user = User.objects.get(username=request.user)
             perfil = Perfil.objects.get(user=user)
@@ -1372,11 +1475,21 @@ class ListarTipoUserStory(LoginRequiredMixin, ListView):
 # --- Crear Tablero Kanban --- #
 @login_required
 def tableroKanban(request, idProyecto, idSprint):
+    try:
+        desarrollador = Perfil.objects.get(user=request.user)
+    except:
+        desarrollador = None
+
     proyecto = Proyecto.objects.get(id=idProyecto)
+    cancelado = Columnas.objects.filter(tipo_us__proyecto=proyecto, orden=-1).first()
     sprint = Sprint.objects.get(id=idSprint)
     context = {"idProyecto": idProyecto}
     context["idSprint"] = idSprint
     context["sprint"] = sprint
+    context["desarrollador"] = desarrollador
+    context["scrumMaster"] = proyecto.scrumMaster
+    context["proyecto"] = proyecto
+    context["cancelado"] = cancelado
 
     if request.method == "GET":
         context["form"] = KanbanForm(idProyecto)
@@ -1387,8 +1500,11 @@ def tableroKanban(request, idProyecto, idSprint):
         for columna in columnas:
             datos.append(
                 {
-                    "columna": columna.nombre,
-                    "tareas": UserStory.objects.filter(estado=columna, sprint=sprint),
+                    "columna": columna,
+                    "idColumna": columna.id,
+                    "tareas": UserStory.objects.filter(
+                        estado=columna, sprint=sprint
+                    ).order_by("-prioridad_total"),
                 }
             )
         context["datos"] = datos
@@ -1397,13 +1513,34 @@ def tableroKanban(request, idProyecto, idSprint):
     elif request.method == "POST":
         form = KanbanForm(idProyecto, request.POST)
         tipo = TipoUserStory.objects.get(id=form.data["tipo"])
-        columnas = Columnas.objects.filter(tipo_us=tipo)
+
+        columnas = []
+        if tipo.nombre != "Estándar":
+            admin_columnas = Columnas.objects.filter(
+                orden__lte=0,
+                tipo_us=TipoUserStory.objects.filter(proyecto=idProyecto).first(),
+            )
+
+            for columna in admin_columnas:
+                columnas.append(columna)
+            columnas.pop()
+
+        columnas_x = Columnas.objects.filter(tipo_us=tipo)
+        for columna in columnas_x:
+            columnas.append(columna)
+
+        if tipo.nombre != "Estándar":
+            columnas.append(admin_columnas.last())
+
         datos = []
         for columna in columnas:
             datos.append(
                 {
-                    "columna": columna.nombre,
-                    "tareas": UserStory.objects.filter(estado=columna, sprint=sprint),
+                    "columna": columna,
+                    "idColumna": columna.id,
+                    "tareas": UserStory.objects.filter(
+                        estado=columna, sprint=sprint
+                    ).order_by("-prioridad_total"),
                 }
             )
         context["datos"] = datos
@@ -1431,6 +1568,17 @@ def avanzarEstadoTarea(request, idProyecto, idSprint, idTarea):
                 tarea.estado = columnas[i + 1]
                 tarea.save()
                 break
+
+        if tarea.estado == columnas.last():
+            scrum_master = columnas.first().tipo_us.proyecto.scrumMaster
+            send_mail(
+                "Un User Story en Realease",
+                "Usted es ScrumMaster y la tarea '{0}' acaba de llegar al estado finalizado, ingrese a la plataforma para observar los cambios y realizar seguimiento".format(
+                    tarea.nombre
+                ),
+                "is2.sgpa@gmail.com",
+                scrum_master,
+            )
 
         user = User.objects.get(username=request.user)
         perfil = Perfil.objects.get(user=user)
@@ -1481,8 +1629,13 @@ def retrocederEstadoTarea(request, idProyecto, idSprint, idTarea):
 
 @login_required
 def asignarTareasSprint(request, idProyecto, idSprint):
+    proyecto = Proyecto.objects.get(id=idProyecto)
     context = {"idProyecto": idProyecto}
+    context["proyecto"] = proyecto
     context["idSprint"] = idSprint
+    context["cancelado"] = Columnas.objects.filter(
+        tipo_us__proyecto=idProyecto, orden=-1
+    ).first()
     if request.method == "GET":
         datos = []
         datos.append(
@@ -1490,7 +1643,7 @@ def asignarTareasSprint(request, idProyecto, idSprint):
                 "columna": "Product Backlog",
                 "tareas": UserStory.objects.filter(
                     backlog__proyecto=idProyecto, sprint=None
-                ).order_by("id"),
+                ).order_by("-estado", "-prioridad_total"),
             }
         )
         datos.append(
@@ -1498,10 +1651,37 @@ def asignarTareasSprint(request, idProyecto, idSprint):
                 "columna": "Sprint Backlog",
                 "tareas": UserStory.objects.filter(
                     backlog__proyecto=idProyecto, sprint=idSprint
-                ).order_by("id"),
+                ).order_by("-estado", "-prioridad_total"),
             }
         )
         context["datos"] = datos
-        print(context)
         return render(request, "sprints/agregar_tareas.html", context)
     return redirect("proyectos:listar_tareas", idProyecto=idProyecto)
+
+
+def cancelarUs(request, idProyecto):
+    context = {"idProyecto": idProyecto}
+    proyecto = Proyecto.objects.get(id=idProyecto)
+    cancelado = Columnas.objects.filter(tipo_us__proyecto=proyecto, orden=-1).first()
+    release = Columnas.objects.filter(tipo_us__proyecto=proyecto, orden=-2).first()
+
+    if request.method == "POST":
+        tareas = (
+            UserStory.objects.filter(backlog__proyecto__id=idProyecto)
+            .exclude(estado=cancelado)
+            .exclude(estado=release)
+        )
+        for tarea in tareas:
+            tarea.estado = cancelado
+            tarea.save()
+        cantidad = tareas.count()
+        user = User.objects.get(username=request.user)
+        perfil = Perfil.objects.get(user=user)
+        Historial.objects.create(
+            operacion="Se han cancelado {} historias de usuario".format(cantidad),
+            autor=perfil.__str__(),
+            proyecto=Proyecto.objects.get(id=idProyecto),
+            categoria="User Story",
+        )
+        return redirect("proyectos:listar_tareas", idProyecto=idProyecto)
+    return render(request, "tareas/cancelar_tareas.html", context)

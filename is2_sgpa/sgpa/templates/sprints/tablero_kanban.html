@@ -18,7 +18,7 @@
 
     <form method="POST" class="mb-5">
         {% csrf_token %}
-        <h3>Kanban:</h3>
+        <h3>Kanban - {{proyecto.nombre}}</h3>
         <div class="form-group mb-3" style="max-width: 30%;">
             <label class="col-form-label">Tipo de US:</label>
             {{ form.tipo }}
@@ -31,21 +31,24 @@
 
 
 <div style="display: flex; justify-content: space-between;">
+    {% if desarrollador == scrumMaster %}
     {% for dato in datos %}
     <div style="display: flex; flex-direction: column;">
-        <h3 style="text-align-last: center;">{{ dato.columna }}</h3>
+        <h3 style="text-align-last: center;">{{ dato.columna.nombre }}</h3>
         <div class="kanban-tablero">
             {% for tarea in dato.tareas %}
             <div class="kanban-container">
                 <div class="kanban-card">
                     <div class="kanban-card-body">
                         <div style="width: 100%; justify-content: space-between; display: flex;">
-                            <span class="kanban-tag kanban-tag-teal mb-3">{{ tarea.fechaFin }}</span>
-                            <a href="{% url 'proyectos:modificar_tarea' idProyecto tarea.id %}"
+                            <span class="kanban-tag kanban-tag-teal mb-3">Prioridad: {{tarea.prioridad_total}}</span>
+                            <a href="{% url 'proyectos:modificar_tarea_kanban' idProyecto tarea.id %}"
                                 class="btn kanban-tag-teal"><i class="fas fa-pen"></i></a>
                         </div>
                         <h4>{{ tarea.nombre }}</h4>
                         <p>{{ tarea.descripcion }}</p>
+                        <p style="margin: 0 0 0px;">Horas estimadas: {{ tarea.horas_estimadas }}</p>
+                        <p>Horas trabajadas: {{ tarea.horas_trabajadas }}</p>
                         <div class="kanban-user">
                             <div class="kanban-user-info">
                                 <h5>{{ tarea.desarrollador }}</h5>
@@ -59,14 +62,22 @@
                             </div>
                         </div>
                         {% if sprint.estado == "Activo" %}
+                        {% if desarrollador == tarea.desarrollador or desarrollador == scrumMaster %}
                         <div style="display: flex; width: 100%; justify-content: flex-end;">
+
+                            {% if dato.columna.orden != -1 %}
                             <a href="{% url 'proyectos:retroceder_tarea' idProyecto idSprint tarea.id %}"
                                 class="btn kanban-tag-teal" style="transform: scaleX(-1); width: 30px; height: 35px;"><i
                                     class="fa-solid fa-play"></i></a>
+                            {% endif %}
+
+                            {% if -2 != dato.columna.orden and tarea.estado != cancelado %}
                             <a href="{% url 'proyectos:avanzar_tarea' idProyecto idSprint tarea.id %}"
                                 class="btn kanban-tag-teal" style=" width: 30px; height: 35px;"><i
                                     class="fa-solid fa-play"></i></a>
+                            {% endif %}
                         </div>
+                        {% endif %}
                         {% endif %}
                     </div>
                 </div>
@@ -75,6 +86,65 @@
         </div>
     </div>
     {% endfor %}
+
+    {% else %}
+    {% for dato in datos %}
+    {% if dato.columna.orden > 0 %}
+    <div style="display: flex; flex-direction: column;">
+        <h3 style="text-align-last: center;">{{ dato.columna.nombre }}</h3>
+        <div class="kanban-tablero">
+            {% for tarea in dato.tareas %}
+            <div class="kanban-container">
+                <div class="kanban-card">
+                    <div class="kanban-card-body">
+                        <div style="width: 100%; justify-content: space-between; display: flex;">
+                            <span class="kanban-tag kanban-tag-teal mb-3">Prioridad: {{tarea.prioridad_total}}</span>
+                            <a href="{% url 'proyectos:modificar_tarea_kanban' idProyecto tarea.id %}"
+                                class="btn kanban-tag-teal"><i class="fas fa-pen"></i></a>
+                        </div>
+                        <h4>{{ tarea.nombre }}</h4>
+                        <p>{{ tarea.descripcion }}</p>
+                        <p style="margin: 0 0 0px;">Horas estimadas: {{ tarea.horas_estimadas }}</p>
+                        <p>Horas trabajadas: {{ tarea.horas_trabajadas }}</p>
+                        <div class="kanban-user">
+                            <div class="kanban-user-info">
+                                <h5>{{ tarea.desarrollador }}</h5>
+                                {% for rol in tarea.desarrollador.roles.all %}
+                                {% if forloop.last %}
+                                <small>{{ rol.nombre }}</small>
+                                {% else %}
+                                <small>{{ rol.nombre }},</small>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% if sprint.estado == "Activo" %}
+                        {% if desarrollador == tarea.desarrollador or desarrollador == scrumMaster %}
+                        <div style="display: flex; width: 100%; justify-content: flex-end;">
+
+                            {% if dato.columna.orden > 1 or desarrollador == scrumMaster %}
+                            <a href="{% url 'proyectos:retroceder_tarea' idProyecto idSprint tarea.id %}"
+                                class="btn kanban-tag-teal" style="transform: scaleX(-1); width: 30px; height: 35px;"><i
+                                    class="fa-solid fa-play"></i></a>
+                            {% endif %}
+
+                            {% if 2 >= dato.columna.orden or desarrollador == scrumMaster %}
+                            <a href="{% url 'proyectos:avanzar_tarea' idProyecto idSprint tarea.id %}"
+                                class="btn kanban-tag-teal" style=" width: 30px; height: 35px;"><i
+                                    class="fa-solid fa-play"></i></a>
+                        </div>
+                        {% endif %}
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
 </div>
 
 

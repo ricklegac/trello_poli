@@ -41,34 +41,32 @@ class Sprint_Form(forms.ModelForm):
         model = Sprint
         fields = [
             "objetivos",
-            "fechaInicio",
-            "fechaFin",
+            "duracion",
         ]
         labels = {
             "objetivos": "Objetivos",
-            "fechaInicio": "Fecha de inicio",
-            "fechaFin": "Fecha de finalización",
+            "duracion": "Duración",
         }
         widgets = {
             "objetivos": forms.TextInput(attrs={"class": "form-control"}),
-            "fechaInicio": forms.DateInput(attrs={"type": "date"}),
-            "fechaFin": forms.DateInput(attrs={"type": "date"}),
+            "duracion": forms.TextInput(attrs={"class": "form-control"}),
         }
 
 
 class SprintEdit_Form(forms.ModelForm):
     class Meta:
         model = Sprint
-        fields = ["objetivos", "fechaInicio", "fechaFin"]
+        fields = [
+            "objetivos",
+            "duracion",
+        ]
         labels = {
             "objetivos": "Objetivos",
-            "fechaInicio": "Fecha de inicio",
-            "fechaFin": "Fecha de finalización",
+            "duracion": "Duración",
         }
         widgets = {
             "objetivos": forms.TextInput(attrs={"class": "form-control"}),
-            "fechaInicio": forms.DateInput(attrs={"type": "date"}),
-            "fechaFin": forms.DateInput(attrs={"type": "date"}),
+            "duracion": forms.TextInput(attrs={"class": "form-control"}),
         }
 
 
@@ -78,19 +76,16 @@ class ProyectoEdit_Form(forms.ModelForm):
         fields = [
             "nombre",
             "descripcion",
-            "estado",
             "fechaFin",
         ]
         labels = {
             "nombre": "Nombre",
             "descripcion": "Descripcion",
-            "estado": "Estado",
             "fechaFin": "Fecha de finalización",
         }
         widgets = {
             "nombre": forms.TextInput(attrs={"class": "form-control"}),
             "descripcion": forms.TextInput(attrs={"class": "form-control"}),
-            "estado": forms.Select(attrs={"class": "form-control"}),
             "fechaFin": forms.DateInput(attrs={"type": "date"}),
         }
 
@@ -136,7 +131,8 @@ class Rol_Form(forms.ModelForm):
         "Modificar Sprint",
         "Cancelar Sprint",
         "Crear user story",
-        "Modificar user story" "Eliminar user story",
+        "Modificar user story",
+        "Eliminar user story",
     ]
     permisos = Permission.objects.filter(codename__in=permissions).values_list(
         "name", "codename"
@@ -173,19 +169,20 @@ class UserStoryForm(forms.ModelForm):
 
         tipos = TipoUserStory.objects.filter(proyecto=idProyecto).order_by("id")
         backlogs = Backlog.objects.filter(proyecto=idProyecto)
-        sprints = (
-            Sprint.objects.filter(proyecto=idProyecto)
-            .order_by("posicion")
-            .exclude(estado="Cancelado")
-            .exclude(estado="Finalizado")
-        )
-
+        # sprints = (
+        #     Sprint.objects.filter(proyecto=idProyecto)
+        #     .order_by("posicion")
+        #     .exclude(estado="Cancelado")
+        #     .exclude(estado="Finalizado")
+        # )
+        desarroladores = Perfil.objects.filter(miembros__idProyecto=idProyecto)
         self.fields["tipo"].queryset = tipos
         self.fields["tipo"].initial = tipos.first()
         self.fields["backlog"].queryset = backlogs
         self.fields["backlog"].initial = backlogs.first()
-        self.fields["sprint"].queryset = sprints
-        self.fields["sprint"].initial = sprints.first()
+        self.fields["desarrollador"].queryset = desarroladores
+        # self.fields["sprint"].queryset = sprints
+        # self.fields["sprint"].initial = sprints.first()
 
     class Meta:
         model = UserStory
@@ -193,35 +190,38 @@ class UserStoryForm(forms.ModelForm):
             "backlog",
             "nombre",
             "descripcion",
-            "prioridad",
             "estado",
             "desarrollador",
-            "fechaInicio",
-            "fechaFin",
+            "horas_estimadas",
             "tipo",
-            "sprint",
+            "prioridad_tecnica",
+            "prioridad_funcional",
         ]
         labels = {
             "backlog": "Backlog",
             "nombre": "Nombre",
             "descripcion": "Descripcion",
-            "prioridad": "Prioridad",
             "desarrollador": "Desarrollador",
-            "fechaInicio": "Fecha de inicio",
-            "fechaFin": "Fecha de finalización",
+            "horas_estimadas": "Horas estimadas",
             "tipo": "Tipo",
-            "sprint": "Sprint",
+            "prioridad_tecnica": "Prioridad técnica",
+            "prioridad_funcional": "Prioridad funcional",
         }
         widgets = {
             "backlog": forms.Select(attrs={"class": "form-control"}),
             "nombre": forms.TextInput(attrs={"class": "form-control"}),
-            "descripcion": forms.TextInput(attrs={"class": "form-control"}),
-            "prioridad": forms.TextInput(attrs={"class": "form-control"}),
+            "descripcion": forms.Textarea(attrs={"class": "form-control"}),
             "desarrollador": forms.Select(attrs={"class": "form-control"}),
-            "fechaInicio": forms.DateInput(attrs={"type": "date"}),
-            "fechaFin": forms.DateInput(attrs={"type": "date"}),
+            "horas_estimadas": forms.NumberInput(
+                {"class": "form-control col-3", "min": "0"}
+            ),
             "tipo": forms.Select(attrs={"class": "form-control"}),
-            "sprint": forms.Select(attrs={"class": "form-control"}),
+            "prioridad_funcional": forms.NumberInput(
+                {"class": "form-control col-3", "min": "1", "max": "10"}
+            ),
+            "prioridad_tecnica": forms.NumberInput(
+                {"class": "form-control col-3", "min": "1", "max": "10"}
+            ),
         }
 
 
@@ -230,14 +230,14 @@ class UserStoryEdit_Form(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         tipos = TipoUserStory.objects.filter(proyecto=idProyecto).order_by("id")
-        sprints = (
-            Sprint.objects.filter(proyecto=idProyecto)
-            .order_by("posicion")
-            .exclude(estado="Cancelado")
-            .exclude(estado="Finalizado")
-        )
+        # sprints = (
+        #     Sprint.objects.filter(proyecto=idProyecto)
+        #     .order_by("posicion")
+        #     .exclude(estado="Cancelado")
+        #     .exclude(estado="Finalizado")
+        # )
         self.fields["tipo"].queryset = tipos
-        self.fields["sprint"].queryset = sprints
+        # self.fields["sprint"].queryset = sprints
 
     class Meta:
         model = UserStory
@@ -246,30 +246,38 @@ class UserStoryEdit_Form(forms.ModelForm):
             "descripcion",
             "prioridad",
             "desarrollador",
-            "fechaInicio",
-            "fechaFin",
+            "horas_trabajadas",
+            "horas_estimadas",
             "tipo",
-            "sprint",
+            "prioridad_tecnica",
+            "prioridad_funcional",
         ]
         labels = {
             "nombre": "Nombre",
             "descripcion": "Descripcion",
             "prioridad": "Prioridad",
             "desarrollador": "Desarrollador",
-            "fechaInicio": "Fecha de inicio",
-            "fechaFin": "Fecha de finalización",
+            "horas_estimadas": "Horas estimadas",
+            "horas_trabajadas": "Horas trabajadas",
             "tipo": "Tipo",
-            "sprint": "Sprint",
+            "prioridad_tecnica": "Prioridad técnica",
+            "prioridad_funcional": "Prioridad funcional",
         }
         widgets = {
             "nombre": forms.TextInput(attrs={"class": "form-control"}),
-            "descripcion": forms.TextInput(attrs={"class": "form-control"}),
+            "descripcion": forms.Textarea(attrs={"class": "form-control"}),
             "prioridad": forms.TextInput(attrs={"class": "form-control"}),
             "desarrollador": forms.Select(attrs={"class": "form-control"}),
             "fechaInicio": forms.DateInput(attrs={"type": "date"}),
-            "fechaFin": forms.DateInput(attrs={"type": "date"}),
+            "horas_estimadas": forms.TextInput(attrs={"class": "form-control"}),
+            "horas_trabajadas": forms.TextInput(attrs={"class": "form-control"}),
             "tipo": forms.Select(attrs={"class": "form-control"}),
-            "sprint": forms.Select(attrs={"class": "form-control"}),
+            "prioridad_funcional": forms.NumberInput(
+                {"class": "form-control col-3", "min": "1", "max": "10"}
+            ),
+            "prioridad_tecnica": forms.NumberInput(
+                {"class": "form-control col-3", "min": "1", "max": "10"}
+            ),
         }
 
 
