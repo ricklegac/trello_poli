@@ -38,12 +38,18 @@
                     <div class="kanban-card-body">
                         <div style="width: 100%; justify-content: space-between; display: flex;">
                             <span class="kanban-tag kanban-tag-teal mb-3">Prioridad: {{tarea.prioridad_total}}</span>
-                            <a href="{% url 'proyectos:modificar_tarea' idProyecto tarea.id %}"
+                            {% if tarea.sprint %}
+                            {% if tarea.estado.id != cancelado.id %}
+                            <a href="{% url 'proyectos:modificar_tarea_kanban' idProyecto tarea.id %}"
                                 class="btn boton-color"><i class="fas fa-pen"></i></a>
+                            {% endif %}
+                            {% endif %}
                         </div>
                         <h4>{{ tarea.nombre }}</h4>
                         <p>{{ tarea.descripcion }}</p>
-                        <p style="margin: 0 0 0px;">Estado: {{ tarea.estado }}</p>
+                        {% if tarea.estado.id == cancelado.id %}
+                        <p style="margin: 0 0 0px; color: #dc3545;">Estado: {{tarea.estado}}</p>
+                        {% endif %}
                         <p>Horas estimadas: {{ tarea.horas_estimadas }}</p>
                         <div class=" kanban-user" style="width:100%; justify-content: space-between;">
                             <div class="kanban-user-info">

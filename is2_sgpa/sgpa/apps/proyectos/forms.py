@@ -42,14 +42,20 @@ class Sprint_Form(forms.ModelForm):
         fields = [
             "objetivos",
             "duracion",
+            "fechaInicio",
+            "fechaFin",
         ]
         labels = {
             "objetivos": "Objetivos",
             "duracion": "Duración",
+            "fechaInicio": "Fecha de Inicio",
+            "fechaFin": "Fecha de Fin",
         }
         widgets = {
             "objetivos": forms.TextInput(attrs={"class": "form-control"}),
             "duracion": forms.TextInput(attrs={"class": "form-control"}),
+            "fechaInicio": forms.DateInput(attrs={"type": "date"}),
+            "fechaFin": forms.DateInput(attrs={"type": "date"}),
         }
 
 
@@ -59,14 +65,20 @@ class SprintEdit_Form(forms.ModelForm):
         fields = [
             "objetivos",
             "duracion",
+            "fechaInicio",
+            "fechaFin",
         ]
         labels = {
             "objetivos": "Objetivos",
             "duracion": "Duración",
+            "fechaInicio": "Fecha de Inicio",
+            "fechaFin": "Fecha de Fin",
         }
         widgets = {
             "objetivos": forms.TextInput(attrs={"class": "form-control"}),
             "duracion": forms.TextInput(attrs={"class": "form-control"}),
+            "fechaInicio": forms.DateInput(attrs={"type": "date"}),
+            "fechaFin": forms.DateInput(attrs={"type": "date"}),
         }
 
 
@@ -120,6 +132,68 @@ class MiembrosForm(forms.ModelForm):
                     valid_id.append(p.id)
         perfiles = Perfil.objects.filter(id__in=valid_id)
         self.fields["idPerfil"].queryset = perfiles
+
+
+class MiembrosSprintForm(forms.ModelForm):
+    class Meta:
+        model = Miembro
+        fields = [
+            "idPerfil",
+        ]
+        labels = {
+            "idPerfil": "Perfil",
+        }
+        widgets = {
+            "idPerfil": forms.Select(attrs={"class": "form-control custom-select"}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        perfil = Perfil.objects.all()
+        idProyecto = kwargs.pop("idProyecto")
+        idSprint = kwargs.pop("idSprint")
+        super(MiembrosSprintForm, self).__init__(*args, **kwargs)
+        proyecto = Proyecto.objects.get(id=idProyecto)
+
+        valid_id = []
+        miembro = proyecto.miembro_set.all()
+        # for p in perfil:
+        #     if not Miembro.objects.filter(sprint=idSprint).filter(idPerfil=p).exists():
+        #         if not p.id == 1:
+        #             valid_id.append(p.id)
+
+        for p in perfil:
+            esta_en_proyecto = (
+                Miembro.objects.filter(idProyecto=idProyecto)
+                .filter(idPerfil=p)
+                .exists()
+            )
+            esta_en_sprint = (
+                Miembro.objects.filter(sprint=idSprint).filter(idPerfil=p).exists()
+            )
+            if esta_en_proyecto and not esta_en_sprint:
+                if not p.id == 1:
+                    valid_id.append(p.id)
+        perfiles = Perfil.objects.filter(id__in=valid_id)
+        self.fields["idPerfil"].queryset = perfiles
+
+
+class MiembrosSprintEditForm(forms.ModelForm):
+    class Meta:
+        model = Miembro
+        fields = [
+            "activo",
+            "capacidad_pen",
+        ]
+        labels = {
+            "activo": "Activo",
+            "capacidad_pen": "Capacidad diaria",
+        }
+        widgets = {
+            "activo": forms.Select(attrs={"class": "form-control custom-select"}),
+            "capacidad_pen": forms.NumberInput(
+                {"class": "form-control col-3", "min": "0"}
+            ),
+        }
 
 
 class Rol_Form(forms.ModelForm):
@@ -185,7 +259,11 @@ class UserStoryForm(forms.ModelForm):
         #     .exclude(estado="Cancelado")
         #     .exclude(estado="Finalizado")
         # )
-        desarroladores = Perfil.objects.filter(miembros__idProyecto=idProyecto)
+        desarroladores = (
+            Perfil.objects.filter(miembros__idProyecto=idProyecto)
+            .distinct()
+            .exclude(id=1)
+        )
         self.fields["tipo"].queryset = tipos
         self.fields["tipo"].initial = tipos.first()
         self.fields["backlog"].queryset = backlogs
@@ -247,6 +325,66 @@ class UserStoryEdit_Form(forms.ModelForm):
         # )
         self.fields["tipo"].queryset = tipos
         # self.fields["sprint"].queryset = sprints
+
+    class Meta:
+        model = UserStory
+        fields = [
+            "nombre",
+            "descripcion",
+            "prioridad",
+            "desarrollador",
+            "horas_trabajadas",
+            "horas_estimadas",
+            "tipo",
+            "prioridad_tecnica",
+            "prioridad_funcional",
+        ]
+        labels = {
+            "nombre": "Nombre",
+            "descripcion": "Descripcion",
+            "prioridad": "Prioridad",
+            "desarrollador": "Desarrollador",
+            "horas_estimadas": "Horas estimadas",
+            "horas_trabajadas": "Horas trabajadas",
+            "tipo": "Tipo",
+            "prioridad_tecnica": "Prioridad técnica",
+            "prioridad_funcional": "Prioridad funcional",
+        }
+        widgets = {
+            "nombre": forms.TextInput(attrs={"class": "form-control"}),
+            "descripcion": forms.Textarea(attrs={"class": "form-control"}),
+            "prioridad": forms.TextInput(attrs={"class": "form-control"}),
+            "desarrollador": forms.Select(attrs={"class": "form-control"}),
+            "fechaInicio": forms.DateInput(attrs={"type": "date"}),
+            "horas_estimadas": forms.TextInput(attrs={"class": "form-control"}),
+            "horas_trabajadas": forms.TextInput(attrs={"class": "form-control"}),
+            "tipo": forms.Select(attrs={"class": "form-control"}),
+            "prioridad_funcional": forms.NumberInput(
+                {"class": "form-control col-3", "min": "1", "max": "10"}
+            ),
+            "prioridad_tecnica": forms.NumberInput(
+                {"class": "form-control col-3", "min": "1", "max": "10"}
+            ),
+        }
+
+
+class UserStoryEditKanban_Form(forms.ModelForm):
+    def __init__(self, idProyecto, idSprint, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        tipos = TipoUserStory.objects.filter(proyecto=idProyecto).order_by("id")
+        # sprints = (
+        #     Sprint.objects.filter(proyecto=idProyecto)
+        #     .order_by("posicion")
+        #     .exclude(estado="Cancelado")
+        #     .exclude(estado="Finalizado")
+        # )
+        self.fields["tipo"].queryset = tipos
+        # self.fields["sprint"].queryset = sprints
+
+        desarroladores = (
+            Perfil.objects.filter(miembros__sprint=idSprint).distinct().exclude(id=1)
+        )
+        self.fields["desarrollador"].queryset = desarroladores
 
     class Meta:
         model = UserStory

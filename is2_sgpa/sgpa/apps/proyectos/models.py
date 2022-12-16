@@ -70,6 +70,9 @@ class Miembro(models.Model):
         to="usuarios.Perfil", on_delete=models.CASCADE, related_name="miembros"
     )
     idProyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE)
+    sprint = models.ForeignKey(
+        to="proyectos.Sprint", on_delete=models.CASCADE, null=True, blank=True
+    )
     warning_cap = models.BooleanField(default=False)
     activo = models.BooleanField(
         default=False

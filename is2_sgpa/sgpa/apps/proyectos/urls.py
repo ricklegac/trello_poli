@@ -46,6 +46,10 @@ from proyectos.views import (
     verRoles,
     modificarTipoUS,
     cancelarUs,
+    miembroSprintCrear,
+    verMiembrosSprint,
+    miembroSprintEliminar,
+    burndownchart,
 )
 
 urlpatterns = [
@@ -126,6 +130,22 @@ urlpatterns = [
     # Miembros
     path("<int:idProyecto>/miembros/listar/", verMiembros, name="listar_miembros"),
     path("<int:idProyecto>/miembros/nuevo/", miembroCrear, name="nuevo_miembro"),
+    # Miembros Sprint
+    path(
+        "<int:idProyecto>/sprint/<int:idSprint>/miembros/listar/",
+        verMiembrosSprint,
+        name="listar_miembros_sprint",
+    ),
+    path(
+        "<int:idProyecto>/sprint/<int:idSprint>/miembros/nuevo/",
+        miembroSprintCrear,
+        name="nuevo_miembro_sprint",
+    ),
+    path(
+        "<int:idProyecto>/sprint/<int:idSprint>/miembros/eliminar/<int:idMiembro>/",
+        miembroSprintEliminar,
+        name="eliminar_miembro_sprint",
+    ),
     path(
         "<int:idProyecto>/miembros/eliminar/<int:idMiembro>/",
         miembroEliminar,
@@ -204,5 +224,10 @@ urlpatterns = [
         "<int:idProyecto>/tareas/cancelar/",
         cancelarUs,
         name="cancelar_tareas",
+    ),
+    path(
+        "<int:idProyecto>/sprint/<int:idSprint>/burndownchart/",
+        burndownchart,
+        name="burndownchart",
     ),
 ]

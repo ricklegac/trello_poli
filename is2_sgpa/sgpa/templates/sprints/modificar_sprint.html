@@ -22,6 +22,14 @@
                     <label class="col-form-label">Duración (Horas):</label>
                     {{ sprint_Form.duracion }}
                 </div>
+                <div class="form-group">
+                    <label class="col-form-label">Fecha de Inicio:</label>
+                    {{ sprint_Form.fechaInicio }}
+                </div>
+                <div class="form-group">
+                    <label class="col-form-label">Fecha de Fin:</label>
+                    {{ sprint_Form.fechaFin }}
+                </div>
                 <p align="center">
                     <button type="submit" class="btn btn-primary">Guardar</button>
                     <a href="{% url 'proyectos:listar_sprints' id_proyecto %}" class="btn btn-primary"

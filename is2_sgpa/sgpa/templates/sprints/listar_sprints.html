@@ -88,6 +88,8 @@
                             <a href="{% url 'proyectos:sprint_tareas' idProyecto sprint.id %}"
                                 class="btn boton-agregar">Agregar Tareas</a>
                             {% endif %}
+                            <a href="{% url 'proyectos:listar_miembros_sprint' idProyecto sprint.id %}"
+                                class="btn boton-agregar">Miembros</a>
                         </td>
                     </tr>
                     {% endfor %}

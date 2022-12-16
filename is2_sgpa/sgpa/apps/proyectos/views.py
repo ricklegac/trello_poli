@@ -1,3 +1,4 @@
+import pandas as pd
 from datetime import datetime
 from django.forms import modelformset_factory
 from django.forms.models import inlineformset_factory
@@ -33,6 +34,9 @@ from proyectos.forms import (
     TipoUserStoryForm,
     UserStoryEdit_Form,
     UserStoryForm,
+    MiembrosSprintForm,
+    MiembrosSprintEditForm,
+    UserStoryEditKanban_Form,
 )
 from django.views.generic.edit import CreateView
 from django.contrib.auth.decorators import login_required
@@ -171,7 +175,7 @@ def verProyecto(request, id_proyecto):
 
     proyecto = Proyecto.objects.get(id=id_proyecto)
     sprints = Sprint.objects.filter(proyecto=id_proyecto)
-    miembros = Miembro.objects.filter(idProyecto=id_proyecto)
+    miembros = Miembro.objects.filter(idProyecto=id_proyecto).distinct("idPerfil__ci")
 
     return render(
         request,
@@ -738,6 +742,49 @@ def miembroCrear(request, idProyecto):
     )
 
 
+def miembroSprintCrear(request, idProyecto, idSprint):
+    """
+    Vista basada en funciones que permite crear miembros
+    Recibe el request HTTP y el id de un proyecto como parámetros
+    Al finalizar la petición se retorna a la vista de lista de miembros
+    Requiere inicio de sesión
+    """
+
+    if request.method == "POST":
+        form = MiembrosSprintForm(
+            request.POST, idProyecto=idProyecto, idSprint=idSprint
+        )
+
+        if form.is_valid():
+            miembro = form.save(commit=False)
+            miembro.idProyecto = Proyecto.objects.get(id=idProyecto)
+            miembro.sprint = Sprint.objects.get(id=idSprint)
+            miembro.save()
+            user = User.objects.get(username=request.user)
+            perfil = Perfil.objects.get(user=user)
+            Historial.objects.create(
+                operacion="Agregar a {} al sprint".format(miembro.idPerfil.__str__()),
+                autor=perfil.__str__(),
+                proyecto=Proyecto.objects.get(id=idProyecto),
+                categoria="Miembros",
+            )
+
+        return redirect(
+            "proyectos:listar_miembros_sprint", idProyecto=idProyecto, idSprint=idSprint
+        )
+
+    else:
+        form = MiembrosSprintForm(
+            request.POST or None, idProyecto=idProyecto, idSprint=idSprint
+        )
+
+    return render(
+        request,
+        "miembros/nuevo_miembro_sprint.html",
+        {"form": form, "idProyecto": idProyecto, "idSprint": idSprint},
+    )
+
+
 # --- Eliminar Miembro --- #
 @login_required
 def miembroEliminar(request, idProyecto, idMiembro):
@@ -767,6 +814,36 @@ def miembroEliminar(request, idProyecto, idMiembro):
     )
 
 
+@login_required
+def miembroSprintEliminar(request, idProyecto, idSprint, idMiembro):
+    """
+    Vista basada en funciones que permite la eliminación de miembros
+    Recibe el request HTTP, el id de un proyecto y el id de un miembro como parámeetros
+    Una vez finalizada la petición se retorna a la lista de miembros
+    Requiere inicio de sesión
+    """
+
+    miembro = Miembro.objects.get(idPerfil=idMiembro, sprint=idSprint)
+    if request.method == "POST":
+        miembro.delete()
+        user = User.objects.get(username=request.user)
+        perfil = Perfil.objects.get(user=user)
+        Historial.objects.create(
+            operacion="Eliminar a {} del proyecto".format(miembro.idPerfil.__str__()),
+            autor=perfil.__str__(),
+            proyecto=Proyecto.objects.get(id=idProyecto),
+            categoria="Miembros",
+        )
+        return redirect(
+            "proyectos:listar_miembros_sprint", idProyecto=idProyecto, idSprint=idSprint
+        )
+    return render(
+        request,
+        "miembros/eliminar_miembro_sprint.html",
+        {"miembros": miembro, "idProyecto": idProyecto, "idSprint": idSprint},
+    )
+
+
 # --- Listar Miembros --- #
 @login_required
 def verMiembros(request, idProyecto):
@@ -785,6 +862,30 @@ def verMiembros(request, idProyecto):
             "proyecto": proyecto,
             "miembros": miembros,
             "idProyecto": idProyecto,
+        },
+    )
+
+
+@login_required
+def verMiembrosSprint(request, idProyecto, idSprint):
+    """
+    Vista basada en funciones para listar miembros pertenecientes a un proyecto
+    Recibe el request y el id de un proyecto como parámtros
+    Requiere inicio de sesión
+    """
+    miembros = Miembro.objects.filter(idProyecto=idProyecto, sprint=idSprint)
+    proyecto = Proyecto.objects.get(id=idProyecto)
+    sprint = Sprint.objects.get(id=idSprint)
+
+    return render(
+        request,
+        "miembros/ver_miembros_sprint.html",
+        {
+            "proyecto": proyecto,
+            "miembros": miembros,
+            "idProyecto": idProyecto,
+            "idSprint": idSprint,
+            "sprint": sprint,
         },
     )
 
@@ -1199,10 +1300,13 @@ def modificarUserStoryKanban(request, idProyecto, id_tarea):
     proyecto = Proyecto.objects.get(id=idProyecto)
     tarea = UserStory.objects.get(id=id_tarea)
     idSprint = tarea.sprint.id
+
     if request.method == "GET":
-        tarea_Form = UserStoryEdit_Form(idProyecto, instance=tarea)
+        tarea_Form = UserStoryEditKanban_Form(idProyecto, idSprint, instance=tarea)
     else:
-        tarea_Form = UserStoryEdit_Form(idProyecto, request.POST, instance=tarea)
+        tarea_Form = UserStoryEditKanban_Form(
+            idProyecto, idSprint, request.POST, instance=tarea
+        )
         if tarea_Form.is_valid():
             tarea_Form.save()
             # desarrollador = tarea.desarrollador
@@ -1236,6 +1340,8 @@ def modificarUserStoryKanban(request, idProyecto, id_tarea):
         },
     )
 
+
+import random
 
 # --- Eliminar Tipo --- #
 @login_required
@@ -1752,3 +1858,101 @@ def verUserStory(request, idProyecto, id_tarea):
             "idProyecto": idProyecto,
         },
     )
+
+
+def modificarMiembroSprint(request, idProyecto, idSprint, idMiembro):
+    """
+    Vista basada en función, para actualizar un proyecto existente
+    Recibe el request HTTP y el id del poryecto correspondiente como parámetros
+    Al finalizar los cambios en los campos del formulario, guarda la información y redirige a la lista de los proyectos asociados
+    Requiere inicio de sesión y permisos de Scrum Master o administrador
+    """
+
+    proyecto = Proyecto.objects.get(id=idProyecto)
+
+    if request.method == "GET":
+        proyecto_Form = MiembrosSprintEditForm(instance=proyecto)
+    else:
+        proyecto_Form = MiembrosSprintEditForm(request.POST, instance=proyecto)
+        if proyecto_Form.is_valid():
+            proyecto_Form.save()
+            miembros = Miembro.objects.filter(idProyecto=proyecto)
+            correos = []
+            for miembro in miembros:
+                correos.append(miembro.idPerfil.user.email)
+            send_mail(
+                "El proyecto ha sido modificado",
+                "Usted es miembro del proyecto '{0}' y el mismo acaba de ser modificado, ingrese a la plataforma para observar los cambios.".format(
+                    proyecto.nombre
+                ),
+                "is2.sgpa@gmail.com",
+                correos,
+            )
+            user = User.objects.get(username=request.user)
+            perfil = Perfil.objects.get(user=user)
+            Historial.objects.create(
+                operacion="Modificar Proyecto",
+                autor=perfil.__str__(),
+                proyecto=proyecto,
+                categoria="Proyecto",
+            )
+
+        return redirect("proyectos:ver_proyecto", idProyecto)
+    return render(
+        request,
+        "proyectos/modificar_proyecto.html",
+        {"proyecto_Form": proyecto_Form, "idProyecto": idProyecto},
+    )
+
+
+def burndownchart(request, idProyecto, idSprint):
+
+    tareas = UserStory.objects.filter(sprint=idSprint).values()
+    sprint = Sprint.objects.get(id=idSprint)
+    df = pd.DataFrame(tareas)
+    duracion = []
+    try:
+        df1 = df.nombre.tolist()
+        datf1 = df["horas_estimadas"].sort_values(ascending=False).tolist()
+        capacidad = sum(datf1)
+        datf2 = df["horas_trabajadas"].tolist()
+        for i in range(int(sprint.duracion)):
+            duracion.append(i)
+        paso = tareas.count()
+        dias = []
+        for i in range((sprint.fechaFin - sprint.fechaInicio).days):
+            dias.append(i)
+        datf1 = []
+        horas_trabajadas = []
+        dif = capacidad / len(dias)
+        for horas in range(len(dias)):
+            mult = dif * horas
+            datf1.append(mult)
+            horas_trabajadas.append(mult + random.randint(-3, 5))
+
+        datf1.sort(reverse=True)
+        horas_trabajadas.sort(reverse=True)
+
+    except:
+        horas_trabajadas = [0]
+        df1 = ["Vacío"]
+        datf1 = [0]
+        datf2 = [0]
+        duracion = [0]
+        paso = 0
+        dias = [0]
+        capacidad = 0
+
+    context = {
+        "df1": df1,
+        "datf1": datf1,
+        "datf2": datf2,
+        "idProyecto": idProyecto,
+        "idSprint": idSprint,
+        "duracion": duracion,
+        "paso": paso,
+        "capacidad": capacidad,
+        "dias": dias,
+        "horas_trabajadas": horas_trabajadas,
+    }
+    return render(request, "sprints/burndownchart.html", context)

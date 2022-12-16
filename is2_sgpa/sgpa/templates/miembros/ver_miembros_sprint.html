@@ -4,7 +4,7 @@
 <br>
 <div class="container">
     <ins>
-        <h3 align="center">Miembros - {{proyecto.nombre}}</h3>
+        <h3 align="center">Miembros del Sprint - {{proyecto.nombre}}</h3>
     </ins>
     <br>
     <div class="row">
@@ -17,6 +17,7 @@
                     <tr class="table-primary">
                         <th scope="col">Nombre</th>
                         <th scope="col">Apellido</th>
+                        <th scope="col">Capacidad diaria</th>
                         <th scope="col">Proyecto</th>
                         <th scope="col">Accion</th>
                     </tr>
@@ -27,15 +28,15 @@
                     <tr>
                         <td> {{ miembro.idPerfil.user.first_name }} </td>
                         <td> {{ miembro.idPerfil.user.last_name }} </td>
+                        <td> {{ miembro.capacidad_pen }} </td>
                         <td> {{ miembro.idProyecto.nombre }} </td>
                         <td>
                             {% if user.id == proyecto.scrumMaster.user.id or perms.proyectos.eliminar_miembros %}
                             <a class="btn btn-danger"
-                                href="{% url 'proyectos:eliminar_miembro' idProyecto miembro.idPerfil.id %}">Eliminar</a>
+                                href="{% url 'proyectos:eliminar_miembro_sprint' idProyecto idSprint miembro.idPerfil.id %}">Eliminar</a>
                             {% endif %}
-                            <a class="btn btn-primary"
-                                href="{% url 'proyectos:ver_roles' idProyecto miembro.idPerfil.user.id %}">Ver
-                                Roles</a>
+                            <a class="btn btn-danger"
+                                href="{% url 'proyectos:eliminar_miembro_sprint' idProyecto idSprint miembro.idPerfil.id %}">Modificar</a>
                         </td>
                     </tr>
                     {% endfor %}
@@ -49,10 +50,13 @@
         </div>
         <p align=center>
             {% if user.id == proyecto.scrumMaster.user.id or perms.proyectos.agregar_miembros %}
-            <a href="{% url 'proyectos:nuevo_miembro' idProyecto %}" class="btn boton-color" role="button">Agregar
+            {% if sprint.estado != "Activo" %}
+            <a href="{% url 'proyectos:nuevo_miembro_sprint' idProyecto idSprint %}" class="btn boton-color"
+                role="button">Agregar
                 miembro</a>
             {% endif %}
-            <a href="{% url 'proyectos:ver_proyecto' idProyecto %}" class="btn boton-color" role="button">Volver</a>
+            {% endif %}
+            <a href="{% url 'proyectos:listar_sprints' idProyecto %}" class="btn boton-color" role="button">Volver</a>
         </p>
     </div>
 </div>

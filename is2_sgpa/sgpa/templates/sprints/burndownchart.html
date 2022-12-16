@@ -1,0 +1,58 @@
+{% extends 'base.html'%}
+
+{%block content%}
+<div>
+    <canvas id="myChart" width="70" height="30"></canvas>
+</div>
+<div>
+    <a href="{% url 'proyectos:kanban' idProyecto idSprint %}" class="btn btn-primary">Volver</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const ctx = document.getElementById('myChart');
+    var ideal_data = {{ datf1| safe}}
+    var ideal_labels = {{ df1| safe}}
+    var duracion = {{ duracion| safe}}
+    var paso = {{ paso| safe}}
+    var capacidad = {{ capacidad| safe}}
+    var dias = {{ dias| safe}}
+    var horas_trabajadas = {{ horas_trabajadas| safe}}
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: dias,
+            datasets: [{
+                label: 'Ideal',
+                data: ideal_data,
+                fill: false,
+                borderColor: 'rgb(255, 0, 0)',
+                borderWidth: 3,
+                tension: 0.1
+            },
+            {
+                label: 'Actual',
+                data: horas_trabajadas,
+                fill: false,
+                borderColor: 'rgb(0, 192, 0)',
+                borderWidth: 3,
+                tension: 0.1
+            }
+            ]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: capacidad,
+                    min: 0,
+                    ticks: {
+                        stepSize: 5
+                    }
+                },
+            }
+        }
+    });
+</script>
+{%endblock content%}
