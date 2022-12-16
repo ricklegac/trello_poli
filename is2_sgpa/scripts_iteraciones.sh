@@ -1,6 +1,6 @@
 PS3="Elige una iteracion : "
 
-select option in iteracion1 iteracion2 iteracion3 iteracion4 iteracion5 iteracion6
+select option in iteracion1 iteracion2 iteracion3 iteracion4 iteracion5 iteracion6 salir
 do
     echo "Iteracion $opcion"
     echo "opcion: $REPLY"
@@ -39,6 +39,11 @@ do
       echo "Cambiando a la Iteracion 6 "
       sleep 1
       echo "trabajando en ello..."
+    fi
+    if [ $REPLY -lt 1 ] | [ $REPLY -gt 6 ]
+    then
+      echo "saliendo del script"
+      break
     fi
     echo "opcion seleccionada: $opcion"
     echo "opcion: $REPLY"
