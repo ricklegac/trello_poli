@@ -30,7 +30,7 @@
                         <td scope="col">{{ us.descripcion }}</td>
                         <td scope="col">{{ us.prioridad_total }}</td>
                         <td scope="col">{{ us.horas_estimadas }}</td>
-                        <td scope="col">{{ us.estado }}</td>
+                        <td style="color: #198754;" scope="col">{{ us.estado }}</td>
                         <td scope="col">
                             {% if us.desarrollador %}
                             {{ us.desarrollador }}
@@ -39,16 +39,8 @@
                             {% endif %}
                         </td>
                         <td scope="col">
-                            {% if user.id == proyecto.scrumMaster.user.id or perms.proyectos.modificar_user_story %}
-                            <a href="{% url 'proyectos:modificar_tarea' idProyecto us.id %}"
-                                class="btn boton-color">Modificar
+                            <a href="{% url 'proyectos:ver_tarea' idProyecto us.id %}" class="btn boton-color">Ver
                                 US</a>
-                            {% endif %}
-                            {% if user.id == proyecto.scrumMaster.user.id or perms.proyectos.eliminar_user_story %}
-                            <a href="{% url 'proyectos:eliminar_tarea' idProyecto us.id %}"
-                                class="btn boton-color">Eliminar
-                                US</a>
-                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}
@@ -57,16 +49,10 @@
         </div>
     </div>
     {% else %}
-    <h4 align="center">El proyecto no tiene US creados</h4><br>
+    <h4 align="center">El proyecto no tiene US finalizados</h4><br>
     {% endif %}
     <p align="center">
-        {% if user.id == proyecto.scrumMaster.user.id or perms.proyectos.crear_user_story %}
-        <a href="{% url 'proyectos:crear_tarea' idProyecto %}" class="btn boton-color">Crear US</a>
-        {% endif %}
-        {% if user.id == proyecto.scrumMaster.user.id or perms.proyectos.modificar_user_story %}
-        <a href="{% url 'proyectos:cancelar_tareas' idProyecto %}" class="btn btn-danger">Cancelar todas las US</a>
-        {% endif %}
-        <a href="{% url 'proyectos:ver_proyecto' idProyecto %}" class="btn boton-color" role="button">Volver</a>
+        <a href="{% url 'proyectos:kanban' idProyecto idSprint %}" class="btn boton-color" role="button">Volver</a>
     </p>
 </div>
 {% endblock %}

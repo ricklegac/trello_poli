@@ -136,15 +136,26 @@ class Rol(models.Model):
     class Meta:
         unique_together = ["nombre", "proyecto"]
         permissions = (
-            ("Crear proyecto", "Permite crear proyectos"),
-            ("Modificar proyecto", "Permite modificar proyectos"),
-            ("Eliminar proyecto", "Permite eliminar proyectos"),
-            ("Crear Sprint", "Permite crear un sprint"),
-            ("Modificar Sprint", "Permite modificar un sprint"),
-            ("Cancelar Sprint", "Permite cancelar un sprint"),
-            ("Crear user story", "Permite crear un user story"),
-            ("Modificar user story", "Permite modificar un user story"),
-            ("Eliminar user story", "Permite eliminar un user story"),
+            ("iniciar_proyecto", "Permite iniciar proyectos"),
+            ("cancelar_proyecto", "Permite cancelar proyectos"),
+            ("crear_proyecto", "Permite crear proyectos"),
+            ("modificar_proyecto", "Permite modificar proyectos"),
+            ("eliminar_proyecto", "Permite eliminar proyectos"),
+            ("crear_sprint", "Permite crear un sprint"),
+            ("modificar_sprint", "Permite modificar un sprint"),
+            ("eliminar_sprint", "Permite eliminar un sprint"),
+            ("iniciar_sprint", "Permite iniciar un sprint"),
+            ("cancelar_sprint", "Permite cancelar un sprint"),
+            ("finalizar_sprint", "Permite finalizar un sprint"),
+            ("crear_user_story", "Permite crear un user story"),
+            ("modificar_user_story", "Permite modificar un user story"),
+            ("eliminar_user_story", "Permite eliminar un user story"),
+            ("crear_rol", "Permite crear un rol"),
+            ("modificar_rol", "Permite modificar un rol"),
+            ("eliminar_rol", "Permite eliminar un rol"),
+            ("asignar_desasignar_rol", "Permite asignar y desasignar un rol"),
+            ("agregar_miembros", "Permite agregar miembros"),
+            ("eliminar_miembros", "Permite eliminar miembros"),
         )
 
     def __str__(self):

@@ -43,8 +43,9 @@
                         </div>
                         <h4>{{ tarea.nombre }}</h4>
                         <p>{{ tarea.descripcion }}</p>
-                        <p>Estado: {{ tarea.estado }}</p>
-                        <div class="kanban-user" style="width:100%; justify-content: space-between;">
+                        <p style="margin: 0 0 0px;">Estado: {{ tarea.estado }}</p>
+                        <p>Horas estimadas: {{ tarea.horas_estimadas }}</p>
+                        <div class=" kanban-user" style="width:100%; justify-content: space-between;">
                             <div class="kanban-user-info">
                                 <h5>{{ tarea.desarrollador }}</h5>
                                 {% for rol in tarea.desarrollador.roles.all %}

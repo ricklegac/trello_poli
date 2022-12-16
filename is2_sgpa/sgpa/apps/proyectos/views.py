@@ -92,7 +92,7 @@ class crearProyecto(LoginRequiredMixin, CreateView):
         columna.save()
         columna = Columnas.objects.create(nombre="Done", tipo_us=tipo, orden=3)
         columna.save()
-        columna = Columnas.objects.create(nombre="Realese", tipo_us=tipo, orden=-2)
+        columna = Columnas.objects.create(nombre="Relese", tipo_us=tipo, orden=-2)
         columna.save()
         # El Done tiene que ser un backlog al que se pueda acceder para ver los US finalizados
         # columna = Columnas.objects.create(nombre="Done", tipo_us=tipo)
@@ -393,7 +393,7 @@ def finalizarProyecto(request, id_proyecto):
         messages.add_message(
             request,
             messages.ERROR,
-            "No se puede finalizar el proyecto, existen historias de usuario activas. Cambie sus estados a Cancelado o a Realease",
+            "No se puede finalizar el proyecto, existen historias de usuario activas. Cambie sus estados a Cancelado o a Release",
         )
     return redirect("proyectos:ver_proyecto", id_proyecto)
 
@@ -1140,6 +1140,7 @@ def modificarUserStory(request, idProyecto, id_tarea):
     Al finalizar los cambios en los campos del formulario, guarda la información y redirige a la lista de US asociados
     Requiere inicio de sesión y permisos de Scrum Master o administrador
     """
+    proyecto = Proyecto.objects.get(id=idProyecto)
     tarea = UserStory.objects.get(id=id_tarea)
     backlog = tarea.backlog
     if request.method == "GET":
@@ -1164,7 +1165,6 @@ def modificarUserStory(request, idProyecto, id_tarea):
             )
             tarea.save()
 
-            proyecto = Proyecto.objects.get(id=idProyecto)
             user = User.objects.get(username=request.user)
             perfil = Perfil.objects.get(user=user)
             Historial.objects.create(
@@ -1178,7 +1178,12 @@ def modificarUserStory(request, idProyecto, id_tarea):
     return render(
         request,
         "tareas/modificar_tarea.html",
-        {"tarea_Form": tarea_Form, "id_tarea": id_tarea, "idProyecto": idProyecto},
+        {
+            "proyecto": proyecto,
+            "tarea_Form": tarea_Form,
+            "id_tarea": id_tarea,
+            "idProyecto": idProyecto,
+        },
     )
 
 
@@ -1191,6 +1196,7 @@ def modificarUserStoryKanban(request, idProyecto, id_tarea):
     Al finalizar los cambios en los campos del formulario, guarda la información y redirige a la lista de US asociados
     Requiere inicio de sesión y permisos de Scrum Master o administrador
     """
+    proyecto = Proyecto.objects.get(id=idProyecto)
     tarea = UserStory.objects.get(id=id_tarea)
     idSprint = tarea.sprint.id
     if request.method == "GET":
@@ -1208,7 +1214,6 @@ def modificarUserStoryKanban(request, idProyecto, id_tarea):
             #     "is2.sgpa@gmail.com",
             #     desarrollador,
             # )
-            proyecto = Proyecto.objects.get(id=idProyecto)
             user = User.objects.get(username=request.user)
             perfil = Perfil.objects.get(user=user)
             Historial.objects.create(
@@ -1223,6 +1228,7 @@ def modificarUserStoryKanban(request, idProyecto, id_tarea):
         request,
         "tareas/modificar_tarea_kanban.html",
         {
+            "proyecto": proyecto,
             "tarea_Form": tarea_Form,
             "id_tarea": id_tarea,
             "idProyecto": idProyecto,
@@ -1312,6 +1318,8 @@ def desasignarSprint(request, idProyecto, idSprint, idTarea):
     sprint.save()
 
     sprint.tiempo_disponible += tarea.horas_estimadas
+    if sprint.tiempo_disponible > 0:
+        sprint.warning_cap = False
     sprint.save()
 
     columna = Columnas.objects.filter(
@@ -1482,6 +1490,8 @@ def tableroKanban(request, idProyecto, idSprint):
 
     proyecto = Proyecto.objects.get(id=idProyecto)
     cancelado = Columnas.objects.filter(tipo_us__proyecto=proyecto, orden=-1).first()
+    release = Columnas.objects.filter(tipo_us__proyecto=proyecto, orden=-2).first()
+    inactivo = Columnas.objects.filter(tipo_us__proyecto=proyecto, orden=0).first()
     sprint = Sprint.objects.get(id=idSprint)
     context = {"idProyecto": idProyecto}
     context["idSprint"] = idSprint
@@ -1490,6 +1500,8 @@ def tableroKanban(request, idProyecto, idSprint):
     context["scrumMaster"] = proyecto.scrumMaster
     context["proyecto"] = proyecto
     context["cancelado"] = cancelado
+    context["release"] = release
+    context["inactivo"] = inactivo
 
     if request.method == "GET":
         context["form"] = KanbanForm(idProyecto)
@@ -1569,15 +1581,18 @@ def avanzarEstadoTarea(request, idProyecto, idSprint, idTarea):
                 tarea.save()
                 break
 
+        columnas = columnas.order_by("orden")
         if tarea.estado == columnas.last():
             scrum_master = columnas.first().tipo_us.proyecto.scrumMaster
+            correos = []
+            correos.append(scrum_master)
             send_mail(
-                "Un User Story en Realease",
+                "Un User Story en Release",
                 "Usted es ScrumMaster y la tarea '{0}' acaba de llegar al estado finalizado, ingrese a la plataforma para observar los cambios y realizar seguimiento".format(
                     tarea.nombre
                 ),
                 "is2.sgpa@gmail.com",
-                scrum_master,
+                correos,
             )
 
         user = User.objects.get(username=request.user)
@@ -1685,3 +1700,55 @@ def cancelarUs(request, idProyecto):
         )
         return redirect("proyectos:listar_tareas", idProyecto=idProyecto)
     return render(request, "tareas/cancelar_tareas.html", context)
+
+
+class ListarUserStoryFinalizados(LoginRequiredMixin, ListView):
+    """
+    Vista basada en modelos que permite listar todos los user stories creados
+    Muestra la lista de los user stories asociados al proyecto en forma de tabla
+    No recibe parámetros
+    Requiere inicio de sesión
+    """
+
+    redirect_field_name = "redirect_to"
+    model = UserStory
+    template_name = "tareas/tareas_finalizadas.html"
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(ListarUserStoryFinalizados, self).get_context_data()
+        context["idProyecto"] = self.kwargs["idProyecto"]
+        context["idSprint"] = self.kwargs["idSprint"]
+        proyecto = Proyecto.objects.get(id=context["idProyecto"])
+        context["proyecto"] = proyecto
+        return context
+
+    def get_queryset(self):
+        print(self.kwargs)
+        proyecto = Proyecto.objects.get(id=self.kwargs["idProyecto"])
+        release = Columnas.objects.filter(tipo_us__proyecto=proyecto, orden=-2).first()
+        tareas = UserStory.objects.filter(backlog__proyecto=proyecto, estado=release)
+        return tareas
+
+
+@login_required
+def verUserStory(request, idProyecto, id_tarea):
+    """
+    Vista basada en función, para actualizar un User Story existente
+    Recibe el request HTTP y el id del US correspondiente como parámetros
+    Al finalizar los cambios en los campos del formulario, guarda la información y redirige a la lista de US asociados
+    Requiere inicio de sesión y permisos de Scrum Master o administrador
+    """
+    proyecto = Proyecto.objects.get(id=idProyecto)
+    tarea = UserStory.objects.get(id=id_tarea)
+    if request.method == "GET":
+        tarea_Form = UserStoryEdit_Form(idProyecto, instance=tarea)
+    return render(
+        request,
+        "tareas/ver_tarea.html",
+        {
+            "proyecto": proyecto,
+            "tarea": tarea,
+            "id_tarea": id_tarea,
+            "idProyecto": idProyecto,
+        },
+    )

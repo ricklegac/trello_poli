@@ -3,6 +3,7 @@ from proyectos.views import (
     CrearRol,
     ListarRol,
     ListarUserStory,
+    ListarUserStoryFinalizados,
     asignarRol,
     asignarSprint,
     asignarTareasSprint,
@@ -10,6 +11,7 @@ from proyectos.views import (
     cancelarSprint,
     crearTipoUS,
     crearUserStory,
+    verUserStory,
     desasignarRol,
     desasignarSprint,
     editarRol,
@@ -159,6 +161,11 @@ urlpatterns = [
         name="listar_tareas",
     ),
     path(
+        "<int:idProyecto>/sprint/<int:idSprint>/tareas/listar/finalizados/",
+        ListarUserStoryFinalizados.as_view(),
+        name="listar_tareas_finalizadas",
+    ),
+    path(
         "<int:idProyecto>/tipos/listar/",
         ListarTipoUserStory.as_view(),
         name="listar_tipos",
@@ -182,6 +189,11 @@ urlpatterns = [
         "<int:idProyecto>/tareas/editar/<int:id_tarea>/",
         modificarUserStory,
         name="modificar_tarea",
+    ),
+    path(
+        "<int:idProyecto>/tareas/ver/<int:id_tarea>/",
+        verUserStory,
+        name="ver_tarea",
     ),
     path(
         "<int:idProyecto>/tareas/tipo/",

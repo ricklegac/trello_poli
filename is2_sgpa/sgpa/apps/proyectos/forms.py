@@ -124,15 +124,26 @@ class MiembrosForm(forms.ModelForm):
 
 class Rol_Form(forms.ModelForm):
     permissions = [
-        "Crear proyecto",
-        "Modificar proyecto",
-        "Eliminar proyecto",
-        "Crear Sprint",
-        "Modificar Sprint",
-        "Cancelar Sprint",
-        "Crear user story",
-        "Modificar user story",
-        "Eliminar user story",
+        "iniciar_proyecto",
+        "cancelar_proyecto",
+        "crear_proyecto",
+        "modificar_proyecto",
+        "eliminar_proyecto",
+        "crear_sprint",
+        "modificar_sprint",
+        "eliminar_sprint",
+        "iniciar_sprint",
+        "cancelar_sprint",
+        "finalizar_sprint",
+        "crear_user_story",
+        "modificar_user_story",
+        "eliminar_user_story",
+        "crear_rol",
+        "modificar_rol",
+        "eliminar_rol",
+        "asignar_desasignar_rol",
+        "agregar_miembros",
+        "eliminar_miembros",
     ]
     permisos = Permission.objects.filter(codename__in=permissions).values_list(
         "name", "codename"
@@ -145,9 +156,9 @@ class Rol_Form(forms.ModelForm):
         id = kwargs.pop("idProyecto")
         super(Rol_Form, self).__init__(*args, **kwargs)
         proyecto = Proyecto.objects.get(id=id)
-        self.fields["sprint"].queryset = Sprint.objects.filter(
-            proyecto=proyecto
-        ).order_by("id")
+        # self.fields["sprint"].queryset = Sprint.objects.filter(
+        #     proyecto=proyecto
+        # ).order_by("id")
         if kwargs.get("instance"):
             instance = kwargs.get("instance")
             lista = instance.grupo.permissions.all().values_list("name", "codename")
@@ -155,11 +166,10 @@ class Rol_Form(forms.ModelForm):
 
     class Meta:
         model = Rol
-        fields = ["nombre", "sprint"]
-        labels = {"nombre": "Nombre", "sprint": "Sprint"}
+        fields = ["nombre"]
+        labels = {"nombre": "Nombre"}
         widgets = {
             "nombre": forms.TextInput(attrs={"class": "form-control"}),
-            "sprint": forms.CheckboxSelectMultiple(),
         }
 
 
@@ -228,7 +238,6 @@ class UserStoryForm(forms.ModelForm):
 class UserStoryEdit_Form(forms.ModelForm):
     def __init__(self, idProyecto, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
         tipos = TipoUserStory.objects.filter(proyecto=idProyecto).order_by("id")
         # sprints = (
         #     Sprint.objects.filter(proyecto=idProyecto)

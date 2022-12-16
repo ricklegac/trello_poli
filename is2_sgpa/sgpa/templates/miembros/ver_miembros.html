@@ -29,7 +29,7 @@
                         <td> {{ miembro.idPerfil.user.last_name }} </td>
                         <td> {{ miembro.idProyecto.nombre }} </td>
                         <td>
-                            {% if user.id == proyecto.scrumMaster.user.id%}
+                            {% if user.id == proyecto.scrumMaster.user.id or perms.proyectos.eliminar_miembros %}
                             <a class="btn btn-danger"
                                 href="{% url 'proyectos:eliminar_miembro' idProyecto miembro.idPerfil.id %}">Eliminar</a>
                             {% endif %}
@@ -48,7 +48,7 @@
         <div class="col-md-3">
         </div>
         <p align=center>
-            {% if user.id == proyecto.scrumMaster.user.id%}
+            {% if user.id == proyecto.scrumMaster.user.id or perms.proyectos.agregar_miembros %}
             <a href="{% url 'proyectos:nuevo_miembro' idProyecto %}" class="btn boton-color" role="button">Agregar
                 miembro</a>
             {% endif %}

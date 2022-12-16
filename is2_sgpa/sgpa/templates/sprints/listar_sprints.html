@@ -40,33 +40,51 @@
                         <th>Num. Tareas</th>
                         <th>Duración</th>
                         <th>Tiempo Disponible</th>
-                        {% if user.id == proyecto.scrumMaster.user.id%}
                         <th>Acciones</th>
-                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
                     {% for sprint in sprints %}
+                    {% if sprint.warning_cap %}
+                    <tr style="background-color: #f9d6ac;">
+                        {% else %}
                     <tr>
+                        {% endif %}
                         <td scope="col">{{sprint.posicion}}</td>
                         <td scope="col"><a href="{% url 'proyectos:kanban' idProyecto sprint.id %}">
                                 {{sprint.objetivos}} </a></td>
                         <td scope="col">{{sprint.estado}}</td>
                         <td scope="col">{{sprint.numTareas}}</td>
                         <td scope="col">{{sprint.duracion}}</td>
+                        {% if sprint.warning_cap %}
+                        <td scope="col">{{sprint.tiempo_disponible}} <i style="color: #ff5400;"
+                                class="fa-solid fa-triangle-exclamation"></i>
+                        </td>
+                        {% else %}
                         <td scope="col">{{sprint.tiempo_disponible}}</td>
+                        {% endif %}
                         <td scope="col">
-                            {% if user.id == proyecto.scrumMaster.user.id%}
+                            {% if user.id == proyecto.scrumMaster.user.id or perms.proyectos.modificar_sprint %}
                             <a href="{% url 'proyectos:modificar_sprint' idProyecto sprint.id %}"
                                 class="btn boton-color"><i class="fas fa-pen"></i></a>
+                            {% endif %}
+                            {% if user.id == proyecto.scrumMaster.user.id or perms.proyectos.eliminar_sprint %}
                             <a href="{% url 'proyectos:eliminar_sprint' idProyecto sprint.id %}"
                                 class="btn btn-danger"><i class="fas fa-trash"></i></a>
+                            {% endif %}
+                            {% if user.id == proyecto.scrumMaster.user.id or perms.proyectos.iniciar_sprint %}
                             <a href="{% url 'proyectos:iniciar_sprint' idProyecto sprint.id %}"
                                 class="btn boton-iniciar"><i class="fa-solid fa-play"></i></a>
+                            {% endif %}
+                            {% if user.id == proyecto.scrumMaster.user.id or perms.proyectos.finalizar_sprint %}
                             <a href="{% url 'proyectos:finalizar_sprint' idProyecto sprint.id %}"
                                 class="btn boton-finalizar"><i class="fa-solid fa-check"></i></a>
+                            {% endif %}
+                            {% if user.id == proyecto.scrumMaster.user.id or perms.proyectos.cancelar_sprint %}
                             <a href="{% url 'proyectos:cancelar_sprint' idProyecto sprint.id %}"
                                 class="btn boton-cancelar"><i class="fa-solid fa-xmark"></i></a>
+                            {% endif %}
+                            {% if user.id == proyecto.scrumMaster.user.id or perms.proyectos.agregar_tareas_sprint %}
                             <a href="{% url 'proyectos:sprint_tareas' idProyecto sprint.id %}"
                                 class="btn boton-agregar">Agregar Tareas</a>
                             {% endif %}
@@ -76,7 +94,7 @@
                 </tbody>
             </table>
             <p align="center">
-                {% if user.id == proyecto.scrumMaster.user.id%}
+                {% if user.id == proyecto.scrumMaster.user.id or perms.proyectos.crear_sprint %}
                 <a href="{% url 'proyectos:nuevo_sprint' idProyecto %}" class="btn btn-primary" role="button">Crear
                     Sprint</a>
                 {% endif %}

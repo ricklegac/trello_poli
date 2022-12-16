@@ -25,6 +25,8 @@
         </div>
         <button type="submit" class="btn btn-danger">Confirmar</button>
         <a href="{% url 'proyectos:listar_sprints' idProyecto %}" class="btn btn-primary">Volver</a>
+        <a href="{% url 'proyectos:listar_tareas_finalizadas' idProyecto idSprint %}" class="btn btn-primary">US
+            Finalizados</a>
     </form>
 </div>
 
@@ -42,11 +44,22 @@
                     <div class="kanban-card-body">
                         <div style="width: 100%; justify-content: space-between; display: flex;">
                             <span class="kanban-tag kanban-tag-teal mb-3">Prioridad: {{tarea.prioridad_total}}</span>
+                            {% if dato.idColumna != cancelado.id %}
                             <a href="{% url 'proyectos:modificar_tarea_kanban' idProyecto tarea.id %}"
                                 class="btn kanban-tag-teal"><i class="fas fa-pen"></i></a>
+                            {% endif %}
                         </div>
                         <h4>{{ tarea.nombre }}</h4>
                         <p>{{ tarea.descripcion }}</p>
+                        {% if dato.idColumna == cancelado.id %}
+                        <p style="margin: 0 0 0px; color: #dc3545;">Estado: {{tarea.estado}}</p>
+                        {% elif dato.idColumna == release.id %}
+                        <p style="margin: 0 0 0px; color: #198754;">Estado: {{tarea.estado}}</p>
+                        {% elif dato.idColumna == inactivo.id %}
+                        <p style="margin: 0 0 0px; color: #fd930d;">Estado: {{tarea.estado}}</p>
+                        {% else %}
+                        <p style="margin: 0 0 0px; color: #0d6efd;">Estado: Activo</p>
+                        {% endif %}
                         <p style="margin: 0 0 0px;">Horas estimadas: {{ tarea.horas_estimadas }}</p>
                         <p>Horas trabajadas: {{ tarea.horas_trabajadas }}</p>
                         <div class="kanban-user">
