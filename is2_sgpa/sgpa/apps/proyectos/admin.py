@@ -15,7 +15,7 @@ from proyectos.models import (
 # Register your models here.
 admin.site.register([Proyecto, Sprint, Miembro, Rol, UserStory, Backlog])
 
-
+#columnas in line
 class ColumnasInline(admin.TabularInline):
     model = Columnas
     formfield_overrides = {
@@ -24,7 +24,7 @@ class ColumnasInline(admin.TabularInline):
     min_num = 1
     extra = 0
 
-
+#tipos de user story admin
 @admin.register(TipoUserStory)
 class TipoUserStoryAdmin(admin.ModelAdmin):
     inlines = (ColumnasInline,)

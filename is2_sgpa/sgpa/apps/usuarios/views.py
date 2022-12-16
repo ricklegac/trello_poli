@@ -13,7 +13,7 @@ from django.contrib.auth.models import User, Permission
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
 
-
+#def home
 def home(request):
     """
         :param root_path: root path to search isHiddenWithinTree, defaults to "../data_in/"
@@ -26,6 +26,7 @@ def home(request):
 
 
 # --- Creación de Perfil --- #
+#crear perfil
 class CrearPerfil(LoginRequiredMixin, CreateView):
     """
     Clase para la creacion de un perfil de usuario
@@ -49,6 +50,7 @@ class CrearPerfil(LoginRequiredMixin, CreateView):
 
 
 # --- Edición de Perfil --- #
+#editar perfil general
 @login_required
 def editarPerfil_General(request, id_perfil):
     """
@@ -77,6 +79,7 @@ def editarPerfil_General(request, id_perfil):
 
 
 # --- Proyectos de Usuario --- #
+#proyecto de usuarios
 @login_required
 def proyectosUsuario(request, id_usuario):
     """
@@ -123,6 +126,7 @@ def administrador(request):
 
 
 # --- Listar Solicitudes de Acceso --- #
+#lista de accesos
 @login_required
 @permission_required("usuarios.autorizar_usuario", login_url="usuarios:home")
 def listaAcceso(request):
@@ -143,6 +147,7 @@ def listaAcceso(request):
 
 
 # --- Conceder Acceso al Sistema --- #
+#conceder Acceso
 @login_required
 @permission_required("usuarios.autorizar_usuario", login_url="usuarios:home")
 def concederAcceso(request, id_perfil):
@@ -167,6 +172,7 @@ def concederAcceso(request, id_perfil):
 
 
 # --- Listar Perfiles --- #
+#listar perfiles
 class ListarPerfil(LoginRequiredMixin, ListView):
     """
     Clase utilizada para listar los perfiles de usuarios existentes
@@ -180,6 +186,7 @@ class ListarPerfil(LoginRequiredMixin, ListView):
 
 
 # --- Editar Perfil --- #
+#editar perfil admin
 @login_required
 def editarPerfil_Admin(request, id_perfil):
     """
@@ -209,6 +216,7 @@ def editarPerfil_Admin(request, id_perfil):
 
 
 # --- Eliminar Perfil --- #
+#eliminar perfil
 @login_required
 def eliminarPerfil(request, id_perfil):
     """

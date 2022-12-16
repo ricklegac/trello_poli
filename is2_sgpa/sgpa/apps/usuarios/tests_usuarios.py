@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 
 
 # --- Verifica la creación de usuario --- #
+#test crear usuario
 @pytest.mark.django_db
 def test_crearUsuario():
     data = {
@@ -18,6 +19,7 @@ def test_crearUsuario():
 
 
 # --- Verifica la eliminación de un usuario --- #
+#test eliminar usuario
 @pytest.mark.django_db
 def test_eliminarUsuario():
     data = {
@@ -33,6 +35,7 @@ def test_eliminarUsuario():
 
 
 # --- Verifica la creación de un perfil de usuario --- #
+#test crear perfil
 @pytest.mark.django_db
 def test_crearPerfil():
     data = {
@@ -54,6 +57,7 @@ def test_crearPerfil():
 
 # FALLA
 # --- Verifica que no se pueden crear dos perfiles con el mismo ci --- #
+#test crear segundo perfil
 @pytest.mark.django_db
 def test_crearSegundoPerfil():
     data = {
@@ -81,6 +85,7 @@ def test_crearSegundoPerfil():
 
 
 # --- Verifica la eliminarción de un perfil de usuario --- #
+#test eliminar perfil
 @pytest.mark.django_db
 def test_eliminarPerfil():
     data = {

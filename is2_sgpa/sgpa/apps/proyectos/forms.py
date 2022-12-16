@@ -14,7 +14,7 @@ from proyectos.models import (
 from django.contrib.auth.models import Permission
 from django.forms import modelformset_factory
 
-
+#prpoyecto form
 class Proyecto_Form(forms.ModelForm):
     class Meta:
         model = Proyecto
@@ -35,7 +35,7 @@ class Proyecto_Form(forms.ModelForm):
         super(Proyecto_Form, self).init(args, **kwargs)
         self.fields["scrumMaster"].queryset = Perfil.objects.filter(~Q(id=1))
 
-
+#class sprint form
 class Sprint_Form(forms.ModelForm):
     class Meta:
         model = Sprint
@@ -55,7 +55,7 @@ class Sprint_Form(forms.ModelForm):
             "fechaFin": forms.DateInput(attrs={"type": "date"}),
         }
 
-
+#class sprint edit form
 class SprintEdit_Form(forms.ModelForm):
     class Meta:
         model = Sprint
@@ -71,7 +71,7 @@ class SprintEdit_Form(forms.ModelForm):
             "fechaFin": forms.DateInput(attrs={"type": "date"}),
         }
 
-
+#class proyecto edit form
 class ProyectoEdit_Form(forms.ModelForm):
     class Meta:
         model = Proyecto
@@ -94,7 +94,7 @@ class ProyectoEdit_Form(forms.ModelForm):
             "fechaFin": forms.DateInput(attrs={"type": "date"}),
         }
 
-
+#class miembros form
 class MiembrosForm(forms.ModelForm):
     class Meta:
         model = Miembro
@@ -126,7 +126,7 @@ class MiembrosForm(forms.ModelForm):
         perfiles = Perfil.objects.filter(id__in=valid_id)
         self.fields["idPerfil"].queryset = perfiles
 
-
+#class rol form
 class Rol_Form(forms.ModelForm):
     permissions = [
         "Crear proyecto",
@@ -166,7 +166,7 @@ class Rol_Form(forms.ModelForm):
             "sprint": forms.CheckboxSelectMultiple(),
         }
 
-
+#class user story form
 class UserStoryForm(forms.ModelForm):
     def __init__(self, idProyecto, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -224,7 +224,7 @@ class UserStoryForm(forms.ModelForm):
             "sprint": forms.Select(attrs={"class": "form-control"}),
         }
 
-
+#class user story edit form
 class UserStoryEdit_Form(forms.ModelForm):
     def __init__(self, idProyecto, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -272,7 +272,7 @@ class UserStoryEdit_Form(forms.ModelForm):
             "sprint": forms.Select(attrs={"class": "form-control"}),
         }
 
-
+#class tipo de user story form
 class TipoUserStoryForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         try:
@@ -334,7 +334,7 @@ AdicionalColumnaFormset = modelformset_factory(
 #             "nombre": forms.TextInput(attrs={"class": "form-control"}),
 #         }
 
-
+#class kanban form
 class KanbanForm(forms.ModelForm):
     def __init__(self, idProyecto, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -28,7 +28,7 @@ TIPOBL_CHOICES = [
     ("Sprint_Backlog", "Sprint_Backlog"),
 ]
 
-
+#class proyecto
 class Proyecto(models.Model):
     nombre = models.CharField(max_length=50, blank=False)
     descripcion = models.TextField(max_length=200, blank=False)
@@ -49,7 +49,7 @@ class Proyecto(models.Model):
     def __str__(self):
         return self.nombre
 
-
+#class backlog
 class Backlog(models.Model):
     nombre = models.CharField(max_length=20)
     posicion = models.IntegerField(blank=False, null=True)
@@ -64,7 +64,7 @@ class Backlog(models.Model):
     def __str__(self):
         return self.nombre
 
-
+#class sprint
 class Sprint(models.Model):
     objetivos = models.CharField(max_length=300, blank=False, null=True)
     posicion = models.IntegerField(blank=False, null=True)
@@ -84,7 +84,7 @@ class Sprint(models.Model):
     def __str__(self):
         return self.objetivos
 
-
+#class historial
 class Historial(models.Model):
     categoria = models.CharField(max_length=80)
     operacion = models.CharField(max_length=150)
@@ -99,12 +99,12 @@ class Historial(models.Model):
             self.fecha.strftime("%d/%m/%Y %X"), self.autor, self.operacion
         )
 
-
+#class miembro
 class Miembro(models.Model):
     idPerfil = models.ForeignKey(to="usuarios.Perfil", on_delete=models.CASCADE)
     idProyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE)
 
-
+#class rol
 class Rol(models.Model):
     grupo = models.OneToOneField(Group, on_delete=models.CASCADE)
     nombre = models.CharField(max_length=50)
@@ -130,7 +130,7 @@ class Rol(models.Model):
     def __str__(self):
         return self.nombre
 
-
+#class tipo user story
 class TipoUserStory(models.Model):
     nombre = models.CharField(max_length=150)
     proyecto = models.ForeignKey(
@@ -143,7 +143,7 @@ class TipoUserStory(models.Model):
     # class Meta:
     #     unique_together = ['nombre', 'proyecto']
 
-
+#class columnas
 class Columnas(models.Model):
     nombre = models.CharField(max_length=20)
     tipo_us = models.ForeignKey(
@@ -154,7 +154,7 @@ class Columnas(models.Model):
     def __str__(self):
         return self.nombre
 
-
+#class userStory
 class UserStory(models.Model):
 
     backlog = models.ForeignKey(
@@ -187,3 +187,1320 @@ class UserStory(models.Model):
 
     def __str__(self):
         return self.nombre
+
+"""
+#class tipo user story
+class TipoUserStory(models.Model):
+    nombre = models.CharField(max_length=150)
+    proyecto = models.ForeignKey(
+        Proyecto, on_delete=models.CASCADE, related_name="proyectos"
+    )
+
+    def __str__(self):
+        return self.nombre
+
+    # class Meta:
+    #     unique_together = ['nombre', 'proyecto']
+
+#class columnas
+class Columnas(models.Model):
+    nombre = models.CharField(max_length=20)
+    tipo_us = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="columnas"
+    )
+    opcional = models.BooleanField(null=True, blank=True)
+
+    def __str__(self):
+        return self.nombre
+
+#class userStory
+class UserStory(models.Model):
+
+    backlog = models.ForeignKey(
+        to="proyectos.Backlog",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="user_stories",
+    )
+    nombre = models.CharField(max_length=150, blank=False)
+    descripcion = models.TextField(max_length=300, blank=False)
+    estado = models.ForeignKey(
+        to=Columnas, on_delete=models.CASCADE, null=True, blank=True
+    )
+    desarrollador = models.ForeignKey(
+        to="usuarios.Perfil", on_delete=models.CASCADE, null=True, blank=True
+    )
+    fechaCreacion = models.DateField(auto_now_add=True)
+    fechaInicio = models.DateField(default=timezone.now)
+    fechaFin = models.DateField(null=True)
+    sprint = models.ForeignKey(
+        to="proyectos.Sprint", on_delete=models.CASCADE, null=True, blank=True
+    )
+    prioridad = models.PositiveIntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(100)], default=0
+    )
+    tipo = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="user_stories"
+    )
+
+    def __str__(self):
+        return self.nombre
+#class tipo user story
+class TipoUserStory(models.Model):
+    nombre = models.CharField(max_length=150)
+    proyecto = models.ForeignKey(
+        Proyecto, on_delete=models.CASCADE, related_name="proyectos"
+    )
+
+    def __str__(self):
+        return self.nombre
+
+    # class Meta:
+    #     unique_together = ['nombre', 'proyecto']
+
+#class columnas
+class Columnas(models.Model):
+    nombre = models.CharField(max_length=20)
+    tipo_us = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="columnas"
+    )
+    opcional = models.BooleanField(null=True, blank=True)
+
+    def __str__(self):
+        return self.nombre
+
+#class userStory
+class UserStory(models.Model):
+
+    backlog = models.ForeignKey(
+        to="proyectos.Backlog",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="user_stories",
+    )
+    nombre = models.CharField(max_length=150, blank=False)
+    descripcion = models.TextField(max_length=300, blank=False)
+    estado = models.ForeignKey(
+        to=Columnas, on_delete=models.CASCADE, null=True, blank=True
+    )
+    desarrollador = models.ForeignKey(
+        to="usuarios.Perfil", on_delete=models.CASCADE, null=True, blank=True
+    )
+    fechaCreacion = models.DateField(auto_now_add=True)
+    fechaInicio = models.DateField(default=timezone.now)
+    fechaFin = models.DateField(null=True)
+    sprint = models.ForeignKey(
+        to="proyectos.Sprint", on_delete=models.CASCADE, null=True, blank=True
+    )
+    prioridad = models.PositiveIntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(100)], default=0
+    )
+    tipo = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="user_stories"
+    )
+
+    def __str__(self):
+        return self.nombre
+#class tipo user story
+class TipoUserStory(models.Model):
+    nombre = models.CharField(max_length=150)
+    proyecto = models.ForeignKey(
+        Proyecto, on_delete=models.CASCADE, related_name="proyectos"
+    )
+
+    def __str__(self):
+        return self.nombre
+
+    # class Meta:
+    #     unique_together = ['nombre', 'proyecto']
+
+#class columnas
+class Columnas(models.Model):
+    nombre = models.CharField(max_length=20)
+    tipo_us = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="columnas"
+    )
+    opcional = models.BooleanField(null=True, blank=True)
+
+    def __str__(self):
+        return self.nombre
+
+#class userStory
+class UserStory(models.Model):
+
+    backlog = models.ForeignKey(
+        to="proyectos.Backlog",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="user_stories",
+    )
+    nombre = models.CharField(max_length=150, blank=False)
+    descripcion = models.TextField(max_length=300, blank=False)
+    estado = models.ForeignKey(
+        to=Columnas, on_delete=models.CASCADE, null=True, blank=True
+    )
+    desarrollador = models.ForeignKey(
+        to="usuarios.Perfil", on_delete=models.CASCADE, null=True, blank=True
+    )
+    fechaCreacion = models.DateField(auto_now_add=True)
+    fechaInicio = models.DateField(default=timezone.now)
+    fechaFin = models.DateField(null=True)
+    sprint = models.ForeignKey(
+        to="proyectos.Sprint", on_delete=models.CASCADE, null=True, blank=True
+    )
+    prioridad = models.PositiveIntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(100)], default=0
+    )
+    tipo = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="user_stories"
+    )
+
+    def __str__(self):
+        return self.nombre
+#class tipo user story
+class TipoUserStory(models.Model):
+    nombre = models.CharField(max_length=150)
+    proyecto = models.ForeignKey(
+        Proyecto, on_delete=models.CASCADE, related_name="proyectos"
+    )
+
+    def __str__(self):
+        return self.nombre
+
+    # class Meta:
+    #     unique_together = ['nombre', 'proyecto']
+
+#class columnas
+class Columnas(models.Model):
+    nombre = models.CharField(max_length=20)
+    tipo_us = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="columnas"
+    )
+    opcional = models.BooleanField(null=True, blank=True)
+
+    def __str__(self):
+        return self.nombre
+
+#class userStory
+class UserStory(models.Model):
+
+    backlog = models.ForeignKey(
+        to="proyectos.Backlog",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="user_stories",
+    )
+    nombre = models.CharField(max_length=150, blank=False)
+    descripcion = models.TextField(max_length=300, blank=False)
+    estado = models.ForeignKey(
+        to=Columnas, on_delete=models.CASCADE, null=True, blank=True
+    )
+    desarrollador = models.ForeignKey(
+        to="usuarios.Perfil", on_delete=models.CASCADE, null=True, blank=True
+    )
+    fechaCreacion = models.DateField(auto_now_add=True)
+    fechaInicio = models.DateField(default=timezone.now)
+    fechaFin = models.DateField(null=True)
+    sprint = models.ForeignKey(
+        to="proyectos.Sprint", on_delete=models.CASCADE, null=True, blank=True
+    )
+    prioridad = models.PositiveIntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(100)], default=0
+    )
+    tipo = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="user_stories"
+    )
+
+    def __str__(self):
+        return self.nombre
+#class tipo user story
+class TipoUserStory(models.Model):
+    nombre = models.CharField(max_length=150)
+    proyecto = models.ForeignKey(
+        Proyecto, on_delete=models.CASCADE, related_name="proyectos"
+    )
+
+    def __str__(self):
+        return self.nombre
+
+    # class Meta:
+    #     unique_together = ['nombre', 'proyecto']
+
+#class columnas
+class Columnas(models.Model):
+    nombre = models.CharField(max_length=20)
+    tipo_us = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="columnas"
+    )
+    opcional = models.BooleanField(null=True, blank=True)
+
+    def __str__(self):
+        return self.nombre
+
+#class userStory
+class UserStory(models.Model):
+
+    backlog = models.ForeignKey(
+        to="proyectos.Backlog",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="user_stories",
+    )
+    nombre = models.CharField(max_length=150, blank=False)
+    descripcion = models.TextField(max_length=300, blank=False)
+    estado = models.ForeignKey(
+        to=Columnas, on_delete=models.CASCADE, null=True, blank=True
+    )
+    desarrollador = models.ForeignKey(
+        to="usuarios.Perfil", on_delete=models.CASCADE, null=True, blank=True
+    )
+    fechaCreacion = models.DateField(auto_now_add=True)
+    fechaInicio = models.DateField(default=timezone.now)
+    fechaFin = models.DateField(null=True)
+    sprint = models.ForeignKey(
+        to="proyectos.Sprint", on_delete=models.CASCADE, null=True, blank=True
+    )
+    prioridad = models.PositiveIntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(100)], default=0
+    )
+    tipo = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="user_stories"
+    )
+
+    def __str__(self):
+        return self.nombre
+#class tipo user story
+class TipoUserStory(models.Model):
+    nombre = models.CharField(max_length=150)
+    proyecto = models.ForeignKey(
+        Proyecto, on_delete=models.CASCADE, related_name="proyectos"
+    )
+
+    def __str__(self):
+        return self.nombre
+
+    # class Meta:
+    #     unique_together = ['nombre', 'proyecto']
+
+#class columnas
+class Columnas(models.Model):
+    nombre = models.CharField(max_length=20)
+    tipo_us = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="columnas"
+    )
+    opcional = models.BooleanField(null=True, blank=True)
+
+    def __str__(self):
+        return self.nombre
+
+#class userStory
+class UserStory(models.Model):
+
+    backlog = models.ForeignKey(
+        to="proyectos.Backlog",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="user_stories",
+    )
+    nombre = models.CharField(max_length=150, blank=False)
+    descripcion = models.TextField(max_length=300, blank=False)
+    estado = models.ForeignKey(
+        to=Columnas, on_delete=models.CASCADE, null=True, blank=True
+    )
+    desarrollador = models.ForeignKey(
+        to="usuarios.Perfil", on_delete=models.CASCADE, null=True, blank=True
+    )
+    fechaCreacion = models.DateField(auto_now_add=True)
+    fechaInicio = models.DateField(default=timezone.now)
+    fechaFin = models.DateField(null=True)
+    sprint = models.ForeignKey(
+        to="proyectos.Sprint", on_delete=models.CASCADE, null=True, blank=True
+    )
+    prioridad = models.PositiveIntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(100)], default=0
+    )
+    tipo = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="user_stories"
+    )
+
+    def __str__(self):
+        return self.nombre
+#class tipo user story
+class TipoUserStory(models.Model):
+    nombre = models.CharField(max_length=150)
+    proyecto = models.ForeignKey(
+        Proyecto, on_delete=models.CASCADE, related_name="proyectos"
+    )
+
+    def __str__(self):
+        return self.nombre
+
+    # class Meta:
+    #     unique_together = ['nombre', 'proyecto']
+
+#class columnas
+class Columnas(models.Model):
+    nombre = models.CharField(max_length=20)
+    tipo_us = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="columnas"
+    )
+    opcional = models.BooleanField(null=True, blank=True)
+
+    def __str__(self):
+        return self.nombre
+
+#class userStory
+class UserStory(models.Model):
+
+    backlog = models.ForeignKey(
+        to="proyectos.Backlog",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="user_stories",
+    )
+    nombre = models.CharField(max_length=150, blank=False)
+    descripcion = models.TextField(max_length=300, blank=False)
+    estado = models.ForeignKey(
+        to=Columnas, on_delete=models.CASCADE, null=True, blank=True
+    )
+    desarrollador = models.ForeignKey(
+        to="usuarios.Perfil", on_delete=models.CASCADE, null=True, blank=True
+    )
+    fechaCreacion = models.DateField(auto_now_add=True)
+    fechaInicio = models.DateField(default=timezone.now)
+    fechaFin = models.DateField(null=True)
+    sprint = models.ForeignKey(
+        to="proyectos.Sprint", on_delete=models.CASCADE, null=True, blank=True
+    )
+    prioridad = models.PositiveIntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(100)], default=0
+    )
+    tipo = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="user_stories"
+    )
+
+    def __str__(self):
+        return self.nombre
+#class tipo user story
+class TipoUserStory(models.Model):
+    nombre = models.CharField(max_length=150)
+    proyecto = models.ForeignKey(
+        Proyecto, on_delete=models.CASCADE, related_name="proyectos"
+    )
+
+    def __str__(self):
+        return self.nombre
+
+    # class Meta:
+    #     unique_together = ['nombre', 'proyecto']
+
+#class columnas
+class Columnas(models.Model):
+    nombre = models.CharField(max_length=20)
+    tipo_us = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="columnas"
+    )
+    opcional = models.BooleanField(null=True, blank=True)
+
+    def __str__(self):
+        return self.nombre
+
+#class userStory
+class UserStory(models.Model):
+
+    backlog = models.ForeignKey(
+        to="proyectos.Backlog",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="user_stories",
+    )
+    nombre = models.CharField(max_length=150, blank=False)
+    descripcion = models.TextField(max_length=300, blank=False)
+    estado = models.ForeignKey(
+        to=Columnas, on_delete=models.CASCADE, null=True, blank=True
+    )
+    desarrollador = models.ForeignKey(
+        to="usuarios.Perfil", on_delete=models.CASCADE, null=True, blank=True
+    )
+    fechaCreacion = models.DateField(auto_now_add=True)
+    fechaInicio = models.DateField(default=timezone.now)
+    fechaFin = models.DateField(null=True)
+    sprint = models.ForeignKey(
+        to="proyectos.Sprint", on_delete=models.CASCADE, null=True, blank=True
+    )
+    prioridad = models.PositiveIntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(100)], default=0
+    )
+    tipo = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="user_stories"
+    )
+
+    def __str__(self):
+        return self.nombre
+#class tipo user story
+class TipoUserStory(models.Model):
+    nombre = models.CharField(max_length=150)
+    proyecto = models.ForeignKey(
+        Proyecto, on_delete=models.CASCADE, related_name="proyectos"
+    )
+
+    def __str__(self):
+        return self.nombre
+
+    # class Meta:
+    #     unique_together = ['nombre', 'proyecto']
+
+#class columnas
+class Columnas(models.Model):
+    nombre = models.CharField(max_length=20)
+    tipo_us = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="columnas"
+    )
+    opcional = models.BooleanField(null=True, blank=True)
+
+    def __str__(self):
+        return self.nombre
+
+#class userStory
+class UserStory(models.Model):
+
+    backlog = models.ForeignKey(
+        to="proyectos.Backlog",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="user_stories",
+    )
+    nombre = models.CharField(max_length=150, blank=False)
+    descripcion = models.TextField(max_length=300, blank=False)
+    estado = models.ForeignKey(
+        to=Columnas, on_delete=models.CASCADE, null=True, blank=True
+    )
+    desarrollador = models.ForeignKey(
+        to="usuarios.Perfil", on_delete=models.CASCADE, null=True, blank=True
+    )
+    fechaCreacion = models.DateField(auto_now_add=True)
+    fechaInicio = models.DateField(default=timezone.now)
+    fechaFin = models.DateField(null=True)
+    sprint = models.ForeignKey(
+        to="proyectos.Sprint", on_delete=models.CASCADE, null=True, blank=True
+    )
+    prioridad = models.PositiveIntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(100)], default=0
+    )
+    tipo = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="user_stories"
+    )
+
+    def __str__(self):
+        return self.nombre
+#class tipo user story
+class TipoUserStory(models.Model):
+    nombre = models.CharField(max_length=150)
+    proyecto = models.ForeignKey(
+        Proyecto, on_delete=models.CASCADE, related_name="proyectos"
+    )
+
+    def __str__(self):
+        return self.nombre
+
+    # class Meta:
+    #     unique_together = ['nombre', 'proyecto']
+
+#class columnas
+class Columnas(models.Model):
+    nombre = models.CharField(max_length=20)
+    tipo_us = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="columnas"
+    )
+    opcional = models.BooleanField(null=True, blank=True)
+
+    def __str__(self):
+        return self.nombre
+
+#class userStory
+class UserStory(models.Model):
+
+    backlog = models.ForeignKey(
+        to="proyectos.Backlog",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="user_stories",
+    )
+    nombre = models.CharField(max_length=150, blank=False)
+    descripcion = models.TextField(max_length=300, blank=False)
+    estado = models.ForeignKey(
+        to=Columnas, on_delete=models.CASCADE, null=True, blank=True
+    )
+    desarrollador = models.ForeignKey(
+        to="usuarios.Perfil", on_delete=models.CASCADE, null=True, blank=True
+    )
+    fechaCreacion = models.DateField(auto_now_add=True)
+    fechaInicio = models.DateField(default=timezone.now)
+    fechaFin = models.DateField(null=True)
+    sprint = models.ForeignKey(
+        to="proyectos.Sprint", on_delete=models.CASCADE, null=True, blank=True
+    )
+    prioridad = models.PositiveIntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(100)], default=0
+    )
+    tipo = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="user_stories"
+    )
+
+    def __str__(self):
+        return self.nombre
+#class tipo user story
+class TipoUserStory(models.Model):
+    nombre = models.CharField(max_length=150)
+    proyecto = models.ForeignKey(
+        Proyecto, on_delete=models.CASCADE, related_name="proyectos"
+    )
+
+    def __str__(self):
+        return self.nombre
+
+    # class Meta:
+    #     unique_together = ['nombre', 'proyecto']
+
+#class columnas
+class Columnas(models.Model):
+    nombre = models.CharField(max_length=20)
+    tipo_us = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="columnas"
+    )
+    opcional = models.BooleanField(null=True, blank=True)
+
+    def __str__(self):
+        return self.nombre
+
+#class userStory
+class UserStory(models.Model):
+
+    backlog = models.ForeignKey(
+        to="proyectos.Backlog",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="user_stories",
+    )
+    nombre = models.CharField(max_length=150, blank=False)
+    descripcion = models.TextField(max_length=300, blank=False)
+    estado = models.ForeignKey(
+        to=Columnas, on_delete=models.CASCADE, null=True, blank=True
+    )
+    desarrollador = models.ForeignKey(
+        to="usuarios.Perfil", on_delete=models.CASCADE, null=True, blank=True
+    )
+    fechaCreacion = models.DateField(auto_now_add=True)
+    fechaInicio = models.DateField(default=timezone.now)
+    fechaFin = models.DateField(null=True)
+    sprint = models.ForeignKey(
+        to="proyectos.Sprint", on_delete=models.CASCADE, null=True, blank=True
+    )
+    prioridad = models.PositiveIntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(100)], default=0
+    )
+    tipo = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="user_stories"
+    )
+
+    def __str__(self):
+        return self.nombre
+#class tipo user story
+class TipoUserStory(models.Model):
+    nombre = models.CharField(max_length=150)
+    proyecto = models.ForeignKey(
+        Proyecto, on_delete=models.CASCADE, related_name="proyectos"
+    )
+
+    def __str__(self):
+        return self.nombre
+
+    # class Meta:
+    #     unique_together = ['nombre', 'proyecto']
+
+#class columnas
+class Columnas(models.Model):
+    nombre = models.CharField(max_length=20)
+    tipo_us = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="columnas"
+    )
+    opcional = models.BooleanField(null=True, blank=True)
+
+    def __str__(self):
+        return self.nombre
+
+#class userStory
+class UserStory(models.Model):
+
+    backlog = models.ForeignKey(
+        to="proyectos.Backlog",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="user_stories",
+    )
+    nombre = models.CharField(max_length=150, blank=False)
+    descripcion = models.TextField(max_length=300, blank=False)
+    estado = models.ForeignKey(
+        to=Columnas, on_delete=models.CASCADE, null=True, blank=True
+    )
+    desarrollador = models.ForeignKey(
+        to="usuarios.Perfil", on_delete=models.CASCADE, null=True, blank=True
+    )
+    fechaCreacion = models.DateField(auto_now_add=True)
+    fechaInicio = models.DateField(default=timezone.now)
+    fechaFin = models.DateField(null=True)
+    sprint = models.ForeignKey(
+        to="proyectos.Sprint", on_delete=models.CASCADE, null=True, blank=True
+    )
+    prioridad = models.PositiveIntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(100)], default=0
+    )
+    tipo = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="user_stories"
+    )
+
+    def __str__(self):
+        return self.nombre
+#class tipo user story
+class TipoUserStory(models.Model):
+    nombre = models.CharField(max_length=150)
+    proyecto = models.ForeignKey(
+        Proyecto, on_delete=models.CASCADE, related_name="proyectos"
+    )
+
+    def __str__(self):
+        return self.nombre
+
+    # class Meta:
+    #     unique_together = ['nombre', 'proyecto']
+
+#class columnas
+class Columnas(models.Model):
+    nombre = models.CharField(max_length=20)
+    tipo_us = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="columnas"
+    )
+    opcional = models.BooleanField(null=True, blank=True)
+
+    def __str__(self):
+        return self.nombre
+
+#class userStory
+class UserStory(models.Model):
+
+    backlog = models.ForeignKey(
+        to="proyectos.Backlog",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="user_stories",
+    )
+    nombre = models.CharField(max_length=150, blank=False)
+    descripcion = models.TextField(max_length=300, blank=False)
+    estado = models.ForeignKey(
+        to=Columnas, on_delete=models.CASCADE, null=True, blank=True
+    )
+    desarrollador = models.ForeignKey(
+        to="usuarios.Perfil", on_delete=models.CASCADE, null=True, blank=True
+    )
+    fechaCreacion = models.DateField(auto_now_add=True)
+    fechaInicio = models.DateField(default=timezone.now)
+    fechaFin = models.DateField(null=True)
+    sprint = models.ForeignKey(
+        to="proyectos.Sprint", on_delete=models.CASCADE, null=True, blank=True
+    )
+    prioridad = models.PositiveIntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(100)], default=0
+    )
+    tipo = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="user_stories"
+    )
+
+    def __str__(self):
+        return self.nombre
+#class tipo user story
+class TipoUserStory(models.Model):
+    nombre = models.CharField(max_length=150)
+    proyecto = models.ForeignKey(
+        Proyecto, on_delete=models.CASCADE, related_name="proyectos"
+    )
+
+    def __str__(self):
+        return self.nombre
+
+    # class Meta:
+    #     unique_together = ['nombre', 'proyecto']
+
+#class columnas
+class Columnas(models.Model):
+    nombre = models.CharField(max_length=20)
+    tipo_us = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="columnas"
+    )
+    opcional = models.BooleanField(null=True, blank=True)
+
+    def __str__(self):
+        return self.nombre
+
+#class userStory
+class UserStory(models.Model):
+
+    backlog = models.ForeignKey(
+        to="proyectos.Backlog",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="user_stories",
+    )
+    nombre = models.CharField(max_length=150, blank=False)
+    descripcion = models.TextField(max_length=300, blank=False)
+    estado = models.ForeignKey(
+        to=Columnas, on_delete=models.CASCADE, null=True, blank=True
+    )
+    desarrollador = models.ForeignKey(
+        to="usuarios.Perfil", on_delete=models.CASCADE, null=True, blank=True
+    )
+    fechaCreacion = models.DateField(auto_now_add=True)
+    fechaInicio = models.DateField(default=timezone.now)
+    fechaFin = models.DateField(null=True)
+    sprint = models.ForeignKey(
+        to="proyectos.Sprint", on_delete=models.CASCADE, null=True, blank=True
+    )
+    prioridad = models.PositiveIntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(100)], default=0
+    )
+    tipo = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="user_stories"
+    )
+
+    def __str__(self):
+        return self.nombre
+#class tipo user story
+class TipoUserStory(models.Model):
+    nombre = models.CharField(max_length=150)
+    proyecto = models.ForeignKey(
+        Proyecto, on_delete=models.CASCADE, related_name="proyectos"
+    )
+
+    def __str__(self):
+        return self.nombre
+
+    # class Meta:
+    #     unique_together = ['nombre', 'proyecto']
+
+#class columnas
+class Columnas(models.Model):
+    nombre = models.CharField(max_length=20)
+    tipo_us = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="columnas"
+    )
+    opcional = models.BooleanField(null=True, blank=True)
+
+    def __str__(self):
+        return self.nombre
+
+#class userStory
+class UserStory(models.Model):
+
+    backlog = models.ForeignKey(
+        to="proyectos.Backlog",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="user_stories",
+    )
+    nombre = models.CharField(max_length=150, blank=False)
+    descripcion = models.TextField(max_length=300, blank=False)
+    estado = models.ForeignKey(
+        to=Columnas, on_delete=models.CASCADE, null=True, blank=True
+    )
+    desarrollador = models.ForeignKey(
+        to="usuarios.Perfil", on_delete=models.CASCADE, null=True, blank=True
+    )
+    fechaCreacion = models.DateField(auto_now_add=True)
+    fechaInicio = models.DateField(default=timezone.now)
+    fechaFin = models.DateField(null=True)
+    sprint = models.ForeignKey(
+        to="proyectos.Sprint", on_delete=models.CASCADE, null=True, blank=True
+    )
+    prioridad = models.PositiveIntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(100)], default=0
+    )
+    tipo = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="user_stories"
+    )
+
+    def __str__(self):
+        return self.nombre
+#class tipo user story
+class TipoUserStory(models.Model):
+    nombre = models.CharField(max_length=150)
+    proyecto = models.ForeignKey(
+        Proyecto, on_delete=models.CASCADE, related_name="proyectos"
+    )
+
+    def __str__(self):
+        return self.nombre
+
+    # class Meta:
+    #     unique_together = ['nombre', 'proyecto']
+
+#class columnas
+class Columnas(models.Model):
+    nombre = models.CharField(max_length=20)
+    tipo_us = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="columnas"
+    )
+    opcional = models.BooleanField(null=True, blank=True)
+
+    def __str__(self):
+        return self.nombre
+
+#class userStory
+class UserStory(models.Model):
+
+    backlog = models.ForeignKey(
+        to="proyectos.Backlog",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="user_stories",
+    )
+    nombre = models.CharField(max_length=150, blank=False)
+    descripcion = models.TextField(max_length=300, blank=False)
+    estado = models.ForeignKey(
+        to=Columnas, on_delete=models.CASCADE, null=True, blank=True
+    )
+    desarrollador = models.ForeignKey(
+        to="usuarios.Perfil", on_delete=models.CASCADE, null=True, blank=True
+    )
+    fechaCreacion = models.DateField(auto_now_add=True)
+    fechaInicio = models.DateField(default=timezone.now)
+    fechaFin = models.DateField(null=True)
+    sprint = models.ForeignKey(
+        to="proyectos.Sprint", on_delete=models.CASCADE, null=True, blank=True
+    )
+    prioridad = models.PositiveIntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(100)], default=0
+    )
+    tipo = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="user_stories"
+    )
+
+    def __str__(self):
+        return self.nombre
+#class tipo user story
+class TipoUserStory(models.Model):
+    nombre = models.CharField(max_length=150)
+    proyecto = models.ForeignKey(
+        Proyecto, on_delete=models.CASCADE, related_name="proyectos"
+    )
+
+    def __str__(self):
+        return self.nombre
+
+    # class Meta:
+    #     unique_together = ['nombre', 'proyecto']
+
+#class columnas
+class Columnas(models.Model):
+    nombre = models.CharField(max_length=20)
+    tipo_us = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="columnas"
+    )
+    opcional = models.BooleanField(null=True, blank=True)
+
+    def __str__(self):
+        return self.nombre
+
+#class userStory
+class UserStory(models.Model):
+
+    backlog = models.ForeignKey(
+        to="proyectos.Backlog",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="user_stories",
+    )
+    nombre = models.CharField(max_length=150, blank=False)
+    descripcion = models.TextField(max_length=300, blank=False)
+    estado = models.ForeignKey(
+        to=Columnas, on_delete=models.CASCADE, null=True, blank=True
+    )
+    desarrollador = models.ForeignKey(
+        to="usuarios.Perfil", on_delete=models.CASCADE, null=True, blank=True
+    )
+    fechaCreacion = models.DateField(auto_now_add=True)
+    fechaInicio = models.DateField(default=timezone.now)
+    fechaFin = models.DateField(null=True)
+    sprint = models.ForeignKey(
+        to="proyectos.Sprint", on_delete=models.CASCADE, null=True, blank=True
+    )
+    prioridad = models.PositiveIntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(100)], default=0
+    )
+    tipo = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="user_stories"
+    )
+
+    def __str__(self):
+        return self.nombre
+#class tipo user story
+class TipoUserStory(models.Model):
+    nombre = models.CharField(max_length=150)
+    proyecto = models.ForeignKey(
+        Proyecto, on_delete=models.CASCADE, related_name="proyectos"
+    )
+
+    def __str__(self):
+        return self.nombre
+
+    # class Meta:
+    #     unique_together = ['nombre', 'proyecto']
+
+#class columnas
+class Columnas(models.Model):
+    nombre = models.CharField(max_length=20)
+    tipo_us = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="columnas"
+    )
+    opcional = models.BooleanField(null=True, blank=True)
+
+    def __str__(self):
+        return self.nombre
+
+#class userStory
+class UserStory(models.Model):
+
+    backlog = models.ForeignKey(
+        to="proyectos.Backlog",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="user_stories",
+    )
+    nombre = models.CharField(max_length=150, blank=False)
+    descripcion = models.TextField(max_length=300, blank=False)
+    estado = models.ForeignKey(
+        to=Columnas, on_delete=models.CASCADE, null=True, blank=True
+    )
+    desarrollador = models.ForeignKey(
+        to="usuarios.Perfil", on_delete=models.CASCADE, null=True, blank=True
+    )
+    fechaCreacion = models.DateField(auto_now_add=True)
+    fechaInicio = models.DateField(default=timezone.now)
+    fechaFin = models.DateField(null=True)
+    sprint = models.ForeignKey(
+        to="proyectos.Sprint", on_delete=models.CASCADE, null=True, blank=True
+    )
+    prioridad = models.PositiveIntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(100)], default=0
+    )
+    tipo = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="user_stories"
+    )
+
+    def __str__(self):
+        return self.nombre
+#class tipo user story
+class TipoUserStory(models.Model):
+    nombre = models.CharField(max_length=150)
+    proyecto = models.ForeignKey(
+        Proyecto, on_delete=models.CASCADE, related_name="proyectos"
+    )
+
+    def __str__(self):
+        return self.nombre
+
+    # class Meta:
+    #     unique_together = ['nombre', 'proyecto']
+
+#class columnas
+class Columnas(models.Model):
+    nombre = models.CharField(max_length=20)
+    tipo_us = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="columnas"
+    )
+    opcional = models.BooleanField(null=True, blank=True)
+
+    def __str__(self):
+        return self.nombre
+
+#class userStory
+class UserStory(models.Model):
+
+    backlog = models.ForeignKey(
+        to="proyectos.Backlog",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="user_stories",
+    )
+    nombre = models.CharField(max_length=150, blank=False)
+    descripcion = models.TextField(max_length=300, blank=False)
+    estado = models.ForeignKey(
+        to=Columnas, on_delete=models.CASCADE, null=True, blank=True
+    )
+    desarrollador = models.ForeignKey(
+        to="usuarios.Perfil", on_delete=models.CASCADE, null=True, blank=True
+    )
+    fechaCreacion = models.DateField(auto_now_add=True)
+    fechaInicio = models.DateField(default=timezone.now)
+    fechaFin = models.DateField(null=True)
+    sprint = models.ForeignKey(
+        to="proyectos.Sprint", on_delete=models.CASCADE, null=True, blank=True
+    )
+    prioridad = models.PositiveIntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(100)], default=0
+    )
+    tipo = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="user_stories"
+    )
+
+    def __str__(self):
+        return self.nombre
+#class tipo user story
+class TipoUserStory(models.Model):
+    nombre = models.CharField(max_length=150)
+    proyecto = models.ForeignKey(
+        Proyecto, on_delete=models.CASCADE, related_name="proyectos"
+    )
+
+    def __str__(self):
+        return self.nombre
+
+    # class Meta:
+    #     unique_together = ['nombre', 'proyecto']
+
+#class columnas
+class Columnas(models.Model):
+    nombre = models.CharField(max_length=20)
+    tipo_us = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="columnas"
+    )
+    opcional = models.BooleanField(null=True, blank=True)
+
+    def __str__(self):
+        return self.nombre
+
+#class userStory
+class UserStory(models.Model):
+
+    backlog = models.ForeignKey(
+        to="proyectos.Backlog",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="user_stories",
+    )
+    nombre = models.CharField(max_length=150, blank=False)
+    descripcion = models.TextField(max_length=300, blank=False)
+    estado = models.ForeignKey(
+        to=Columnas, on_delete=models.CASCADE, null=True, blank=True
+    )
+    desarrollador = models.ForeignKey(
+        to="usuarios.Perfil", on_delete=models.CASCADE, null=True, blank=True
+    )
+    fechaCreacion = models.DateField(auto_now_add=True)
+    fechaInicio = models.DateField(default=timezone.now)
+    fechaFin = models.DateField(null=True)
+    sprint = models.ForeignKey(
+        to="proyectos.Sprint", on_delete=models.CASCADE, null=True, blank=True
+    )
+    prioridad = models.PositiveIntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(100)], default=0
+    )
+    tipo = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="user_stories"
+    )
+
+    def __str__(self):
+        return self.nombre
+#class tipo user story
+class TipoUserStory(models.Model):
+    nombre = models.CharField(max_length=150)
+    proyecto = models.ForeignKey(
+        Proyecto, on_delete=models.CASCADE, related_name="proyectos"
+    )
+
+    def __str__(self):
+        return self.nombre
+
+    # class Meta:
+    #     unique_together = ['nombre', 'proyecto']
+
+#class columnas
+class Columnas(models.Model):
+    nombre = models.CharField(max_length=20)
+    tipo_us = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="columnas"
+    )
+    opcional = models.BooleanField(null=True, blank=True)
+
+    def __str__(self):
+        return self.nombre
+
+#class userStory
+class UserStory(models.Model):
+
+    backlog = models.ForeignKey(
+        to="proyectos.Backlog",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="user_stories",
+    )
+    nombre = models.CharField(max_length=150, blank=False)
+    descripcion = models.TextField(max_length=300, blank=False)
+    estado = models.ForeignKey(
+        to=Columnas, on_delete=models.CASCADE, null=True, blank=True
+    )
+    desarrollador = models.ForeignKey(
+        to="usuarios.Perfil", on_delete=models.CASCADE, null=True, blank=True
+    )
+    fechaCreacion = models.DateField(auto_now_add=True)
+    fechaInicio = models.DateField(default=timezone.now)
+    fechaFin = models.DateField(null=True)
+    sprint = models.ForeignKey(
+        to="proyectos.Sprint", on_delete=models.CASCADE, null=True, blank=True
+    )
+    prioridad = models.PositiveIntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(100)], default=0
+    )
+    tipo = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="user_stories"
+    )
+
+    def __str__(self):
+        return self.nombre
+#class tipo user story
+class TipoUserStory(models.Model):
+    nombre = models.CharField(max_length=150)
+    proyecto = models.ForeignKey(
+        Proyecto, on_delete=models.CASCADE, related_name="proyectos"
+    )
+
+    def __str__(self):
+        return self.nombre
+
+    # class Meta:
+    #     unique_together = ['nombre', 'proyecto']
+
+#class columnas
+class Columnas(models.Model):
+    nombre = models.CharField(max_length=20)
+    tipo_us = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="columnas"
+    )
+    opcional = models.BooleanField(null=True, blank=True)
+
+    def __str__(self):
+        return self.nombre
+
+#class userStory
+class UserStory(models.Model):
+
+    backlog = models.ForeignKey(
+        to="proyectos.Backlog",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="user_stories",
+    )
+    nombre = models.CharField(max_length=150, blank=False)
+    descripcion = models.TextField(max_length=300, blank=False)
+    estado = models.ForeignKey(
+        to=Columnas, on_delete=models.CASCADE, null=True, blank=True
+    )
+    desarrollador = models.ForeignKey(
+        to="usuarios.Perfil", on_delete=models.CASCADE, null=True, blank=True
+    )
+    fechaCreacion = models.DateField(auto_now_add=True)
+    fechaInicio = models.DateField(default=timezone.now)
+    fechaFin = models.DateField(null=True)
+    sprint = models.ForeignKey(
+        to="proyectos.Sprint", on_delete=models.CASCADE, null=True, blank=True
+    )
+    prioridad = models.PositiveIntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(100)], default=0
+    )
+    tipo = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="user_stories"
+    )
+
+    def __str__(self):
+        return self.nombre
+#class tipo user story
+class TipoUserStory(models.Model):
+    nombre = models.CharField(max_length=150)
+    proyecto = models.ForeignKey(
+        Proyecto, on_delete=models.CASCADE, related_name="proyectos"
+    )
+
+    def __str__(self):
+        return self.nombre
+
+    # class Meta:
+    #     unique_together = ['nombre', 'proyecto']
+
+#class columnas
+class Columnas(models.Model):
+    nombre = models.CharField(max_length=20)
+    tipo_us = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="columnas"
+    )
+    opcional = models.BooleanField(null=True, blank=True)
+
+    def __str__(self):
+        return self.nombre
+
+#class userStory
+class UserStory(models.Model):
+
+    backlog = models.ForeignKey(
+        to="proyectos.Backlog",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="user_stories",
+    )
+    nombre = models.CharField(max_length=150, blank=False)
+    descripcion = models.TextField(max_length=300, blank=False)
+    estado = models.ForeignKey(
+        to=Columnas, on_delete=models.CASCADE, null=True, blank=True
+    )
+    desarrollador = models.ForeignKey(
+        to="usuarios.Perfil", on_delete=models.CASCADE, null=True, blank=True
+    )
+    fechaCreacion = models.DateField(auto_now_add=True)
+    fechaInicio = models.DateField(default=timezone.now)
+    fechaFin = models.DateField(null=True)
+    sprint = models.ForeignKey(
+        to="proyectos.Sprint", on_delete=models.CASCADE, null=True, blank=True
+    )
+    prioridad = models.PositiveIntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(100)], default=0
+    )
+    tipo = models.ForeignKey(
+        TipoUserStory, on_delete=models.CASCADE, related_name="user_stories"
+    )
+
+    def __str__(self):
+        return self.nombre
+
+
+
+"""        
