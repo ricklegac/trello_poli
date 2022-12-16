@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container-fluid">
     <ins>
-        <h3 align="center">Lista de Roles</h3>
+        <h3 align="center">Lista de Roles - {{proyecto.nombre}}</h3>
     </ins>
     {% if object_list %}
     <div class="row">
@@ -31,10 +31,12 @@
                             {% endif %}
                         </td>
                         <td scope="col">
-                            {% if user.id == proyecto.scrumMaster.user.id%}
+                            {% if user.id == proyecto.scrumMaster.user.id or perms.proyectos.modificar_rol %}
                             <a href="{% url 'proyectos:editar_rol' idProyecto rol.id %}"
                                 class="btn boton-color">Modificar
                                 Rol</a>
+                            {% endif %}
+                            {% if user.id == proyecto.scrumMaster.user.id or perms.proyectos.eliminar_rol %}
                             <a href="{% url 'proyectos:eliminar_rol' idProyecto rol.id %}"
                                 class="btn boton-color">Eliminar
                                 Rol</a>
@@ -50,7 +52,7 @@
     <h4 align="center">El proyecto no tiene roles creados</h4><br>
     {% endif %}
     <p align="center">
-        {% if user.id == proyecto.scrumMaster.user.id%}
+        {% if user.id == proyecto.scrumMaster.user.id or perms.proyectos.crear_rol %}
         <a href="{% url 'proyectos:crear_rol' idProyecto %}" class="btn boton-color">Crear Rol</a>
         {% endif %}
         <a href="{% url 'proyectos:ver_proyecto' idProyecto %}" class="btn boton-color" role="button">Volver</a>

@@ -22,7 +22,7 @@
 {% endfor %}
 {% endif %}
 <ins>
-    <h3 align="center">Asignacion de tareas al Sprint</h3>
+    <h3 align="center">Asignacion de tareas al Sprint - {{proyecto.nombre}}</h3>
 </ins>
 <p align="center">
     <a class="btn btn-primary" href="{% url 'proyectos:listar_sprints' idProyecto %}" role="button">Volver</a>
@@ -37,13 +37,21 @@
                 <div class="kanban-card">
                     <div class="kanban-card-body">
                         <div style="width: 100%; justify-content: space-between; display: flex;">
-                            <span class="kanban-tag kanban-tag-teal mb-3">{{ tarea.fechaFin }}</span>
-                            <a href="{% url 'proyectos:modificar_tarea' idProyecto tarea.id %}"
+                            <span class="kanban-tag kanban-tag-teal mb-3">Prioridad: {{tarea.prioridad_total}}</span>
+                            {% if tarea.sprint %}
+                            {% if tarea.estado.id != cancelado.id %}
+                            <a href="{% url 'proyectos:modificar_tarea_kanban' idProyecto tarea.id %}"
                                 class="btn boton-color"><i class="fas fa-pen"></i></a>
+                            {% endif %}
+                            {% endif %}
                         </div>
                         <h4>{{ tarea.nombre }}</h4>
                         <p>{{ tarea.descripcion }}</p>
-                        <div class="kanban-user" style="width:100%; justify-content: space-between;">
+                        {% if tarea.estado.id == cancelado.id %}
+                        <p style="margin: 0 0 0px; color: #dc3545;">Estado: {{tarea.estado}}</p>
+                        {% endif %}
+                        <p>Horas estimadas: {{ tarea.horas_estimadas }}</p>
+                        <div class=" kanban-user" style="width:100%; justify-content: space-between;">
                             <div class="kanban-user-info">
                                 <h5>{{ tarea.desarrollador }}</h5>
                                 {% for rol in tarea.desarrollador.roles.all %}
@@ -54,12 +62,14 @@
                                 {% endif %}
                                 {% endfor %}
                             </div>
+                            {% if tarea.estado.id != cancelado.id %}
                             {% if tarea.sprint == None %}
                             <a class="btn boton-color mb-2" style="width: 80px; height: 40px;"
                                 href="{% url 'proyectos:asignar_sprint' idProyecto idSprint tarea.id %}">Asignar</a>
                             {% else %}
                             <a class="btn btn-danger mb-2 style=" width: 80px; height: 40px;"
                                 href="{% url 'proyectos:desasignar_sprint' idProyecto idSprint tarea.id %}">Retirar</a>
+                            {% endif %}
                             {% endif %}
                         </div>
                     </div>

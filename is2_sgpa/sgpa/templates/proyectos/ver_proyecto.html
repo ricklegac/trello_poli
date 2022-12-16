@@ -109,19 +109,19 @@
 
             {% else %}
             <a href="{% url 'proyectos:listar_sprints' proyecto.id %}" class="btn btn-primary">Sprints</a>
-            {% if user.id == proyecto.scrumMaster.user.id%}
             <a href="{% url 'proyectos:listar_tareas' proyecto.id %}" class="btn btn-primary" role="button">Product
                 Backlog</a>
+            {% if user.id == proyecto.scrumMaster.user.id%}
             <a href="{% url 'proyectos:modificar_proyecto' proyecto.id %}" class="btn btn-primary">Modificar
                 Proyecto</a>
-            <a href="{% url 'proyectos:listar_roles' proyecto.id %}" class="btn btn-primary" role="button">Roles</a>
             {% endif %}
+            <a href="{% url 'proyectos:listar_roles' proyecto.id %}" class="btn btn-primary" role="button">Roles</a>
             <a href="{% url 'proyectos:listar_miembros' proyecto.id %}" class="btn btn-primary"
                 role="button">Miembros</a>
             {% endif %}
 
             {% if proyecto.estado == 'Pendiente' %}
-            {% if user.id == proyecto.scrumMaster.user.id%}
+            {% if user.id == proyecto.scrumMaster.user.id or perms.proyectos.iniciar_proyecto %}
             <a href="{% url 'proyectos:iniciar_proyecto' proyecto.id %}" class="btn btn-success"
                 role="button">Iniciar</a>
             {% endif %}
@@ -132,7 +132,9 @@
                 role="button">Cancelar</a>
             {% endif %}
 
+            {% if user.id == proyecto.scrumMaster.user.id %}
             <a href="{% url 'proyectos:listar_proyectos'%}" class="btn boton-color" role="button">Volver</a>
+            {% endif %}
         </div>
     </div>
     <br>

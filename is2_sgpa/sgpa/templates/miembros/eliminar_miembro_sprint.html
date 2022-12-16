@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<form method="post">
+    {% csrf_token %}
+    <h3> Desea eliminar el registro de {{ miembros.idPerfil.user.first_name }} {{ miembros.idPerfil.user.last_name }} en
+        el proyecto {{ miembros.idProyecto.nombre }}? </h3>
+
+    <button class="btn btn-danger" type="submit">Confirmar</button>
+    <a class="btn btn-default" href="{% url 'proyectos:listar_miembros_sprint' idProyecto idSprint %}">Cancelar</a>
+</form>
+
+{% endblock %}

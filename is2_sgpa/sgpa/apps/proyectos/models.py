@@ -65,11 +65,37 @@ class Backlog(models.Model):
         return self.nombre
 
 
+class Miembro(models.Model):
+    idPerfil = models.ForeignKey(
+        to="usuarios.Perfil", on_delete=models.CASCADE, related_name="miembros"
+    )
+    idProyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE)
+    sprint = models.ForeignKey(
+        to="proyectos.Sprint", on_delete=models.CASCADE, null=True, blank=True
+    )
+    warning_cap = models.BooleanField(default=False)
+    activo = models.BooleanField(
+        default=False
+    )  # Estado del Miembro, si esta Activo == True sino == False
+    capacidad_pen = models.PositiveSmallIntegerField(
+        blank=True,
+        null=True,
+        default=0,
+        validators=[MinValueValidator(0), MaxValueValidator(24)],
+    )  # cantidad de horas por dia a trabajar
+    capacidad_ini = models.PositiveSmallIntegerField(
+        blank=True,
+        null=True,
+        default=0,
+        validators=[MinValueValidator(0), MaxValueValidator(24)],
+    )
+
+
 class Sprint(models.Model):
     objetivos = models.CharField(max_length=300, blank=False, null=True)
     posicion = models.IntegerField(blank=False, null=True)
     numTareas = models.IntegerField(default=0)
-    duracion = models.FloatField(default=0)  # numero referido al numero de semanas
+    duracion = models.FloatField(default=0)  # numero referido al numero de horas
     tiempo_disponible = models.FloatField(default=0)
     estado = models.CharField(
         max_length=10, choices=ESTADOSPR_CHOICES, default="En_cola"
@@ -80,6 +106,8 @@ class Sprint(models.Model):
     fechaCreacion = models.DateField(auto_now_add=True)
     fechaInicio = models.DateField(null=True)
     fechaFin = models.DateField(null=True)
+    warning_cap = models.BooleanField(default=False)
+    equipo = models.ManyToManyField(Miembro, related_name="+")
 
     def __str__(self):
         return self.objetivos
@@ -100,11 +128,6 @@ class Historial(models.Model):
         )
 
 
-class Miembro(models.Model):
-    idPerfil = models.ForeignKey(to="usuarios.Perfil", on_delete=models.CASCADE)
-    idProyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE)
-
-
 class Rol(models.Model):
     grupo = models.OneToOneField(Group, on_delete=models.CASCADE)
     nombre = models.CharField(max_length=50)
@@ -116,15 +139,26 @@ class Rol(models.Model):
     class Meta:
         unique_together = ["nombre", "proyecto"]
         permissions = (
-            ("Crear proyecto", "Permite crear proyectos"),
-            ("Modificar proyecto", "Permite modificar proyectos"),
-            ("Eliminar proyecto", "Permite eliminar proyectos"),
-            ("Crear Sprint", "Permite crear un sprint"),
-            ("Modificar Sprint", "Permite modificar un sprint"),
-            ("Cancelar Sprint", "Permite cancelar un sprint"),
-            ("Crear user story", "Permite crear un user story"),
-            ("Modificar user story", "Permite modificar un user story"),
-            ("Eliminar user story", "Permite eliminar un user story"),
+            ("iniciar_proyecto", "Permite iniciar proyectos"),
+            ("cancelar_proyecto", "Permite cancelar proyectos"),
+            ("crear_proyecto", "Permite crear proyectos"),
+            ("modificar_proyecto", "Permite modificar proyectos"),
+            ("eliminar_proyecto", "Permite eliminar proyectos"),
+            ("crear_sprint", "Permite crear un sprint"),
+            ("modificar_sprint", "Permite modificar un sprint"),
+            ("eliminar_sprint", "Permite eliminar un sprint"),
+            ("iniciar_sprint", "Permite iniciar un sprint"),
+            ("cancelar_sprint", "Permite cancelar un sprint"),
+            ("finalizar_sprint", "Permite finalizar un sprint"),
+            ("crear_user_story", "Permite crear un user story"),
+            ("modificar_user_story", "Permite modificar un user story"),
+            ("eliminar_user_story", "Permite eliminar un user story"),
+            ("crear_rol", "Permite crear un rol"),
+            ("modificar_rol", "Permite modificar un rol"),
+            ("eliminar_rol", "Permite eliminar un rol"),
+            ("asignar_desasignar_rol", "Permite asignar y desasignar un rol"),
+            ("agregar_miembros", "Permite agregar miembros"),
+            ("eliminar_miembros", "Permite eliminar miembros"),
         )
 
     def __str__(self):
@@ -150,6 +184,7 @@ class Columnas(models.Model):
         TipoUserStory, on_delete=models.CASCADE, related_name="columnas"
     )
     opcional = models.BooleanField(null=True, blank=True)
+    orden = models.IntegerField(default=0)
 
     def __str__(self):
         return self.nombre
@@ -165,7 +200,7 @@ class UserStory(models.Model):
         related_name="user_stories",
     )
     nombre = models.CharField(max_length=150, blank=False)
-    descripcion = models.TextField(max_length=300, blank=False)
+    descripcion = models.TextField(null=True, blank=False, default="")
     estado = models.ForeignKey(
         to=Columnas, on_delete=models.CASCADE, null=True, blank=True
     )
@@ -183,6 +218,34 @@ class UserStory(models.Model):
     )
     tipo = models.ForeignKey(
         TipoUserStory, on_delete=models.CASCADE, related_name="user_stories"
+    )
+    horas_trabajadas = models.PositiveSmallIntegerField(
+        verbose_name="Horas trabajadas", null=True, blank=True, default=0
+    )
+    horas_estimadas = models.PositiveSmallIntegerField(
+        verbose_name="Horas estimadas",
+        default=0,
+        null=True,
+        blank=True,
+        validators=[MinValueValidator(0)],
+    )
+    prioridad_funcional = models.PositiveSmallIntegerField(
+        default=0,
+        null=True,
+        blank=True,
+        validators=[MinValueValidator(0), MaxValueValidator(10)],
+    )
+    prioridad_tecnica = models.PositiveSmallIntegerField(
+        default=0,
+        null=True,
+        blank=True,
+        validators=[MinValueValidator(0), MaxValueValidator(10)],
+    )
+    prioridad_total = models.FloatField(
+        default=0,
+        null=True,
+        blank=True,
+        validators=[MinValueValidator(0), MaxValueValidator(13)],
     )
 
     def __str__(self):

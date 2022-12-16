@@ -27,59 +27,66 @@
                 {% endif %}
                 {% csrf_token %}
                 <div class="form-group">
-                    <label class="col-form-label">Tipo:</label>
-                    {{ tarea_Form.tipo }}
+                    <label class="col-form-label">Estado:</label>
+                    <input class="form-control" id="readOnlyInput" type="text" placeholder="{{ tarea.estado }}"
+                        readonly="">
                 </div>
-                <!-- <div class="form-group">
-                    <label class="col-form-label">Sprint:</label>
-                    {{ tarea_Form.sprint }}
-                </div>
-                <div class="form-group">
-                    <label class="col-form-label">Backlog:</label>
-                    {{ tarea_Form.backlog }}
-                </div> -->
                 <div class="form-group">
                     <label class="col-form-label">Nombre:</label>
-                    {{ tarea_Form.nombre }}
+
+                    <input class="form-control" id="readOnlyInput" type="text" placeholder="{{ tarea.nombre }}"
+                        readonly="">
                 </div>
                 <div class="form-group">
                     <label class="col-form-label">Tareas:</label>
-                    {{ tarea_Form.descripcion }}
+
+                    <input class="form-control" id="readOnlyInput" type="text" placeholder="{{ tarea.descripcion }}"
+                        readonly="">
                 </div>
                 <div class="form-group">
                     <label class="col-form-label">Prioridad:</label>
-                    {{ tarea_Form.prioridad }}
+
+                    <input class="form-control" id="readOnlyInput" type="text" placeholder="{{ tarea.prioridad }}"
+                        readonly="">
                 </div>
                 <div class="form-group">
                     <label class="col-form-label">Desarrollador:</label>
-                    {{ tarea_Form.desarrollador }}
+
+                    <input class="form-control" id="readOnlyInput" type="text" placeholder="{{ tarea.desarrollador }}"
+                        readonly="">
                 </div>
                 <div class="form-group">
                     <label class="col-form-label">Horas estimadas:</label>
-                    {{ tarea_Form.horas_estimadas }}
+
+                    <input class="form-control" id="readOnlyInput" type="text" placeholder="{{ tarea.horas_estimadas }}"
+                        readonly="">
                 </div>
                 <div class="form-group">
                     <label class="col-form-label">Horas trabajadas:</label>
-                    {{ tarea_Form.horas_trabajadas }}
+
+                    <input class="form-control" id="readOnlyInput" type="text"
+                        placeholder="{{ tarea.horas_trabajadas }}" readonly="">
                 </div>
 
                 <div class="form-group">
                     <label class="col-form-label">Prioridad funcional:</label>
-                    {{ tarea_Form.prioridad_funcional }}
+
+                    <input class="form-control" id="readOnlyInput" type="text"
+                        placeholder="{{ tarea.prioridad_funcional }}" readonly="">
                 </div>
                 <div class="form-group">
                     <label class="col-form-label">Prioridad tecnica:</label>
-                    {{ tarea_Form.prioridad_tecnica }}
+
+                    <input class="form-control" id="readOnlyInput" type="text"
+                        placeholder="{{ tarea.prioridad_tecnica }}" readonly="">
                 </div>
-                <p align="center">
-                    <button type="submit" class="btn btn-primary">Guardar</button>
-                    <a href="{% url 'proyectos:listar_tareas' idProyecto%}" class="btn btn-primary"
-                        role="button">Cancelar</a>
-                </p>
             </form>
         </div>
         <div class="col-md-3">
-
+            <p align="center">
+                <a href="{% url 'proyectos:kanban' idProyecto idSprint %}" class="btn btn-primary"
+                    role="button">Volver</a>
+            </p>
         </div>
     </div>
 </div>

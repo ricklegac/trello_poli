@@ -3,6 +3,7 @@ from proyectos.views import (
     CrearRol,
     ListarRol,
     ListarUserStory,
+    ListarUserStoryFinalizados,
     asignarRol,
     asignarSprint,
     asignarTareasSprint,
@@ -10,6 +11,7 @@ from proyectos.views import (
     cancelarSprint,
     crearTipoUS,
     crearUserStory,
+    verUserStory,
     desasignarRol,
     desasignarSprint,
     editarRol,
@@ -22,6 +24,7 @@ from proyectos.views import (
     miembroCrear,
     miembroEliminar,
     modificarUserStory,
+    modificarUserStoryKanban,
     retrocederEstadoTarea,
     tableroKanban,
     verMiembros,
@@ -42,6 +45,11 @@ from proyectos.views import (
     eliminarTipo,
     verRoles,
     modificarTipoUS,
+    cancelarUs,
+    miembroSprintCrear,
+    verMiembrosSprint,
+    miembroSprintEliminar,
+    burndownchart,
 )
 
 urlpatterns = [
@@ -93,7 +101,7 @@ urlpatterns = [
         name="sprint_tareas",
     ),
     path(
-        "<int:idProyecto>/sprint/<int:idSprint>/tarea/<int:idTarea>/",
+        "<int:idProyecto>/sprint/<int:idSprint>/tarea/<int:idTarea>/asignar_sprint",
         asignarSprint,
         name="asignar_sprint",
     ),
@@ -112,11 +120,32 @@ urlpatterns = [
         retrocederEstadoTarea,
         name="retroceder_tarea",
     ),
+    path(
+        "<int:idProyecto>/sprint/kanban/tareas/editar/<int:id_tarea>/",
+        modificarUserStoryKanban,
+        name="modificar_tarea_kanban",
+    ),
     # Historial
     path("<int:id_proyecto>/historial/", verHistorial, name="ver_historial"),
     # Miembros
     path("<int:idProyecto>/miembros/listar/", verMiembros, name="listar_miembros"),
     path("<int:idProyecto>/miembros/nuevo/", miembroCrear, name="nuevo_miembro"),
+    # Miembros Sprint
+    path(
+        "<int:idProyecto>/sprint/<int:idSprint>/miembros/listar/",
+        verMiembrosSprint,
+        name="listar_miembros_sprint",
+    ),
+    path(
+        "<int:idProyecto>/sprint/<int:idSprint>/miembros/nuevo/",
+        miembroSprintCrear,
+        name="nuevo_miembro_sprint",
+    ),
+    path(
+        "<int:idProyecto>/sprint/<int:idSprint>/miembros/eliminar/<int:idMiembro>/",
+        miembroSprintEliminar,
+        name="eliminar_miembro_sprint",
+    ),
     path(
         "<int:idProyecto>/miembros/eliminar/<int:idMiembro>/",
         miembroEliminar,
@@ -152,6 +181,11 @@ urlpatterns = [
         name="listar_tareas",
     ),
     path(
+        "<int:idProyecto>/sprint/<int:idSprint>/tareas/listar/finalizados/",
+        ListarUserStoryFinalizados.as_view(),
+        name="listar_tareas_finalizadas",
+    ),
+    path(
         "<int:idProyecto>/tipos/listar/",
         ListarTipoUserStory.as_view(),
         name="listar_tipos",
@@ -177,8 +211,23 @@ urlpatterns = [
         name="modificar_tarea",
     ),
     path(
+        "<int:idProyecto>/tareas/ver/<int:id_tarea>/",
+        verUserStory,
+        name="ver_tarea",
+    ),
+    path(
         "<int:idProyecto>/tareas/tipo/",
         crearTipoUS,
         name="tipos_us",
+    ),
+    path(
+        "<int:idProyecto>/tareas/cancelar/",
+        cancelarUs,
+        name="cancelar_tareas",
+    ),
+    path(
+        "<int:idProyecto>/sprint/<int:idSprint>/burndownchart/",
+        burndownchart,
+        name="burndownchart",
     ),
 ]

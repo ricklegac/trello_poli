@@ -19,18 +19,21 @@
                     {{ form.objetivos }}
                 </div>
                 <div class="form-group">
+                    <label class="col-form-label">Duración (Horas):</label>
+                    {{ form.duracion }}
+                </div>
+                <div class="form-group">
                     <label class="col-form-label">Fecha de Inicio:</label>
                     {{ form.fechaInicio }}
                 </div>
                 <div class="form-group">
-                    <label class="col-form-label">Feche de Finalización:</label>
+                    <label class="col-form-label">Fecha de Fin:</label>
                     {{ form.fechaFin }}
-                </div>
-                <p align="center">
-                    <button type="submit" class="btn btn-primary">Guardar</button>
-                    <a href="{% url 'proyectos:listar_sprints' id_proyecto %}" class="btn btn-primary"
-                        role="button">Cancelar</a>
-                </p>
+                    <p align="center">
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                        <a href="{% url 'proyectos:listar_sprints' id_proyecto %}" class="btn btn-primary"
+                            role="button">Cancelar</a>
+                    </p>
             </form>
         </div>
         <div class="col-md-3">
