@@ -38,7 +38,7 @@ do
     then
       echo "Cambiando a la Iteracion 6 "
       sleep 1
-      echo "trabajando en ello..."
+      git checkout 6.0
     fi
     if [ $REPLY -lt 1 ] | [ $REPLY -gt 6 ]
     then
