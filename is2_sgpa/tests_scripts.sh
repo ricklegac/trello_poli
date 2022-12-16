@@ -30,7 +30,7 @@ do
     fi
     if [ $REPLY -eq 5 ]
     then
-      echo "test TESTS USUARIOS "
+      echo "test TESTS TAREAS "
       sleep 1
       pytest sgpa/apps/proyectos/tests_tareas.py
     fi
